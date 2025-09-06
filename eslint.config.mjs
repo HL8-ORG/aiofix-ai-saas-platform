@@ -4,7 +4,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default [
   {
     ignores: [
       'eslint.config.mjs',
@@ -25,7 +25,6 @@ export default tseslint.config(
       sourceType: 'commonjs',
       parserOptions: {
         projectService: true,
-        // @ts-ignore
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -78,4 +77,42 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'off',
     },
   },
-);
+
+  // 🧪 测试文件 - 特殊规则
+  {
+    files: [
+      '**/*.spec.ts',
+      '**/*.test.ts',
+      '**/__tests__/**/*.ts',
+      '**/tests/**/*.ts',
+    ],
+    rules: {
+      // 测试文件允许使用 any 类型进行类型断言和模拟
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/unbound-method': 'off', // 测试文件中允许未绑定的方法引用
+
+      // 保持重要的代码质量规则
+      'no-console': 'warn', // 测试中允许 console，但给出警告
+      'no-debugger': 'error', // 禁止 debugger 语句
+      'no-alert': 'error', // 禁止 alert 语句
+      'no-eval': 'error', // 禁止 eval 语句
+      'no-implied-eval': 'error', // 禁止隐式 eval
+      'no-new-func': 'error', // 禁止 new Function
+
+      // 安全相关规则（这些规则需要安装相应的插件）
+      // 'no-hardcoded-credentials': 'error', // 禁止硬编码凭据
+      // 'no-secrets': 'error', // 禁止硬编码密钥
+
+      // 代码风格规则（保持一致性）
+      'prefer-const': 'warn',
+      'no-var': 'error',
+      'no-unused-vars': 'warn',
+    },
+  },
+];

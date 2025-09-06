@@ -3,6 +3,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
 
+  // 禁用Babel，强制使用ts-jest
+  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$))'],
+
   // 项目根目录
   rootDir: '.',
 
@@ -16,16 +19,44 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
   // 模块名映射
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@aiofix/core$': '<rootDir>/packages/core/src',
     '^@aiofix/common$': '<rootDir>/packages/common/src',
+    '^@aiofix/logging$': '<rootDir>/packages/logging/src',
+    '^@aiofix/config$': '<rootDir>/packages/config/src',
+    '^@aiofix/database$': '<rootDir>/packages/database/src',
+    '^@aiofix/notification$': '<rootDir>/packages/notification/src',
     '^@aiofix/(.*)$': '<rootDir>/packages/$1/src',
   },
 
   // 转换配置
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        useESM: false,
+        isolatedModules: true,
+        tsconfig: {
+          module: 'commonjs',
+          target: 'es2020',
+          strict: true,
+          esModuleInterop: true,
+          allowSyntheticDefaultImports: true,
+          skipLibCheck: true,
+          forceConsistentCasingInFileNames: true,
+          experimentalDecorators: true,
+          emitDecoratorMetadata: true,
+          types: ['jest', 'node'],
+        },
+      },
+    ],
   },
+
+  // 强制使用ts-jest，禁用Babel
+  transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$))'],
+
+  // 明确指定不使用Babel
+  // babelConfig: false, // 注释掉，因为Jest不识别这个选项
 
   // 覆盖率配置
   collectCoverage: true,

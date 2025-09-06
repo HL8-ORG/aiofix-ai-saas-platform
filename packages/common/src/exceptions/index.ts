@@ -68,8 +68,8 @@ export abstract class BaseException extends Error {
     this.timestamp = new Date();
 
     // 确保堆栈跟踪正确
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
+    if ((Error as any).captureStackTrace) {
+      (Error as any).captureStackTrace(this, this.constructor);
     }
   }
 
@@ -264,7 +264,7 @@ export class ConcurrencyException extends ConflictException {
 export class DataIsolationException extends ForbiddenException {
   constructor(message: string = 'Data isolation violation', details?: any) {
     super(message);
-    this.details = details;
+    (this as any).details = details;
   }
 }
 

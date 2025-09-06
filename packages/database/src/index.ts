@@ -1,28 +1,26 @@
 /**
- * Aiofix数据库模块
+ * @file index.ts
+ * @description 数据库适配器基础设施库入口文件
  *
- * 提供统一的数据库管理功能，包括：
- * - MikroORM集成
- * - 数据库连接管理
- * - 迁移管理
- * - 多数据库支持
- * - NestJS集成
+ * 该文件是数据库适配器基础设施库的主要入口点，提供：
+ * - 数据库适配器模块
+ * - PostgreSQL适配器
+ * - 数据库管理器
+ * - 数据库工厂
+ * - 配置管理
+ * - 健康检查服务
  *
- * @fileoverview 数据库模块入口
- * @author AI开发团队
- * @since 1.0.0
+ * 遵循DDD和Clean Architecture原则，提供统一的数据库抽象层。
  */
 
-// 数据库服务导出
-export * from './services/database.service';
+// 导出接口
 export * from './interfaces/database.interface';
 
-// 数据库配置导出
-export * from './config/database.config';
+// 导出配置
+export { DatabaseConfig } from './config/database.config';
 
-// 数据库模块导出
+// 导出适配器
+export * from './adapters/postgresql.adapter';
+
+// 导出模块
 export * from './database.module';
-
-// 版本信息
-export const VERSION = '1.0.0';
-export const PACKAGE_NAME = '@aiofix/database';

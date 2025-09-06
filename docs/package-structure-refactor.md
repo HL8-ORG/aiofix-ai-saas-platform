@@ -28,7 +28,7 @@
 packages/
 ├── core/                    # 核心领域模型和事件溯源
 ├── common/                  # 通用工具和类型（简化后）
-├── logger/                  # 日志模块（新增）
+├── logging/                 # 日志模块（新增）
 ├── config/                  # 配置模块（新增）
 ├── cache/                   # 缓存模块（新增）
 ├── notification/            # 通知模块（新增）
@@ -38,7 +38,7 @@ packages/
 
 ### 2. 各包详细说明
 
-#### 2.1 @aiofix/logger - 日志模块
+#### 2.1 @aiofix/logging - 日志模块
 
 **职责**：提供统一的日志记录功能
 **功能**：
@@ -57,10 +57,10 @@ packages/
 **导出**：
 
 ```typescript
-export * from './services/logger.service';
-export * from './interfaces/logger.interface';
-export * from './config/logger.config';
-export * from './logger.module';
+export * from './services/logging.service';
+export * from './interfaces/logging.interface';
+export * from './config/logging.config';
+export * from './logging.module';
 ```
 
 #### 2.2 @aiofix/config - 配置模块
@@ -227,7 +227,7 @@ export * from './test-factories';
 
 ```typescript
 // 只引入需要的模块
-import { LoggerService } from '@aiofix/logger';
+import { LoggingService } from '@aiofix/logging';
 import { ConfigService } from '@aiofix/config';
 import { CacheService } from '@aiofix/cache';
 ```
@@ -236,12 +236,12 @@ import { CacheService } from '@aiofix/cache';
 
 ```typescript
 // 在NestJS应用中导入模块
-import { LoggerModule } from '@aiofix/logger';
+import { LoggingModule } from '@aiofix/logging';
 import { ConfigModule } from '@aiofix/config';
 import { CacheModule } from '@aiofix/cache';
 
 @Module({
-  imports: [LoggerModule, ConfigModule, CacheModule],
+  imports: [LoggingModule, ConfigModule, CacheModule],
 })
 export class AppModule {}
 ```
@@ -253,7 +253,7 @@ export class AppModule {}
 @Injectable()
 export class UserService {
   constructor(
-    private readonly logger: LoggerService,
+    private readonly logging: LoggingService,
     private readonly config: ConfigService,
     private readonly cache: CacheService,
   ) {}

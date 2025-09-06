@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="47" failures="2" errors="0" time="2.958">
+  <testsuite name="Database Interfaces" errors="0" failures="0" skipped="0" timestamp="2025-09-06T17:58:46" time="0.258" tests="14">
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该定义正确的连接状态类型" time="0.002">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该包含所有必需的属性" time="0.002">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该支持可选的错误属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该支持所有数据库类型" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该包含所有必需的配置属性" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该支持可选的配置属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseHealth" name="应该包含所有健康检查属性" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseHealth" name="应该支持可选的错误属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseStats" name="应该包含所有统计属性" time="0.009">
+    </testcase>
+    <testcase classname="Database Interfaces › QueryOptions" name="应该支持所有查询选项" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › TransactionOptions" name="应该支持所有事务选项" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseAdapter" name="应该定义所有必需的适配器方法" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseManager" name="应该定义所有必需的管理器方法" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseFactory" name="应该定义所有必需的工厂方法" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="DatabaseConfig" errors="0" failures="0" skipped="0" timestamp="2025-09-06T17:58:47" time="0.793" tests="11">
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该验证数字字段" time="0.002">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该接受有效配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › MikroOrmConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › MikroOrmConfig" name="应该验证可选字段" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseLoggingConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseLoggingConfig" name="应该验证配置字段" time="0">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该验证必需字段" time="0.002">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该接受有效配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该验证嵌套对象" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="PostgreSQLAdapter" errors="0" failures="0" skipped="0" timestamp="2025-09-06T17:58:48" time="1.111" tests="19">
+    <testcase classname="PostgreSQLAdapter › 初始化" name="应该正确初始化适配器" time="0.012">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 初始化" name="应该初始化统计信息" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该能够连接到数据库" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该能够断开数据库连接" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该处理连接错误" time="0.022">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该能够执行查询" time="0.005">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该能够执行命令" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该处理查询错误" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该更新统计信息" time="0.005">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事务管理" name="应该能够执行事务" time="0.011">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事务管理" name="应该在事务失败时回滚" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 健康检查" name="应该返回健康状态" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 健康检查" name="应该处理连接池错误" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 统计信息" name="应该返回统计信息" time="0.001">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 统计信息" name="应该能够重置统计信息" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接测试" name="应该能够ping数据库" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接测试" name="应该在ping失败时返回false" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事件通知" name="应该在查询执行时发出事件" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事件通知" name="应该在连接状态变化时发出事件" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="DatabaseModule" errors="0" failures="2" skipped="0" timestamp="2025-09-06T17:58:49" time="0.436" tests="3">
+    <testcase classname="DatabaseModule" name="should be defined" time="0.003">
+    </testcase>
+    <testcase classname="DatabaseModule" name="should have database config provider" time="0.002">
+      <failure>Error: Nest could not find DATABASE_CONFIG element (this provider does not exist in the current context)
+    at InstanceLinksHost.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-links-host.js:15:19)
+    at TestingModule.find (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/abstract-instance-resolver.js:8:60)
+    at TestingModule.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/nest-application-context.js:77:20)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/database/src/database.module.spec.ts:41:27)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseModule" name="should have database name provider" time="0.002">
+      <failure>Error: Nest could not find DATABASE_NAME element (this provider does not exist in the current context)
+    at InstanceLinksHost.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-links-host.js:15:19)
+    at TestingModule.find (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/abstract-instance-resolver.js:8:60)
+    at TestingModule.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/nest-application-context.js:77:20)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/database/src/database.module.spec.ts:47:25)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

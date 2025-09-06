@@ -4,10 +4,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@aiofix/logging/*": ["libs/logging/src/*"],
-      "@aiofix/*": ["libs/*/src"]
+      "@aiofix/logging": ["packages/logging/src"],
+      "@aiofix/config": ["packages/config/src"],
+      "@aiofix/core": ["packages/core/src"],
+      "@aiofix/common": ["packages/common/src"],
+      "@aiofix/*": ["packages/*/src"]
     },
     "noEmit": true
-  },
-  "include": ["packages/**/*", "apps/**/*", "scripts/**/*"]
+  }
 }

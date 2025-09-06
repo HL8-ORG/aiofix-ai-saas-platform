@@ -14,6 +14,7 @@
 // 领域层导出
 export { EventSourcedAggregateRoot } from './domain/event-sourced-aggregate-root';
 export { DomainEvent } from './domain/domain-event';
+export { ValueObject } from './domain/value-object';
 
 // 领域层接口导出
 export type {

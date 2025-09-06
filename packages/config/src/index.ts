@@ -1,30 +1,31 @@
 /**
- * Aiofix配置模块
+ * @fileoverview
+ * @aiofix/config 公共API接口
  *
- * 提供统一的配置管理功能，包括：
- * - 环境变量管理
- * - 配置验证
- * - 配置类型安全
- * - 配置热重载
- * - NestJS集成
+ * @description
+ * IAM系统配置模块的公共API接口，提供了配置系统的所有公开接口。
+ * 该文件是配置模块的入口点，导出了所有必要的类型、服务和工具函数。
  *
- * @fileoverview 配置模块入口
- * @author AI开发团队
- * @since 1.0.0
+ * 主要原理与机制如下：
+ * 1. 使用export *语法导出所有公开的模块
+ * 2. 提供类型安全的配置访问接口
+ * 3. 支持模块化配置管理
+ * 4. 集成环境配置和接口定义
+ *
+ * 功能与业务规则：
+ * 1. 配置模块API导出
+ * 2. 类型定义导出
+ * 3. 服务类导出
+ * 4. 工具函数导出
+ * 5. 环境配置导出
+ *
+ * @exports
+ * - default-config: 默认配置定义
+ * - config-loader: 配置加载器工具函数
+ * - config.module: 配置模块定义
+ * - config.service: 配置服务类
  */
-
-// 配置服务导出
-export * from './services/config.service';
-export * from './interfaces/config.interface';
-
-// 配置类导出
-export * from './config/app.config';
-export * from './config/database.config';
-export * from './config/redis.config';
-
-// 配置模块导出
+export * from './default-config';
+export * from './config-loader';
 export * from './config.module';
-
-// 版本信息
-export const VERSION = '1.0.0';
-export const PACKAGE_NAME = '@aiofix/config';
+export * from './config.service';

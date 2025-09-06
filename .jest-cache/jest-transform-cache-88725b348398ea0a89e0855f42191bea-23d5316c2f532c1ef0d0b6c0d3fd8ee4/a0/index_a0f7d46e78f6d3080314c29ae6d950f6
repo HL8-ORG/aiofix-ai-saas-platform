@@ -1,0 +1,47 @@
+dd8b25ed8f411410a85b83a1295e21e1
+"use strict";
+/**
+ * Aiofix日志模块
+ *
+ * 提供统一的日志记录功能，包括：
+ * - 多级别日志记录（debug, info, warn, error）
+ * - 日志格式化
+ * - 日志轮转
+ * - 结构化日志
+ * - NestJS集成
+ *
+ * @fileoverview 日志模块入口
+ * @author AI开发团队
+ * @since 1.0.0
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PACKAGE_NAME = exports.VERSION = exports.PinoLoggerConfigService = void 0;
+// 日志服务导出
+__exportStar(require("./services/pino-logger.service"), exports);
+var pino_logger_config_service_1 = require("./services/pino-logger-config.service");
+Object.defineProperty(exports, "PinoLoggerConfigService", { enumerable: true, get: function () { return pino_logger_config_service_1.PinoLoggerConfigService; } });
+__exportStar(require("./interfaces/logging.interface"), exports);
+// 日志模块导出
+__exportStar(require("./logging.module"), exports);
+// 工厂和中间件导出
+__exportStar(require("./factories/pino-logger.factory"), exports);
+__exportStar(require("./middleware/pino-logging.middleware"), exports);
+__exportStar(require("./interceptors/pino-logging.interceptor"), exports);
+// 版本信息
+exports.VERSION = '1.0.0';
+exports.PACKAGE_NAME = '@aiofix/logging';
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL2hvbWUvYXJsaWdsZS9WMS9BaW9maXgvYWlvZml4LWFpLXNhYXMtcGxhdGZvcm0vcGFja2FnZXMvbG9nZ2luZy9zcmMvaW5kZXgudHMiLCJtYXBwaW5ncyI6IjtBQUFBOzs7Ozs7Ozs7Ozs7O0dBYUc7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBRUgsU0FBUztBQUNULGlFQUErQztBQUMvQyxvRkFBZ0Y7QUFBdkUscUlBQUEsdUJBQXVCLE9BQUE7QUFDaEMsaUVBQStDO0FBRS9DLFNBQVM7QUFDVCxtREFBaUM7QUFFakMsV0FBVztBQUNYLGtFQUFnRDtBQUNoRCx1RUFBcUQ7QUFDckQsMEVBQXdEO0FBRXhELE9BQU87QUFDTSxRQUFBLE9BQU8sR0FBRyxPQUFPLENBQUM7QUFDbEIsUUFBQSxZQUFZLEdBQUcsaUJBQWlCLENBQUMiLCJuYW1lcyI6W10sInNvdXJjZXMiOlsiL2hvbWUvYXJsaWdsZS9WMS9BaW9maXgvYWlvZml4LWFpLXNhYXMtcGxhdGZvcm0vcGFja2FnZXMvbG9nZ2luZy9zcmMvaW5kZXgudHMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBBaW9maXjml6Xlv5fmqKHlnZdcbiAqXG4gKiDmj5Dkvpvnu5/kuIDnmoTml6Xlv5forrDlvZXlip/og73vvIzljIXmi6zvvJpcbiAqIC0g5aSa57qn5Yir5pel5b+X6K6w5b2V77yIZGVidWcsIGluZm8sIHdhcm4sIGVycm9y77yJXG4gKiAtIOaXpeW/l+agvOW8j+WMllxuICogLSDml6Xlv5fova7ovaxcbiAqIC0g57uT5p6E5YyW5pel5b+XXG4gKiAtIE5lc3RKU+mbhuaIkFxuICpcbiAqIEBmaWxlb3ZlcnZpZXcg5pel5b+X5qih5Z2X5YWl5Y+jXG4gKiBAYXV0aG9yIEFJ5byA5Y+R5Zui6ZifXG4gKiBAc2luY2UgMS4wLjBcbiAqL1xuXG4vLyDml6Xlv5fmnI3liqHlr7zlh7pcbmV4cG9ydCAqIGZyb20gJy4vc2VydmljZXMvcGluby1sb2dnZXIuc2VydmljZSc7XG5leHBvcnQgeyBQaW5vTG9nZ2VyQ29uZmlnU2VydmljZSB9IGZyb20gJy4vc2VydmljZXMvcGluby1sb2dnZXItY29uZmlnLnNlcnZpY2UnO1xuZXhwb3J0ICogZnJvbSAnLi9pbnRlcmZhY2VzL2xvZ2dpbmcuaW50ZXJmYWNlJztcblxuLy8g5pel5b+X5qih5Z2X5a+85Ye6XG5leHBvcnQgKiBmcm9tICcuL2xvZ2dpbmcubW9kdWxlJztcblxuLy8g5bel5Y6C5ZKM5Lit6Ze05Lu25a+85Ye6XG5leHBvcnQgKiBmcm9tICcuL2ZhY3Rvcmllcy9waW5vLWxvZ2dlci5mYWN0b3J5JztcbmV4cG9ydCAqIGZyb20gJy4vbWlkZGxld2FyZS9waW5vLWxvZ2dpbmcubWlkZGxld2FyZSc7XG5leHBvcnQgKiBmcm9tICcuL2ludGVyY2VwdG9ycy9waW5vLWxvZ2dpbmcuaW50ZXJjZXB0b3InO1xuXG4vLyDniYjmnKzkv6Hmga9cbmV4cG9ydCBjb25zdCBWRVJTSU9OID0gJzEuMC4wJztcbmV4cG9ydCBjb25zdCBQQUNLQUdFX05BTUUgPSAnQGFpb2ZpeC9sb2dnaW5nJztcbiJdLCJ2ZXJzaW9uIjozfQ==

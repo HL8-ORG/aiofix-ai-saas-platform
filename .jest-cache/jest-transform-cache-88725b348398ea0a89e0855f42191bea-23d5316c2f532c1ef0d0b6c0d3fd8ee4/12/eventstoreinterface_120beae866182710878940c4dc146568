@@ -1,0 +1,407 @@
+9d11336ffc0675b7079a742d777f3925
+"use strict";
+
+/* istanbul ignore next */
+function cov_5fbdvedjn() {
+  var path = "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/interfaces/event-store.interface.ts";
+  var hash = "d003dbd4b74f88aeb2254007a45aa7f1e826a458";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/interfaces/event-store.interface.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 2,
+          column: 0
+        },
+        end: {
+          line: 2,
+          column: 62
+        }
+      },
+      "1": {
+        start: {
+          line: 3,
+          column: 0
+        },
+        end: {
+          line: 3,
+          column: 60
+        }
+      },
+      "2": {
+        start: {
+          line: 23,
+          column: 8
+        },
+        end: {
+          line: 23,
+          column: 93
+        }
+      },
+      "3": {
+        start: {
+          line: 24,
+          column: 8
+        },
+        end: {
+          line: 24,
+          column: 39
+        }
+      },
+      "4": {
+        start: {
+          line: 25,
+          column: 8
+        },
+        end: {
+          line: 25,
+          column: 39
+        }
+      },
+      "5": {
+        start: {
+          line: 26,
+          column: 8
+        },
+        end: {
+          line: 26,
+          column: 47
+        }
+      },
+      "6": {
+        start: {
+          line: 27,
+          column: 8
+        },
+        end: {
+          line: 27,
+          column: 43
+        }
+      },
+      "7": {
+        start: {
+          line: 30,
+          column: 0
+        },
+        end: {
+          line: 30,
+          column: 44
+        }
+      },
+      "8": {
+        start: {
+          line: 50,
+          column: 8
+        },
+        end: {
+          line: 50,
+          column: 23
+        }
+      },
+      "9": {
+        start: {
+          line: 51,
+          column: 8
+        },
+        end: {
+          line: 51,
+          column: 38
+        }
+      },
+      "10": {
+        start: {
+          line: 52,
+          column: 8
+        },
+        end: {
+          line: 52,
+          column: 25
+        }
+      },
+      "11": {
+        start: {
+          line: 53,
+          column: 8
+        },
+        end: {
+          line: 55,
+          column: 9
+        }
+      },
+      "12": {
+        start: {
+          line: 54,
+          column: 12
+        },
+        end: {
+          line: 54,
+          column: 31
+        }
+      },
+      "13": {
+        start: {
+          line: 58,
+          column: 0
+        },
+        end: {
+          line: 58,
+          column: 42
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 22,
+            column: 4
+          },
+          end: {
+            line: 22,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 22,
+            column: 61
+          },
+          end: {
+            line: 28,
+            column: 5
+          }
+        },
+        line: 22
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 49,
+            column: 4
+          },
+          end: {
+            line: 49,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 49,
+            column: 60
+          },
+          end: {
+            line: 56,
+            column: 5
+          }
+        },
+        line: 49
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 49,
+            column: 25
+          },
+          end: {
+            line: 49,
+            column: 51
+          }
+        },
+        type: "default-arg",
+        locations: [{
+          start: {
+            line: 49,
+            column: 32
+          },
+          end: {
+            line: 49,
+            column: 51
+          }
+        }],
+        line: 49
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 53,
+            column: 8
+          },
+          end: {
+            line: 55,
+            column: 9
+          }
+        },
+        type: "if",
+        locations: [{
+          start: {
+            line: 53,
+            column: 8
+          },
+          end: {
+            line: 55,
+            column: 9
+          }
+        }, {
+          start: {
+            line: undefined,
+            column: undefined
+          },
+          end: {
+            line: undefined,
+            column: undefined
+          }
+        }],
+        line: 53
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0
+    },
+    b: {
+      "0": [0],
+      "1": [0, 0]
+    },
+    inputSourceMap: {
+      file: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/interfaces/event-store.interface.ts",
+      mappings: ";;;AA0IA;;;;;;;;;GASG;AACH,MAAa,gBAAiB,SAAQ,KAAK;IAgBzC;;;;;;OAMG;IACH,YACE,WAAmB,EACnB,eAAuB,EACvB,aAAqB;QAErB,KAAK,CACH,OAAO,WAAW,kBAAkB,eAAe,WAAW,aAAa,EAAE,CAC9E,CAAC;QACF,IAAI,CAAC,IAAI,GAAG,kBAAkB,CAAC;QAC/B,IAAI,CAAC,WAAW,GAAG,WAAW,CAAC;QAC/B,IAAI,CAAC,eAAe,GAAG,eAAe,CAAC;QACvC,IAAI,CAAC,aAAa,GAAG,aAAa,CAAC;IACrC,CAAC;CACF;AApCD,4CAoCC;AAED;;;;;;;;;GASG;AACH,MAAa,eAAgB,SAAQ,KAAK;IAMxC;;;;;;OAMG;IACH,YACE,OAAe,EACf,OAAe,mBAAmB,EAClC,KAAa;QAEb,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,iBAAiB,CAAC;QAC9B,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QAEjB,IAAI,KAAK,EAAE,CAAC;YACV,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;QACrB,CAAC;IACH,CAAC;CACF;AA1BD,0CA0BC",
+      names: [],
+      sources: ["/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/interfaces/event-store.interface.ts"],
+      sourcesContent: ["import { IDomainEvent, IAggregateSnapshot } from './domain-event.interface';\n\n/**\n * \u4E8B\u4EF6\u5B58\u50A8\u63A5\u53E3\n *\n * \u4E8B\u4EF6\u5B58\u50A8\u662F\u4E8B\u4EF6\u6EAF\u6E90\u67B6\u6784\u7684\u6838\u5FC3\u7EC4\u4EF6\uFF0C\u8D1F\u8D23\u4E8B\u4EF6\u7684\u6301\u4E45\u5316\u548C\u68C0\u7D22\u3002\n * \u6240\u6709\u4E8B\u4EF6\u5B58\u50A8\u5B9E\u73B0\u90FD\u5FC5\u987B\u5B9E\u73B0\u6B64\u63A5\u53E3\uFF0C\u786E\u4FDD\u4E8B\u4EF6\u5B58\u50A8\u7684\u4E00\u81F4\u6027\u548C\u53EF\u9760\u6027\u3002\n *\n * \u4E8B\u4EF6\u5B58\u50A8\u7684\u6838\u5FC3\u804C\u8D23\uFF1A\n * 1. \u4FDD\u5B58\u805A\u5408\u6839\u7684\u4E8B\u4EF6\u5230\u6301\u4E45\u5316\u5B58\u50A8\n * 2. \u6839\u636E\u805A\u5408\u6839ID\u68C0\u7D22\u4E8B\u4EF6\u5386\u53F2\n * 3. \u7BA1\u7406\u805A\u5408\u6839\u7684\u5FEB\u7167\n * 4. \u63D0\u4F9B\u4E8B\u4EF6\u67E5\u8BE2\u548C\u8FC7\u6EE4\u529F\u80FD\n * 5. \u786E\u4FDD\u4E8B\u4EF6\u7684\u539F\u5B50\u6027\u548C\u4E00\u81F4\u6027\n *\n * @interface IEventStore\n * @author AI\u5F00\u53D1\u56E2\u961F\n * @since 1.0.0\n */\nexport interface IEventStore {\n  /**\n   * \u4FDD\u5B58\u805A\u5408\u6839\u7684\u4E8B\u4EF6\n   *\n   * \u5C06\u805A\u5408\u6839\u7684\u672A\u63D0\u4EA4\u4E8B\u4EF6\u4FDD\u5B58\u5230\u4E8B\u4EF6\u5B58\u50A8\u4E2D\u3002\n   * \u4F7F\u7528\u4E50\u89C2\u9501\u673A\u5236\u786E\u4FDD\u5E76\u53D1\u5B89\u5168\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   * @param {IDomainEvent[]} events - \u8981\u4FDD\u5B58\u7684\u4E8B\u4EF6\u5217\u8868\n   * @param {number} expectedVersion - \u671F\u671B\u7684\u7248\u672C\u53F7\uFF08\u4E50\u89C2\u9501\uFF09\n   *\n   * @returns {Promise<void>} \u4FDD\u5B58\u64CD\u4F5C\u7684Promise\n   *\n   * @throws {ConcurrencyError} \u5F53\u7248\u672C\u53F7\u4E0D\u5339\u914D\u65F6\u629B\u51FA\u5E76\u53D1\u9519\u8BEF\n   * @throws {EventStoreError} \u5F53\u4FDD\u5B58\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  saveEvents(\n    aggregateId: string,\n    events: IDomainEvent[],\n    expectedVersion: number,\n  ): Promise<void>;\n\n  /**\n   * \u83B7\u53D6\u805A\u5408\u6839\u7684\u4E8B\u4EF6\u5386\u53F2\n   *\n   * \u6839\u636E\u805A\u5408\u6839ID\u83B7\u53D6\u5176\u5B8C\u6574\u7684\u4E8B\u4EF6\u5386\u53F2\u3002\n   * \u4E8B\u4EF6\u6309\u7248\u672C\u53F7\u5347\u5E8F\u6392\u5217\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   * @param {number} [fromVersion] - \u8D77\u59CB\u7248\u672C\u53F7\uFF08\u53EF\u9009\uFF09\n   *\n   * @returns {Promise<IDomainEvent[]>} \u4E8B\u4EF6\u5386\u53F2\u5217\u8868\n   *\n   * @throws {EventStoreError} \u5F53\u68C0\u7D22\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  getEvents(aggregateId: string, fromVersion?: number): Promise<IDomainEvent[]>;\n\n  /**\n   * \u6839\u636E\u4E8B\u4EF6\u7C7B\u578B\u83B7\u53D6\u4E8B\u4EF6\n   *\n   * \u6839\u636E\u4E8B\u4EF6\u7C7B\u578B\u548C\u53EF\u9009\u7684\u65F6\u95F4\u8303\u56F4\u83B7\u53D6\u4E8B\u4EF6\u5217\u8868\u3002\n   * \u7528\u4E8E\u4E8B\u4EF6\u5904\u7406\u548C\u6295\u5F71\u66F4\u65B0\u3002\n   *\n   * @param {string} eventType - \u4E8B\u4EF6\u7C7B\u578B\u540D\u79F0\n   * @param {Date} [fromDate] - \u8D77\u59CB\u65F6\u95F4\uFF08\u53EF\u9009\uFF09\n   *\n   * @returns {Promise<IDomainEvent[]>} \u5339\u914D\u7684\u4E8B\u4EF6\u5217\u8868\n   *\n   * @throws {EventStoreError} \u5F53\u68C0\u7D22\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  getEventsByType(eventType: string, fromDate?: Date): Promise<IDomainEvent[]>;\n\n  /**\n   * \u83B7\u53D6\u805A\u5408\u6839\u7684\u6700\u65B0\u5FEB\u7167\n   *\n   * \u83B7\u53D6\u6307\u5B9A\u805A\u5408\u6839\u7684\u6700\u65B0\u5FEB\u7167\uFF0C\u7528\u4E8E\u4F18\u5316\u805A\u5408\u91CD\u5EFA\u6027\u80FD\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   *\n   * @returns {Promise<IAggregateSnapshot | null>} \u5FEB\u7167\u5BF9\u8C61\u6216null\n   *\n   * @throws {EventStoreError} \u5F53\u68C0\u7D22\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  getSnapshot(aggregateId: string): Promise<IAggregateSnapshot | null>;\n\n  /**\n   * \u4FDD\u5B58\u805A\u5408\u6839\u7684\u5FEB\u7167\n   *\n   * \u5C06\u805A\u5408\u6839\u7684\u5FEB\u7167\u4FDD\u5B58\u5230\u4E8B\u4EF6\u5B58\u50A8\u4E2D\uFF0C\u7528\u4E8E\u6027\u80FD\u4F18\u5316\u3002\n   *\n   * @param {IAggregateSnapshot} snapshot - \u8981\u4FDD\u5B58\u7684\u5FEB\u7167\n   *\n   * @returns {Promise<void>} \u4FDD\u5B58\u64CD\u4F5C\u7684Promise\n   *\n   * @throws {EventStoreError} \u5F53\u4FDD\u5B58\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  saveSnapshot(snapshot: IAggregateSnapshot): Promise<void>;\n\n  /**\n   * \u68C0\u67E5\u805A\u5408\u6839\u662F\u5426\u5B58\u5728\n   *\n   * \u68C0\u67E5\u6307\u5B9AID\u7684\u805A\u5408\u6839\u662F\u5426\u5728\u4E8B\u4EF6\u5B58\u50A8\u4E2D\u5B58\u5728\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   *\n   * @returns {Promise<boolean>} \u805A\u5408\u6839\u662F\u5426\u5B58\u5728\n   *\n   * @throws {EventStoreError} \u5F53\u68C0\u67E5\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  exists(aggregateId: string): Promise<boolean>;\n\n  /**\n   * \u83B7\u53D6\u805A\u5408\u6839\u7684\u5F53\u524D\u7248\u672C\u53F7\n   *\n   * \u83B7\u53D6\u6307\u5B9A\u805A\u5408\u6839\u7684\u5F53\u524D\u7248\u672C\u53F7\uFF0C\u7528\u4E8E\u4E50\u89C2\u9501\u63A7\u5236\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   *\n   * @returns {Promise<number>} \u5F53\u524D\u7248\u672C\u53F7\n   *\n   * @throws {EventStoreError} \u5F53\u68C0\u7D22\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  getVersion(aggregateId: string): Promise<number>;\n\n  /**\n   * \u5220\u9664\u805A\u5408\u6839\u7684\u6240\u6709\u4E8B\u4EF6\n   *\n   * \u5220\u9664\u6307\u5B9A\u805A\u5408\u6839\u7684\u6240\u6709\u4E8B\u4EF6\u548C\u5FEB\u7167\u3002\n   * \u6CE8\u610F\uFF1A\u6B64\u64CD\u4F5C\u4E0D\u53EF\u9006\uFF0C\u8BF7\u8C28\u614E\u4F7F\u7528\u3002\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   *\n   * @returns {Promise<void>} \u5220\u9664\u64CD\u4F5C\u7684Promise\n   *\n   * @throws {EventStoreError} \u5F53\u5220\u9664\u5931\u8D25\u65F6\u629B\u51FA\u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n   */\n  deleteAggregate(aggregateId: string): Promise<void>;\n}\n\n/**\n * \u5E76\u53D1\u9519\u8BEF\n *\n * \u5F53\u4E50\u89C2\u9501\u68C0\u67E5\u5931\u8D25\u65F6\u629B\u51FA\u6B64\u9519\u8BEF\uFF0C\u8868\u793A\u805A\u5408\u6839\u5DF2\u88AB\u5176\u4ED6\u64CD\u4F5C\u4FEE\u6539\u3002\n *\n * @class ConcurrencyError\n * @extends {Error}\n * @author AI\u5F00\u53D1\u56E2\u961F\n * @since 1.0.0\n */\nexport class ConcurrencyError extends Error {\n  /**\n   * \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   */\n  public readonly aggregateId: string;\n\n  /**\n   * \u671F\u671B\u7684\u7248\u672C\u53F7\n   */\n  public readonly expectedVersion: number;\n\n  /**\n   * \u5B9E\u9645\u7684\u7248\u672C\u53F7\n   */\n  public readonly actualVersion: number;\n\n  /**\n   * \u6784\u9020\u51FD\u6570\n   *\n   * @param {string} aggregateId - \u805A\u5408\u6839\u7684\u552F\u4E00\u6807\u8BC6\u7B26\n   * @param {number} expectedVersion - \u671F\u671B\u7684\u7248\u672C\u53F7\n   * @param {number} actualVersion - \u5B9E\u9645\u7684\u7248\u672C\u53F7\n   */\n  constructor(\n    aggregateId: string,\n    expectedVersion: number,\n    actualVersion: number,\n  ) {\n    super(\n      `\u805A\u5408\u6839 ${aggregateId} \u7684\u7248\u672C\u53F7\u4E0D\u5339\u914D\u3002\u671F\u671B\u7248\u672C: ${expectedVersion}, \u5B9E\u9645\u7248\u672C: ${actualVersion}`,\n    );\n    this.name = 'ConcurrencyError';\n    this.aggregateId = aggregateId;\n    this.expectedVersion = expectedVersion;\n    this.actualVersion = actualVersion;\n  }\n}\n\n/**\n * \u4E8B\u4EF6\u5B58\u50A8\u9519\u8BEF\n *\n * \u5F53\u4E8B\u4EF6\u5B58\u50A8\u64CD\u4F5C\u5931\u8D25\u65F6\u629B\u51FA\u6B64\u9519\u8BEF\u3002\n *\n * @class EventStoreError\n * @extends {Error}\n * @author AI\u5F00\u53D1\u56E2\u961F\n * @since 1.0.0\n */\nexport class EventStoreError extends Error {\n  /**\n   * \u9519\u8BEF\u4EE3\u7801\n   */\n  public readonly code: string;\n\n  /**\n   * \u6784\u9020\u51FD\u6570\n   *\n   * @param {string} message - \u9519\u8BEF\u6D88\u606F\n   * @param {string} [code='EVENT_STORE_ERROR'] - \u9519\u8BEF\u4EE3\u7801\n   * @param {Error} [cause] - \u539F\u59CB\u9519\u8BEF\uFF08\u53EF\u9009\uFF09\n   */\n  constructor(\n    message: string,\n    code: string = 'EVENT_STORE_ERROR',\n    cause?: Error,\n  ) {\n    super(message);\n    this.name = 'EventStoreError';\n    this.code = code;\n\n    if (cause) {\n      this.cause = cause;\n    }\n  }\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "d003dbd4b74f88aeb2254007a45aa7f1e826a458"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_5fbdvedjn = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_5fbdvedjn();
+cov_5fbdvedjn().s[0]++;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* istanbul ignore next */
+cov_5fbdvedjn().s[1]++;
+exports.EventStoreError = exports.ConcurrencyError = void 0;
+/**
+ * 并发错误
+ *
+ * 当乐观锁检查失败时抛出此错误，表示聚合根已被其他操作修改。
+ *
+ * @class ConcurrencyError
+ * @extends {Error}
+ * @author AI开发团队
+ * @since 1.0.0
+ */
+class ConcurrencyError extends Error {
+  /**
+   * 构造函数
+   *
+   * @param {string} aggregateId - 聚合根的唯一标识符
+   * @param {number} expectedVersion - 期望的版本号
+   * @param {number} actualVersion - 实际的版本号
+   */
+  constructor(aggregateId, expectedVersion, actualVersion) {
+    /* istanbul ignore next */
+    cov_5fbdvedjn().f[0]++;
+    cov_5fbdvedjn().s[2]++;
+    super(`聚合根 ${aggregateId} 的版本号不匹配。期望版本: ${expectedVersion}, 实际版本: ${actualVersion}`);
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[3]++;
+    this.name = 'ConcurrencyError';
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[4]++;
+    this.aggregateId = aggregateId;
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[5]++;
+    this.expectedVersion = expectedVersion;
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[6]++;
+    this.actualVersion = actualVersion;
+  }
+}
+/* istanbul ignore next */
+cov_5fbdvedjn().s[7]++;
+exports.ConcurrencyError = ConcurrencyError;
+/**
+ * 事件存储错误
+ *
+ * 当事件存储操作失败时抛出此错误。
+ *
+ * @class EventStoreError
+ * @extends {Error}
+ * @author AI开发团队
+ * @since 1.0.0
+ */
+class EventStoreError extends Error {
+  /**
+   * 构造函数
+   *
+   * @param {string} message - 错误消息
+   * @param {string} [code='EVENT_STORE_ERROR'] - 错误代码
+   * @param {Error} [cause] - 原始错误（可选）
+   */
+  constructor(message, code =
+  /* istanbul ignore next */
+  (cov_5fbdvedjn().b[0][0]++, 'EVENT_STORE_ERROR'), cause) {
+    /* istanbul ignore next */
+    cov_5fbdvedjn().f[1]++;
+    cov_5fbdvedjn().s[8]++;
+    super(message);
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[9]++;
+    this.name = 'EventStoreError';
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[10]++;
+    this.code = code;
+    /* istanbul ignore next */
+    cov_5fbdvedjn().s[11]++;
+    if (cause) {
+      /* istanbul ignore next */
+      cov_5fbdvedjn().b[1][0]++;
+      cov_5fbdvedjn().s[12]++;
+      this.cause = cause;
+    } else
+    /* istanbul ignore next */
+    {
+      cov_5fbdvedjn().b[1][1]++;
+    }
+  }
+}
+/* istanbul ignore next */
+cov_5fbdvedjn().s[13]++;
+exports.EventStoreError = EventStoreError;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJDb25jdXJyZW5jeUVycm9yIiwiRXJyb3IiLCJjb25zdHJ1Y3RvciIsImFnZ3JlZ2F0ZUlkIiwiZXhwZWN0ZWRWZXJzaW9uIiwiYWN0dWFsVmVyc2lvbiIsImNvdl81ZmJkdmVkam4iLCJmIiwicyIsIm5hbWUiLCJleHBvcnRzIiwiRXZlbnRTdG9yZUVycm9yIiwibWVzc2FnZSIsImNvZGUiLCJiIiwiY2F1c2UiXSwic291cmNlcyI6WyIvaG9tZS9hcmxpZ2xlL1YxL0Fpb2ZpeC9haW9maXgtYWktc2Fhcy1wbGF0Zm9ybS9wYWNrYWdlcy9jb3JlL3NyYy9kb21haW4vaW50ZXJmYWNlcy9ldmVudC1zdG9yZS5pbnRlcmZhY2UudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgSURvbWFpbkV2ZW50LCBJQWdncmVnYXRlU25hcHNob3QgfSBmcm9tICcuL2RvbWFpbi1ldmVudC5pbnRlcmZhY2UnO1xuXG4vKipcbiAqIOS6i+S7tuWtmOWCqOaOpeWPo1xuICpcbiAqIOS6i+S7tuWtmOWCqOaYr+S6i+S7tua6r+a6kOaetuaehOeahOaguOW/g+e7hOS7tu+8jOi0n+i0o+S6i+S7tueahOaMgeS5heWMluWSjOajgOe0ouOAglxuICog5omA5pyJ5LqL5Lu25a2Y5YKo5a6e546w6YO95b+F6aG75a6e546w5q2k5o6l5Y+j77yM56Gu5L+d5LqL5Lu25a2Y5YKo55qE5LiA6Ie05oCn5ZKM5Y+v6Z2g5oCn44CCXG4gKlxuICog5LqL5Lu25a2Y5YKo55qE5qC45b+D6IGM6LSj77yaXG4gKiAxLiDkv53lrZjogZrlkIjmoLnnmoTkuovku7bliLDmjIHkuYXljJblrZjlgqhcbiAqIDIuIOagueaNruiBmuWQiOaguUlE5qOA57Si5LqL5Lu25Y6G5Y+yXG4gKiAzLiDnrqHnkIbogZrlkIjmoLnnmoTlv6vnhadcbiAqIDQuIOaPkOS+m+S6i+S7tuafpeivouWSjOi/h+a7pOWKn+iDvVxuICogNS4g56Gu5L+d5LqL5Lu255qE5Y6f5a2Q5oCn5ZKM5LiA6Ie05oCnXG4gKlxuICogQGludGVyZmFjZSBJRXZlbnRTdG9yZVxuICogQGF1dGhvciBBSeW8gOWPkeWboumYn1xuICogQHNpbmNlIDEuMC4wXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgSUV2ZW50U3RvcmUge1xuICAvKipcbiAgICog5L+d5a2Y6IGa5ZCI5qC555qE5LqL5Lu2XG4gICAqXG4gICAqIOWwhuiBmuWQiOagueeahOacquaPkOS6pOS6i+S7tuS/neWtmOWIsOS6i+S7tuWtmOWCqOS4reOAglxuICAgKiDkvb/nlKjkuZDop4LplIHmnLrliLbnoa7kv53lubblj5HlronlhajjgIJcbiAgICpcbiAgICogQHBhcmFtIHtzdHJpbmd9IGFnZ3JlZ2F0ZUlkIC0g6IGa5ZCI5qC555qE5ZSv5LiA5qCH6K+G56ymXG4gICAqIEBwYXJhbSB7SURvbWFpbkV2ZW50W119IGV2ZW50cyAtIOimgeS/neWtmOeahOS6i+S7tuWIl+ihqFxuICAgKiBAcGFyYW0ge251bWJlcn0gZXhwZWN0ZWRWZXJzaW9uIC0g5pyf5pyb55qE54mI5pys5Y+377yI5LmQ6KeC6ZSB77yJXG4gICAqXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPHZvaWQ+fSDkv53lrZjmk43kvZznmoRQcm9taXNlXG4gICAqXG4gICAqIEB0aHJvd3Mge0NvbmN1cnJlbmN5RXJyb3J9IOW9k+eJiOacrOWPt+S4jeWMuemFjeaXtuaKm+WHuuW5tuWPkemUmeivr1xuICAgKiBAdGhyb3dzIHtFdmVudFN0b3JlRXJyb3J9IOW9k+S/neWtmOWksei0peaXtuaKm+WHuuS6i+S7tuWtmOWCqOmUmeivr1xuICAgKi9cbiAgc2F2ZUV2ZW50cyhcbiAgICBhZ2dyZWdhdGVJZDogc3RyaW5nLFxuICAgIGV2ZW50czogSURvbWFpbkV2ZW50W10sXG4gICAgZXhwZWN0ZWRWZXJzaW9uOiBudW1iZXIsXG4gICk6IFByb21pc2U8dm9pZD47XG5cbiAgLyoqXG4gICAqIOiOt+WPluiBmuWQiOagueeahOS6i+S7tuWOhuWPslxuICAgKlxuICAgKiDmoLnmja7ogZrlkIjmoLlJROiOt+WPluWFtuWujOaVtOeahOS6i+S7tuWOhuWPsuOAglxuICAgKiDkuovku7bmjInniYjmnKzlj7fljYfluo/mjpLliJfjgIJcbiAgICpcbiAgICogQHBhcmFtIHtzdHJpbmd9IGFnZ3JlZ2F0ZUlkIC0g6IGa5ZCI5qC555qE5ZSv5LiA5qCH6K+G56ymXG4gICAqIEBwYXJhbSB7bnVtYmVyfSBbZnJvbVZlcnNpb25dIC0g6LW35aeL54mI5pys5Y+377yI5Y+v6YCJ77yJXG4gICAqXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPElEb21haW5FdmVudFtdPn0g5LqL5Lu25Y6G5Y+y5YiX6KGoXG4gICAqXG4gICAqIEB0aHJvd3Mge0V2ZW50U3RvcmVFcnJvcn0g5b2T5qOA57Si5aSx6LSl5pe25oqb5Ye65LqL5Lu25a2Y5YKo6ZSZ6K+vXG4gICAqL1xuICBnZXRFdmVudHMoYWdncmVnYXRlSWQ6IHN0cmluZywgZnJvbVZlcnNpb24/OiBudW1iZXIpOiBQcm9taXNlPElEb21haW5FdmVudFtdPjtcblxuICAvKipcbiAgICog5qC55o2u5LqL5Lu257G75Z6L6I635Y+W5LqL5Lu2XG4gICAqXG4gICAqIOagueaNruS6i+S7tuexu+Wei+WSjOWPr+mAieeahOaXtumXtOiMg+WbtOiOt+WPluS6i+S7tuWIl+ihqOOAglxuICAgKiDnlKjkuo7kuovku7blpITnkIblkozmipXlvbHmm7TmlrDjgIJcbiAgICpcbiAgICogQHBhcmFtIHtzdHJpbmd9IGV2ZW50VHlwZSAtIOS6i+S7tuexu+Wei+WQjeensFxuICAgKiBAcGFyYW0ge0RhdGV9IFtmcm9tRGF0ZV0gLSDotbflp4vml7bpl7TvvIjlj6/pgInvvIlcbiAgICpcbiAgICogQHJldHVybnMge1Byb21pc2U8SURvbWFpbkV2ZW50W10+fSDljLnphY3nmoTkuovku7bliJfooahcbiAgICpcbiAgICogQHRocm93cyB7RXZlbnRTdG9yZUVycm9yfSDlvZPmo4DntKLlpLHotKXml7bmipvlh7rkuovku7blrZjlgqjplJnor69cbiAgICovXG4gIGdldEV2ZW50c0J5VHlwZShldmVudFR5cGU6IHN0cmluZywgZnJvbURhdGU/OiBEYXRlKTogUHJvbWlzZTxJRG9tYWluRXZlbnRbXT47XG5cbiAgLyoqXG4gICAqIOiOt+WPluiBmuWQiOagueeahOacgOaWsOW/q+eFp1xuICAgKlxuICAgKiDojrflj5bmjIflrprogZrlkIjmoLnnmoTmnIDmlrDlv6vnhafvvIznlKjkuo7kvJjljJbogZrlkIjph43lu7rmgKfog73jgIJcbiAgICpcbiAgICogQHBhcmFtIHtzdHJpbmd9IGFnZ3JlZ2F0ZUlkIC0g6IGa5ZCI5qC555qE5ZSv5LiA5qCH6K+G56ymXG4gICAqXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPElBZ2dyZWdhdGVTbmFwc2hvdCB8IG51bGw+fSDlv6vnhaflr7nosaHmiJZudWxsXG4gICAqXG4gICAqIEB0aHJvd3Mge0V2ZW50U3RvcmVFcnJvcn0g5b2T5qOA57Si5aSx6LSl5pe25oqb5Ye65LqL5Lu25a2Y5YKo6ZSZ6K+vXG4gICAqL1xuICBnZXRTbmFwc2hvdChhZ2dyZWdhdGVJZDogc3RyaW5nKTogUHJvbWlzZTxJQWdncmVnYXRlU25hcHNob3QgfCBudWxsPjtcblxuICAvKipcbiAgICog5L+d5a2Y6IGa5ZCI5qC555qE5b+r54WnXG4gICAqXG4gICAqIOWwhuiBmuWQiOagueeahOW/q+eFp+S/neWtmOWIsOS6i+S7tuWtmOWCqOS4re+8jOeUqOS6juaAp+iDveS8mOWMluOAglxuICAgKlxuICAgKiBAcGFyYW0ge0lBZ2dyZWdhdGVTbmFwc2hvdH0gc25hcHNob3QgLSDopoHkv53lrZjnmoTlv6vnhadcbiAgICpcbiAgICogQHJldHVybnMge1Byb21pc2U8dm9pZD59IOS/neWtmOaTjeS9nOeahFByb21pc2VcbiAgICpcbiAgICogQHRocm93cyB7RXZlbnRTdG9yZUVycm9yfSDlvZPkv53lrZjlpLHotKXml7bmipvlh7rkuovku7blrZjlgqjplJnor69cbiAgICovXG4gIHNhdmVTbmFwc2hvdChzbmFwc2hvdDogSUFnZ3JlZ2F0ZVNuYXBzaG90KTogUHJvbWlzZTx2b2lkPjtcblxuICAvKipcbiAgICog5qOA5p+l6IGa5ZCI5qC55piv5ZCm5a2Y5ZyoXG4gICAqXG4gICAqIOajgOafpeaMh+WumklE55qE6IGa5ZCI5qC55piv5ZCm5Zyo5LqL5Lu25a2Y5YKo5Lit5a2Y5Zyo44CCXG4gICAqXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBhZ2dyZWdhdGVJZCAtIOiBmuWQiOagueeahOWUr+S4gOagh+ivhuesplxuICAgKlxuICAgKiBAcmV0dXJucyB7UHJvbWlzZTxib29sZWFuPn0g6IGa5ZCI5qC55piv5ZCm5a2Y5ZyoXG4gICAqXG4gICAqIEB0aHJvd3Mge0V2ZW50U3RvcmVFcnJvcn0g5b2T5qOA5p+l5aSx6LSl5pe25oqb5Ye65LqL5Lu25a2Y5YKo6ZSZ6K+vXG4gICAqL1xuICBleGlzdHMoYWdncmVnYXRlSWQ6IHN0cmluZyk6IFByb21pc2U8Ym9vbGVhbj47XG5cbiAgLyoqXG4gICAqIOiOt+WPluiBmuWQiOagueeahOW9k+WJjeeJiOacrOWPt1xuICAgKlxuICAgKiDojrflj5bmjIflrprogZrlkIjmoLnnmoTlvZPliY3niYjmnKzlj7fvvIznlKjkuo7kuZDop4LplIHmjqfliLbjgIJcbiAgICpcbiAgICogQHBhcmFtIHtzdHJpbmd9IGFnZ3JlZ2F0ZUlkIC0g6IGa5ZCI5qC555qE5ZSv5LiA5qCH6K+G56ymXG4gICAqXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPG51bWJlcj59IOW9k+WJjeeJiOacrOWPt1xuICAgKlxuICAgKiBAdGhyb3dzIHtFdmVudFN0b3JlRXJyb3J9IOW9k+ajgOe0ouWksei0peaXtuaKm+WHuuS6i+S7tuWtmOWCqOmUmeivr1xuICAgKi9cbiAgZ2V0VmVyc2lvbihhZ2dyZWdhdGVJZDogc3RyaW5nKTogUHJvbWlzZTxudW1iZXI+O1xuXG4gIC8qKlxuICAgKiDliKDpmaTogZrlkIjmoLnnmoTmiYDmnInkuovku7ZcbiAgICpcbiAgICog5Yig6Zmk5oyH5a6a6IGa5ZCI5qC555qE5omA5pyJ5LqL5Lu25ZKM5b+r54Wn44CCXG4gICAqIOazqOaEj++8muatpOaTjeS9nOS4jeWPr+mAhu+8jOivt+iwqOaFjuS9v+eUqOOAglxuICAgKlxuICAgKiBAcGFyYW0ge3N0cmluZ30gYWdncmVnYXRlSWQgLSDogZrlkIjmoLnnmoTllK/kuIDmoIfor4bnrKZcbiAgICpcbiAgICogQHJldHVybnMge1Byb21pc2U8dm9pZD59IOWIoOmZpOaTjeS9nOeahFByb21pc2VcbiAgICpcbiAgICogQHRocm93cyB7RXZlbnRTdG9yZUVycm9yfSDlvZPliKDpmaTlpLHotKXml7bmipvlh7rkuovku7blrZjlgqjplJnor69cbiAgICovXG4gIGRlbGV0ZUFnZ3JlZ2F0ZShhZ2dyZWdhdGVJZDogc3RyaW5nKTogUHJvbWlzZTx2b2lkPjtcbn1cblxuLyoqXG4gKiDlubblj5HplJnor69cbiAqXG4gKiDlvZPkuZDop4LplIHmo4Dmn6XlpLHotKXml7bmipvlh7rmraTplJnor6/vvIzooajnpLrogZrlkIjmoLnlt7Looqvlhbbku5bmk43kvZzkv67mlLnjgIJcbiAqXG4gKiBAY2xhc3MgQ29uY3VycmVuY3lFcnJvclxuICogQGV4dGVuZHMge0Vycm9yfVxuICogQGF1dGhvciBBSeW8gOWPkeWboumYn1xuICogQHNpbmNlIDEuMC4wXG4gKi9cbmV4cG9ydCBjbGFzcyBDb25jdXJyZW5jeUVycm9yIGV4dGVuZHMgRXJyb3Ige1xuICAvKipcbiAgICog6IGa5ZCI5qC555qE5ZSv5LiA5qCH6K+G56ymXG4gICAqL1xuICBwdWJsaWMgcmVhZG9ubHkgYWdncmVnYXRlSWQ6IHN0cmluZztcblxuICAvKipcbiAgICog5pyf5pyb55qE54mI5pys5Y+3XG4gICAqL1xuICBwdWJsaWMgcmVhZG9ubHkgZXhwZWN0ZWRWZXJzaW9uOiBudW1iZXI7XG5cbiAgLyoqXG4gICAqIOWunumZheeahOeJiOacrOWPt1xuICAgKi9cbiAgcHVibGljIHJlYWRvbmx5IGFjdHVhbFZlcnNpb246IG51bWJlcjtcblxuICAvKipcbiAgICog5p6E6YCg5Ye95pWwXG4gICAqXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBhZ2dyZWdhdGVJZCAtIOiBmuWQiOagueeahOWUr+S4gOagh+ivhuesplxuICAgKiBAcGFyYW0ge251bWJlcn0gZXhwZWN0ZWRWZXJzaW9uIC0g5pyf5pyb55qE54mI5pys5Y+3XG4gICAqIEBwYXJhbSB7bnVtYmVyfSBhY3R1YWxWZXJzaW9uIC0g5a6e6ZmF55qE54mI5pys5Y+3XG4gICAqL1xuICBjb25zdHJ1Y3RvcihcbiAgICBhZ2dyZWdhdGVJZDogc3RyaW5nLFxuICAgIGV4cGVjdGVkVmVyc2lvbjogbnVtYmVyLFxuICAgIGFjdHVhbFZlcnNpb246IG51bWJlcixcbiAgKSB7XG4gICAgc3VwZXIoXG4gICAgICBg6IGa5ZCI5qC5ICR7YWdncmVnYXRlSWR9IOeahOeJiOacrOWPt+S4jeWMuemFjeOAguacn+acm+eJiOacrDogJHtleHBlY3RlZFZlcnNpb259LCDlrp7pmYXniYjmnKw6ICR7YWN0dWFsVmVyc2lvbn1gLFxuICAgICk7XG4gICAgdGhpcy5uYW1lID0gJ0NvbmN1cnJlbmN5RXJyb3InO1xuICAgIHRoaXMuYWdncmVnYXRlSWQgPSBhZ2dyZWdhdGVJZDtcbiAgICB0aGlzLmV4cGVjdGVkVmVyc2lvbiA9IGV4cGVjdGVkVmVyc2lvbjtcbiAgICB0aGlzLmFjdHVhbFZlcnNpb24gPSBhY3R1YWxWZXJzaW9uO1xuICB9XG59XG5cbi8qKlxuICog5LqL5Lu25a2Y5YKo6ZSZ6K+vXG4gKlxuICog5b2T5LqL5Lu25a2Y5YKo5pON5L2c5aSx6LSl5pe25oqb5Ye65q2k6ZSZ6K+v44CCXG4gKlxuICogQGNsYXNzIEV2ZW50U3RvcmVFcnJvclxuICogQGV4dGVuZHMge0Vycm9yfVxuICogQGF1dGhvciBBSeW8gOWPkeWboumYn1xuICogQHNpbmNlIDEuMC4wXG4gKi9cbmV4cG9ydCBjbGFzcyBFdmVudFN0b3JlRXJyb3IgZXh0ZW5kcyBFcnJvciB7XG4gIC8qKlxuICAgKiDplJnor6/ku6PnoIFcbiAgICovXG4gIHB1YmxpYyByZWFkb25seSBjb2RlOiBzdHJpbmc7XG5cbiAgLyoqXG4gICAqIOaehOmAoOWHveaVsFxuICAgKlxuICAgKiBAcGFyYW0ge3N0cmluZ30gbWVzc2FnZSAtIOmUmeivr+a2iOaBr1xuICAgKiBAcGFyYW0ge3N0cmluZ30gW2NvZGU9J0VWRU5UX1NUT1JFX0VSUk9SJ10gLSDplJnor6/ku6PnoIFcbiAgICogQHBhcmFtIHtFcnJvcn0gW2NhdXNlXSAtIOWOn+Wni+mUmeivr++8iOWPr+mAie+8iVxuICAgKi9cbiAgY29uc3RydWN0b3IoXG4gICAgbWVzc2FnZTogc3RyaW5nLFxuICAgIGNvZGU6IHN0cmluZyA9ICdFVkVOVF9TVE9SRV9FUlJPUicsXG4gICAgY2F1c2U/OiBFcnJvcixcbiAgKSB7XG4gICAgc3VwZXIobWVzc2FnZSk7XG4gICAgdGhpcy5uYW1lID0gJ0V2ZW50U3RvcmVFcnJvcic7XG4gICAgdGhpcy5jb2RlID0gY29kZTtcblxuICAgIGlmIChjYXVzZSkge1xuICAgICAgdGhpcy5jYXVzZSA9IGNhdXNlO1xuICAgIH1cbiAgfVxufVxuIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQTBJQTs7Ozs7Ozs7OztBQVVBLE1BQWFBLGdCQUFpQixTQUFRQyxLQUFLO0VBZ0J6Qzs7Ozs7OztFQU9BQyxZQUNFQyxXQUFtQixFQUNuQkMsZUFBdUIsRUFDdkJDLGFBQXFCO0lBQUE7SUFBQUMsYUFBQSxHQUFBQyxDQUFBO0lBQUFELGFBQUEsR0FBQUUsQ0FBQTtJQUVyQixLQUFLLENBQ0gsT0FBT0wsV0FBVyxrQkFBa0JDLGVBQWUsV0FBV0MsYUFBYSxFQUFFLENBQzlFO0lBQUM7SUFBQUMsYUFBQSxHQUFBRSxDQUFBO0lBQ0YsSUFBSSxDQUFDQyxJQUFJLEdBQUcsa0JBQWtCO0lBQUM7SUFBQUgsYUFBQSxHQUFBRSxDQUFBO0lBQy9CLElBQUksQ0FBQ0wsV0FBVyxHQUFHQSxXQUFXO0lBQUM7SUFBQUcsYUFBQSxHQUFBRSxDQUFBO0lBQy9CLElBQUksQ0FBQ0osZUFBZSxHQUFHQSxlQUFlO0lBQUM7SUFBQUUsYUFBQSxHQUFBRSxDQUFBO0lBQ3ZDLElBQUksQ0FBQ0gsYUFBYSxHQUFHQSxhQUFhO0VBQ3BDOztBQUNEO0FBQUFDLGFBQUEsR0FBQUUsQ0FBQTtBQXBDREUsT0FBQSxDQUFBVixnQkFBQSxHQUFBQSxnQkFBQTtBQXNDQTs7Ozs7Ozs7OztBQVVBLE1BQWFXLGVBQWdCLFNBQVFWLEtBQUs7RUFNeEM7Ozs7Ozs7RUFPQUMsWUFDRVUsT0FBZSxFQUNmQyxJQUFBO0VBQUE7RUFBQSxDQUFBUCxhQUFBLEdBQUFRLENBQUEsVUFBZSxtQkFBbUIsR0FDbENDLEtBQWE7SUFBQTtJQUFBVCxhQUFBLEdBQUFDLENBQUE7SUFBQUQsYUFBQSxHQUFBRSxDQUFBO0lBRWIsS0FBSyxDQUFDSSxPQUFPLENBQUM7SUFBQztJQUFBTixhQUFBLEdBQUFFLENBQUE7SUFDZixJQUFJLENBQUNDLElBQUksR0FBRyxpQkFBaUI7SUFBQztJQUFBSCxhQUFBLEdBQUFFLENBQUE7SUFDOUIsSUFBSSxDQUFDSyxJQUFJLEdBQUdBLElBQUk7SUFBQztJQUFBUCxhQUFBLEdBQUFFLENBQUE7SUFFakIsSUFBSU8sS0FBSyxFQUFFO01BQUE7TUFBQVQsYUFBQSxHQUFBUSxDQUFBO01BQUFSLGFBQUEsR0FBQUUsQ0FBQTtNQUNULElBQUksQ0FBQ08sS0FBSyxHQUFHQSxLQUFLO0lBQ3BCLENBQUM7SUFBQTtJQUFBO01BQUFULGFBQUEsR0FBQVEsQ0FBQTtJQUFBO0VBQ0g7O0FBQ0Q7QUFBQVIsYUFBQSxHQUFBRSxDQUFBO0FBMUJERSxPQUFBLENBQUFDLGVBQUEsR0FBQUEsZUFBQSIsImlnbm9yZUxpc3QiOltdfQ==

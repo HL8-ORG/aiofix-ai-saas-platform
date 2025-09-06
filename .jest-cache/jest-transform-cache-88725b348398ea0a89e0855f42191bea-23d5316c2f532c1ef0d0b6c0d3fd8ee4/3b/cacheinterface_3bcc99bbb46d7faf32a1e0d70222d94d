@@ -1,0 +1,344 @@
+be806e52eee2717d449918a6c0dc1f03
+"use strict";
+
+/* istanbul ignore next */
+function cov_29f0wdjbjk() {
+  var path = "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/interfaces/cache.interface.ts";
+  var hash = "f24dcff19471283df63d8b52d60e42882373e03f";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/interfaces/cache.interface.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 2,
+          column: 0
+        },
+        end: {
+          line: 2,
+          column: 62
+        }
+      },
+      "1": {
+        start: {
+          line: 3,
+          column: 0
+        },
+        end: {
+          line: 3,
+          column: 51
+        }
+      },
+      "2": {
+        start: {
+          line: 9,
+          column: 0
+        },
+        end: {
+          line: 13,
+          column: 54
+        }
+      },
+      "3": {
+        start: {
+          line: 10,
+          column: 4
+        },
+        end: {
+          line: 10,
+          column: 35
+        }
+      },
+      "4": {
+        start: {
+          line: 11,
+          column: 4
+        },
+        end: {
+          line: 11,
+          column: 33
+        }
+      },
+      "5": {
+        start: {
+          line: 12,
+          column: 4
+        },
+        end: {
+          line: 12,
+          column: 35
+        }
+      },
+      "6": {
+        start: {
+          line: 19,
+          column: 0
+        },
+        end: {
+          line: 24,
+          column: 66
+        }
+      },
+      "7": {
+        start: {
+          line: 20,
+          column: 4
+        },
+        end: {
+          line: 20,
+          column: 33
+        }
+      },
+      "8": {
+        start: {
+          line: 21,
+          column: 4
+        },
+        end: {
+          line: 21,
+          column: 33
+        }
+      },
+      "9": {
+        start: {
+          line: 22,
+          column: 4
+        },
+        end: {
+          line: 22,
+          column: 35
+        }
+      },
+      "10": {
+        start: {
+          line: 23,
+          column: 4
+        },
+        end: {
+          line: 23,
+          column: 33
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 9,
+            column: 1
+          },
+          end: {
+            line: 9,
+            column: 2
+          }
+        },
+        loc: {
+          start: {
+            line: 9,
+            column: 22
+          },
+          end: {
+            line: 13,
+            column: 1
+          }
+        },
+        line: 9
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 19,
+            column: 1
+          },
+          end: {
+            line: 19,
+            column: 2
+          }
+        },
+        loc: {
+          start: {
+            line: 19,
+            column: 26
+          },
+          end: {
+            line: 24,
+            column: 1
+          }
+        },
+        line: 19
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 13,
+            column: 3
+          },
+          end: {
+            line: 13,
+            column: 52
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 13,
+            column: 3
+          },
+          end: {
+            line: 13,
+            column: 12
+          }
+        }, {
+          start: {
+            line: 13,
+            column: 17
+          },
+          end: {
+            line: 13,
+            column: 51
+          }
+        }],
+        line: 13
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 24,
+            column: 3
+          },
+          end: {
+            line: 24,
+            column: 64
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 24,
+            column: 3
+          },
+          end: {
+            line: 24,
+            column: 16
+          }
+        }, {
+          start: {
+            line: 24,
+            column: 21
+          },
+          end: {
+            line: 24,
+            column: 63
+          }
+        }],
+        line: 24
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0
+    },
+    b: {
+      "0": [0, 0],
+      "1": [0, 0]
+    },
+    inputSourceMap: {
+      file: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/interfaces/cache.interface.ts",
+      mappings: ";;;AAAA;;;GAGG;AACH,IAAY,SAIX;AAJD,WAAY,SAAS;IACnB,8BAAiB,CAAA;IACjB,4BAAe,CAAA;IACf,8BAAiB,CAAA;AACnB,CAAC,EAJW,SAAS,yBAAT,SAAS,QAIpB;AAED;;;GAGG;AACH,IAAY,aAKX;AALD,WAAY,aAAa;IACvB,4BAAW,CAAA;IACX,4BAAW,CAAA;IACX,8BAAa,CAAA;IACb,4BAAW,CAAA;AACb,CAAC,EALW,aAAa,6BAAb,aAAa,QAKxB",
+      names: [],
+      sources: ["/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/interfaces/cache.interface.ts"],
+      sourcesContent: ["/**\n * @enum CacheType\n * @description \u7F13\u5B58\u7C7B\u578B\u679A\u4E3E\n */\nexport enum CacheType {\n  MEMORY = 'memory',\n  REDIS = 'redis',\n  HYBRID = 'hybrid',\n}\n\n/**\n * @enum CacheStrategy\n * @description \u7F13\u5B58\u7B56\u7565\u679A\u4E3E\n */\nexport enum CacheStrategy {\n  LRU = 'lru', // \u6700\u8FD1\u6700\u5C11\u4F7F\u7528\n  LFU = 'lfu', // \u6700\u5C11\u4F7F\u7528\u9891\u7387\n  FIFO = 'fifo', // \u5148\u8FDB\u5148\u51FA\n  TTL = 'ttl', // \u57FA\u4E8E\u65F6\u95F4\u8FC7\u671F\n}\n\n/**\n * @interface CacheOptions\n * @description \u7F13\u5B58\u9009\u9879\u63A5\u53E3\n */\nexport interface CacheOptions {\n  /** \u7F13\u5B58\u7C7B\u578B */\n  type: CacheType;\n  /** \u7F13\u5B58\u7B56\u7565 */\n  strategy: CacheStrategy;\n  /** \u9ED8\u8BA4\u8FC7\u671F\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  ttl?: number;\n  /** \u6700\u5927\u7F13\u5B58\u9879\u6570\u91CF */\n  maxSize?: number;\n  /** \u662F\u5426\u542F\u7528\u538B\u7F29 */\n  compress?: boolean;\n  /** \u662F\u5426\u542F\u7528\u52A0\u5BC6 */\n  encrypt?: boolean;\n  /** \u91CD\u8BD5\u6B21\u6570 */\n  retries?: number;\n  /** \u91CD\u8BD5\u5EF6\u8FDF\uFF08\u6BEB\u79D2\uFF09 */\n  retryDelay?: number;\n  /** \u8FDE\u63A5\u8D85\u65F6\uFF08\u6BEB\u79D2\uFF09 */\n  timeout?: number;\n}\n\n/**\n * @interface CacheKey\n * @description \u7F13\u5B58\u952E\u63A5\u53E3\n */\nexport interface CacheKey {\n  /** \u952E\u540D */\n  key: string;\n  /** \u547D\u540D\u7A7A\u95F4 */\n  namespace?: string;\n  /** \u7248\u672C\u53F7 */\n  version?: string;\n  /** \u79DF\u6237ID */\n  tenantId?: string;\n  /** \u7528\u6237ID */\n  userId?: string;\n  /** \u6807\u7B7E */\n  tags?: string[];\n}\n\n/**\n * @interface CacheValue<T>\n * @description \u7F13\u5B58\u503C\u63A5\u53E3\n */\nexport interface CacheValue<T = unknown> {\n  /** \u5B9E\u9645\u503C */\n  value: T;\n  /** \u521B\u5EFA\u65F6\u95F4 */\n  createdAt: number;\n  /** \u8FC7\u671F\u65F6\u95F4 */\n  expiresAt?: number;\n  /** \u8BBF\u95EE\u6B21\u6570 */\n  accessCount: number;\n  /** \u6700\u540E\u8BBF\u95EE\u65F6\u95F4 */\n  lastAccessed: number;\n  /** \u7248\u672C\u53F7 */\n  version?: string;\n  /** \u6807\u7B7E */\n  tags?: string[];\n  /** \u5143\u6570\u636E */\n  metadata?: Record<string, unknown>;\n}\n\n/**\n * @interface CacheEntry<T>\n * @description \u7F13\u5B58\u6761\u76EE\u63A5\u53E3\n */\nexport interface CacheEntry<T = unknown> {\n  /** \u7F13\u5B58\u952E */\n  key: CacheKey;\n  /** \u7F13\u5B58\u503C */\n  value: CacheValue<T>;\n  /** \u5927\u5C0F\uFF08\u5B57\u8282\uFF09 */\n  size: number;\n}\n\n/**\n * @interface CacheStats\n * @description \u7F13\u5B58\u7EDF\u8BA1\u63A5\u53E3\n */\nexport interface CacheStats {\n  /** \u603B\u6761\u76EE\u6570 */\n  totalEntries: number;\n  /** \u547D\u4E2D\u6B21\u6570 */\n  hits: number;\n  /** \u672A\u547D\u4E2D\u6B21\u6570 */\n  misses: number;\n  /** \u547D\u4E2D\u7387 */\n  hitRate: number;\n  /** \u603B\u5927\u5C0F\uFF08\u5B57\u8282\uFF09 */\n  totalSize: number;\n  /** \u5E73\u5747\u5927\u5C0F\uFF08\u5B57\u8282\uFF09 */\n  averageSize: number;\n  /** \u8FC7\u671F\u6761\u76EE\u6570 */\n  expiredEntries: number;\n  /** \u9A71\u9010\u6761\u76EE\u6570 */\n  evictedEntries: number;\n  /** \u6700\u540E\u91CD\u7F6E\u65F6\u95F4 */\n  lastReset: number;\n}\n\n/**\n * @interface CacheHealth\n * @description \u7F13\u5B58\u5065\u5EB7\u72B6\u6001\u63A5\u53E3\n */\nexport interface CacheHealth {\n  /** \u662F\u5426\u5065\u5EB7 */\n  healthy: boolean;\n  /** \u8FDE\u63A5\u72B6\u6001 */\n  connected: boolean;\n  /** \u54CD\u5E94\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  responseTime: number;\n  /** \u9519\u8BEF\u4FE1\u606F */\n  error?: string;\n  /** \u6700\u540E\u68C0\u67E5\u65F6\u95F4 */\n  lastCheck: number;\n}\n\n/**\n * @interface ICacheService\n * @description \u7F13\u5B58\u670D\u52A1\u63A5\u53E3\n */\nexport interface ICacheService {\n  /**\n   * @method get\n   * @description \u83B7\u53D6\u7F13\u5B58\u503C\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @returns {Promise<T | null>} \u7F13\u5B58\u503C\u6216null\n   */\n  get<T = unknown>(key: CacheKey): Promise<T | null>;\n\n  /**\n   * @method set\n   * @description \u8BBE\u7F6E\u7F13\u5B58\u503C\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @param {T} value \u7F13\u5B58\u503C\n   * @param {Partial<CacheOptions>} options \u7F13\u5B58\u9009\u9879\n   * @returns {Promise<boolean>} \u662F\u5426\u6210\u529F\n   */\n  set<T = unknown>(\n    key: CacheKey,\n    value: T,\n    options?: Partial<CacheOptions>,\n  ): Promise<boolean>;\n\n  /**\n   * @method delete\n   * @description \u5220\u9664\u7F13\u5B58\u503C\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @returns {Promise<boolean>} \u662F\u5426\u6210\u529F\n   */\n  delete(key: CacheKey): Promise<boolean>;\n\n  /**\n   * @method exists\n   * @description \u68C0\u67E5\u7F13\u5B58\u952E\u662F\u5426\u5B58\u5728\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @returns {Promise<boolean>} \u662F\u5426\u5B58\u5728\n   */\n  exists(key: CacheKey): Promise<boolean>;\n\n  /**\n   * @method clear\n   * @description \u6E05\u7A7A\u7F13\u5B58\n   * @param {string} namespace \u547D\u540D\u7A7A\u95F4\uFF08\u53EF\u9009\uFF09\n   * @returns {Promise<boolean>} \u662F\u5426\u6210\u529F\n   */\n  clear(namespace?: string): Promise<boolean>;\n\n  /**\n   * @method getStats\n   * @description \u83B7\u53D6\u7F13\u5B58\u7EDF\u8BA1\n   * @returns {Promise<CacheStats>} \u7F13\u5B58\u7EDF\u8BA1\n   */\n  getStats(): Promise<CacheStats>;\n\n  /**\n   * @method getHealth\n   * @description \u83B7\u53D6\u7F13\u5B58\u5065\u5EB7\u72B6\u6001\n   * @returns {Promise<CacheHealth>} \u7F13\u5B58\u5065\u5EB7\u72B6\u6001\n   */\n  getHealth(): Promise<CacheHealth>;\n\n  /**\n   * @method resetStats\n   * @description \u91CD\u7F6E\u7F13\u5B58\u7EDF\u8BA1\n   * @returns {Promise<void>}\n   */\n  resetStats(): Promise<void>;\n}\n\n/**\n * @interface ICacheManager\n * @description \u7F13\u5B58\u7BA1\u7406\u5668\u63A5\u53E3\n */\nexport interface ICacheManager {\n  /**\n   * @method getCache\n   * @description \u83B7\u53D6\u7F13\u5B58\u670D\u52A1\u5B9E\u4F8B\n   * @param {CacheType} type \u7F13\u5B58\u7C7B\u578B\n   * @returns {ICacheService} \u7F13\u5B58\u670D\u52A1\u5B9E\u4F8B\n   */\n  getCache(type: CacheType): ICacheService;\n\n  /**\n   * @method setDefaultCache\n   * @description \u8BBE\u7F6E\u9ED8\u8BA4\u7F13\u5B58\u7C7B\u578B\n   * @param {CacheType} type \u7F13\u5B58\u7C7B\u578B\n   * @returns {void}\n   */\n  setDefaultCache(type: CacheType): void;\n\n  /**\n   * @method getDefaultCache\n   * @description \u83B7\u53D6\u9ED8\u8BA4\u7F13\u5B58\u670D\u52A1\n   * @returns {ICacheService} \u9ED8\u8BA4\u7F13\u5B58\u670D\u52A1\n   */\n  getDefaultCache(): ICacheService;\n\n  /**\n   * @method registerCache\n   * @description \u6CE8\u518C\u7F13\u5B58\u670D\u52A1\n   * @param {CacheType} type \u7F13\u5B58\u7C7B\u578B\n   * @param {ICacheService} service \u7F13\u5B58\u670D\u52A1\n   * @returns {void}\n   */\n  registerCache(type: CacheType, service: ICacheService): void;\n\n  /**\n   * @method unregisterCache\n   * @description \u6CE8\u9500\u7F13\u5B58\u670D\u52A1\n   * @param {CacheType} type \u7F13\u5B58\u7C7B\u578B\n   * @returns {boolean} \u662F\u5426\u6210\u529F\n   */\n  unregisterCache(type: CacheType): boolean;\n\n  /**\n   * @method getAllCaches\n   * @description \u83B7\u53D6\u6240\u6709\u7F13\u5B58\u670D\u52A1\n   * @returns {Map<CacheType, ICacheService>} \u7F13\u5B58\u670D\u52A1\u6620\u5C04\n   */\n  getAllCaches(): Map<CacheType, ICacheService>;\n\n  /**\n   * @method getStats\n   * @description \u83B7\u53D6\u6240\u6709\u7F13\u5B58\u7EDF\u8BA1\n   * @returns {Promise<Map<CacheType, CacheStats>>} \u7F13\u5B58\u7EDF\u8BA1\u6620\u5C04\n   */\n  getStats(): Promise<Map<CacheType, CacheStats>>;\n\n  /**\n   * @method getHealth\n   * @description \u83B7\u53D6\u6240\u6709\u7F13\u5B58\u5065\u5EB7\u72B6\u6001\n   * @returns {Promise<Map<CacheType, CacheHealth>>} \u7F13\u5B58\u5065\u5EB7\u72B6\u6001\u6620\u5C04\n   */\n  getHealth(): Promise<Map<CacheType, CacheHealth>>;\n}\n\n/**\n * @interface ICacheKeyFactory\n * @description \u7F13\u5B58\u952E\u5DE5\u5382\u63A5\u53E3\n */\nexport interface ICacheKeyFactory {\n  /**\n   * @method create\n   * @description \u521B\u5EFA\u7F13\u5B58\u952E\n   * @param {string} key \u57FA\u7840\u952E\u540D\n   * @param {Partial<CacheKey>} options \u952E\u9009\u9879\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  create(key: string, options?: Partial<CacheKey>): CacheKey;\n\n  /**\n   * @method createNamespace\n   * @description \u521B\u5EFA\u547D\u540D\u7A7A\u95F4\u952E\n   * @param {string} namespace \u547D\u540D\u7A7A\u95F4\n   * @param {string} key \u952E\u540D\n   * @param {Partial<CacheKey>} options \u952E\u9009\u9879\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  createNamespace(\n    namespace: string,\n    key: string,\n    options?: Partial<CacheKey>,\n  ): CacheKey;\n\n  /**\n   * @method createTenant\n   * @description \u521B\u5EFA\u79DF\u6237\u952E\n   * @param {string} tenantId \u79DF\u6237ID\n   * @param {string} key \u952E\u540D\n   * @param {Partial<CacheKey>} options \u952E\u9009\u9879\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  createTenant(\n    tenantId: string,\n    key: string,\n    options?: Partial<CacheKey>,\n  ): CacheKey;\n\n  /**\n   * @method createUser\n   * @description \u521B\u5EFA\u7528\u6237\u952E\n   * @param {string} userId \u7528\u6237ID\n   * @param {string} key \u952E\u540D\n   * @param {Partial<CacheKey>} options \u952E\u9009\u9879\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  createUser(\n    userId: string,\n    key: string,\n    options?: Partial<CacheKey>,\n  ): CacheKey;\n\n  /**\n   * @method createTagged\n   * @description \u521B\u5EFA\u5E26\u6807\u7B7E\u7684\u952E\n   * @param {string} key \u952E\u540D\n   * @param {string[]} tags \u6807\u7B7E\u6570\u7EC4\n   * @param {Partial<CacheKey>} options \u952E\u9009\u9879\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  createTagged(\n    key: string,\n    tags: string[],\n    options?: Partial<CacheKey>,\n  ): CacheKey;\n\n  /**\n   * @method toString\n   * @description \u5C06\u7F13\u5B58\u952E\u8F6C\u6362\u4E3A\u5B57\u7B26\u4E32\n   * @param {CacheKey} cacheKey \u7F13\u5B58\u952E\n   * @returns {string} \u5B57\u7B26\u4E32\u5F62\u5F0F\u7684\u952E\n   */\n  toString(cacheKey: CacheKey): string;\n\n  /**\n   * @method parse\n   * @description \u89E3\u6790\u5B57\u7B26\u4E32\u4E3A\u7F13\u5B58\u952E\n   * @param {string} keyString \u952E\u5B57\u7B26\u4E32\n   * @returns {CacheKey} \u7F13\u5B58\u952E\n   */\n  parse(keyString: string): CacheKey;\n}\n\n/**\n * @interface ICacheInvalidationService\n * @description \u7F13\u5B58\u5931\u6548\u670D\u52A1\u63A5\u53E3\n */\nexport interface ICacheInvalidationService {\n  /**\n   * @method invalidateByKey\n   * @description \u6839\u636E\u952E\u5931\u6548\u7F13\u5B58\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @returns {Promise<boolean>} \u662F\u5426\u6210\u529F\n   */\n  invalidateByKey(key: CacheKey): Promise<boolean>;\n\n  /**\n   * @method invalidateByNamespace\n   * @description \u6839\u636E\u547D\u540D\u7A7A\u95F4\u5931\u6548\u7F13\u5B58\n   * @param {string} namespace \u547D\u540D\u7A7A\u95F4\n   * @returns {Promise<number>} \u5931\u6548\u7684\u6761\u76EE\u6570\n   */\n  invalidateByNamespace(namespace: string): Promise<number>;\n\n  /**\n   * @method invalidateByTenant\n   * @description \u6839\u636E\u79DF\u6237\u5931\u6548\u7F13\u5B58\n   * @param {string} tenantId \u79DF\u6237ID\n   * @returns {Promise<number>} \u5931\u6548\u7684\u6761\u76EE\u6570\n   */\n  invalidateByTenant(tenantId: string): Promise<number>;\n\n  /**\n   * @method invalidateByUser\n   * @description \u6839\u636E\u7528\u6237\u5931\u6548\u7F13\u5B58\n   * @param {string} userId \u7528\u6237ID\n   * @returns {Promise<number>} \u5931\u6548\u7684\u6761\u76EE\u6570\n   */\n  invalidateByUser(userId: string): Promise<number>;\n\n  /**\n   * @method invalidateByTags\n   * @description \u6839\u636E\u6807\u7B7E\u5931\u6548\u7F13\u5B58\n   * @param {string[]} tags \u6807\u7B7E\u6570\u7EC4\n   * @returns {Promise<number>} \u5931\u6548\u7684\u6761\u76EE\u6570\n   */\n  invalidateByTags(tags: string[]): Promise<number>;\n\n  /**\n   * @method invalidateByPattern\n   * @description \u6839\u636E\u6A21\u5F0F\u5931\u6548\u7F13\u5B58\n   * @param {string} pattern \u6A21\u5F0F\u5B57\u7B26\u4E32\n   * @returns {Promise<number>} \u5931\u6548\u7684\u6761\u76EE\u6570\n   */\n  invalidateByPattern(pattern: string): Promise<number>;\n\n  /**\n   * @method scheduleInvalidation\n   * @description \u8BA1\u5212\u5931\u6548\u7F13\u5B58\n   * @param {CacheKey} key \u7F13\u5B58\u952E\n   * @param {number} delay \u5EF6\u8FDF\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09\n   * @returns {Promise<string>} \u8BA1\u5212ID\n   */\n  scheduleInvalidation(key: CacheKey, delay: number): Promise<string>;\n\n  /**\n   * @method cancelScheduledInvalidation\n   * @description \u53D6\u6D88\u8BA1\u5212\u5931\u6548\n   * @param {string} scheduleId \u8BA1\u5212ID\n   * @returns {Promise<boolean>} \u662F\u5426\u6210\u529F\n   */\n  cancelScheduledInvalidation(scheduleId: string): Promise<boolean>;\n}\n\n/**\n * @interface RedisConfig\n * @description Redis\u914D\u7F6E\u63A5\u53E3\n */\nexport interface RedisConfig {\n  /** Redis\u4E3B\u673A\u5730\u5740 */\n  host: string;\n  /** Redis\u7AEF\u53E3 */\n  port: number;\n  /** Redis\u5BC6\u7801 */\n  password?: string;\n  /** \u6570\u636E\u5E93\u7D22\u5F15 */\n  db?: number;\n  /** \u8FDE\u63A5\u8D85\u65F6\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  connectTimeout?: number;\n  /** \u547D\u4EE4\u8D85\u65F6\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  commandTimeout?: number;\n  /** \u91CD\u8BD5\u6B21\u6570 */\n  retries?: number;\n  /** \u91CD\u8BD5\u5EF6\u8FDF\uFF08\u6BEB\u79D2\uFF09 */\n  retryDelay?: number;\n  /** \u662F\u5426\u542F\u7528\u96C6\u7FA4\u6A21\u5F0F */\n  cluster?: boolean;\n  /** \u96C6\u7FA4\u8282\u70B9 */\n  nodes?: Array<{ host: string; port: number }>;\n  /** \u662F\u5426\u542F\u7528\u54E8\u5175\u6A21\u5F0F */\n  sentinel?: boolean;\n  /** \u54E8\u5175\u914D\u7F6E */\n  sentinels?: Array<{ host: string; port: number }>;\n  /** \u4E3B\u8282\u70B9\u540D\u79F0 */\n  name?: string;\n}\n\n/**\n * @interface MemoryCacheConfig\n * @description \u5185\u5B58\u7F13\u5B58\u914D\u7F6E\u63A5\u53E3\n */\nexport interface MemoryCacheConfig {\n  /** \u9ED8\u8BA4\u8FC7\u671F\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  defaultTtl?: number;\n  /** \u6700\u5927\u7F13\u5B58\u9879\u6570\u91CF */\n  maxSize?: number;\n  /** \u9ED8\u8BA4\u7F13\u5B58\u7B56\u7565 */\n  defaultStrategy?: CacheStrategy;\n  /** \u6E05\u7406\u95F4\u9694\uFF08\u6BEB\u79D2\uFF09 */\n  cleanupInterval?: number;\n  /** \u662F\u5426\u542F\u7528\u538B\u7F29 */\n  enableCompression?: boolean;\n  /** \u662F\u5426\u542F\u7528\u52A0\u5BC6 */\n  enableEncryption?: boolean;\n}\n\n/**\n * @interface CacheManagerConfig\n * @description \u7F13\u5B58\u7BA1\u7406\u5668\u914D\u7F6E\u63A5\u53E3\n */\nexport interface CacheManagerConfig {\n  /** \u9ED8\u8BA4\u7F13\u5B58\u9009\u9879 */\n  defaultOptions?: CacheOptions;\n  /** \u9ED8\u8BA4\u7F13\u5B58\u7B56\u7565 */\n  defaultStrategy?: CacheStrategy;\n  /** \u662F\u5426\u542F\u7528\u7F13\u5B58 */\n  enabled?: boolean;\n  /** \u7F13\u5B58\u5C42\u914D\u7F6E */\n  layers?: CacheLayerConfig[];\n  /** \u76D1\u63A7\u95F4\u9694\uFF08\u6BEB\u79D2\uFF09 */\n  monitoringInterval?: number;\n  /** \u81EA\u52A8\u6E05\u7406\u95F4\u9694\uFF08\u6BEB\u79D2\uFF09 */\n  cleanupInterval?: number;\n  /** \u6700\u5927\u7F13\u5B58\u5927\u5C0F */\n  maxSize?: number;\n  /** \u662F\u5426\u542F\u7528\u7EDF\u8BA1 */\n  enableStats?: boolean;\n  /** \u662F\u5426\u542F\u7528\u4E8B\u4EF6 */\n  enableEvents?: boolean;\n}\n\n/**\n * @interface CacheLayerConfig\n * @description \u7F13\u5B58\u5C42\u914D\u7F6E\u63A5\u53E3\n */\nexport interface CacheLayerConfig {\n  /** \u7F13\u5B58\u5C42\u540D\u79F0 */\n  name: string;\n  /** \u7F13\u5B58\u5C42\u4F18\u5148\u7EA7\uFF08\u6570\u5B57\u8D8A\u5C0F\u4F18\u5148\u7EA7\u8D8A\u9AD8\uFF09 */\n  priority: number;\n  /** \u7F13\u5B58\u670D\u52A1\u5B9E\u4F8B */\n  service: ICacheService | null;\n  /** \u7F13\u5B58\u5C42\u9009\u9879 */\n  options?: CacheOptions;\n  /** \u662F\u5426\u542F\u7528 */\n  enabled?: boolean;\n  /** \u662F\u5426\u53EA\u8BFB */\n  readOnly?: boolean;\n  /** \u662F\u5426\u4F5C\u4E3A\u540E\u5907\u7F13\u5B58 */\n  fallback?: boolean;\n}\n\n/**\n * @interface CacheInvalidationConfig\n * @description \u7F13\u5B58\u5931\u6548\u670D\u52A1\u914D\u7F6E\u63A5\u53E3\n */\nexport interface CacheInvalidationConfig {\n  /** \u662F\u5426\u542F\u7528\u81EA\u52A8\u5931\u6548 */\n  enabled?: boolean;\n  /** \u9ED8\u8BA4\u5931\u6548\u7B56\u7565 */\n  defaultStrategy?: string;\n  /** \u6279\u91CF\u5931\u6548\u5927\u5C0F */\n  batchSize?: number;\n  /** \u5E76\u53D1\u5931\u6548\u6570 */\n  concurrency?: number;\n  /** \u8D85\u65F6\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  timeout?: number;\n  /** \u91CD\u8BD5\u6B21\u6570 */\n  retries?: number;\n  /** \u91CD\u8BD5\u5EF6\u8FDF\uFF08\u6BEB\u79D2\uFF09 */\n  retryDelay?: number;\n  /** \u662F\u5426\u542F\u7528\u7EDF\u8BA1 */\n  enableStats?: boolean;\n  /** \u662F\u5426\u542F\u7528\u4E8B\u4EF6 */\n  enableEvents?: boolean;\n  /** \u76D1\u63A7\u95F4\u9694\uFF08\u6BEB\u79D2\uFF09 */\n  monitoringInterval?: number;\n}\n\n/**\n * @interface InvalidationResult\n * @description \u7F13\u5B58\u5931\u6548\u7ED3\u679C\u63A5\u53E3\uFF0C\u5B9A\u4E49\u5931\u6548\u64CD\u4F5C\u7684\u7ED3\u679C\u4FE1\u606F\u3002\n */\nexport interface InvalidationResult {\n  /** \u5931\u6548\u7684\u952E\u6570\u91CF */\n  invalidatedKeys: number;\n  /** \u5931\u6548\u7684\u547D\u540D\u7A7A\u95F4\u6570\u91CF */\n  invalidatedNamespaces: number;\n  /** \u5931\u6548\u7684\u6807\u7B7E\u6570\u91CF */\n  invalidatedTags: number;\n  /** \u5931\u6548\u7684\u952E\u5217\u8868 */\n  keys: string[];\n  /** \u5931\u6548\u7684\u547D\u540D\u7A7A\u95F4\u5217\u8868 */\n  namespaces: string[];\n  /** \u5931\u6548\u7684\u6807\u7B7E\u5217\u8868 */\n  tags: string[];\n  /** \u5931\u6548\u65F6\u95F4 */\n  invalidatedAt: Date;\n  /** \u6267\u884C\u65F6\u95F4\uFF08\u6BEB\u79D2\uFF09 */\n  executionTime: number;\n  /** \u662F\u5426\u6210\u529F */\n  success: boolean;\n  /** \u9519\u8BEF\u4FE1\u606F */\n  error?: string;\n  /** \u5143\u6570\u636E */\n  metadata?: Record<string, unknown>;\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "f24dcff19471283df63d8b52d60e42882373e03f"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_29f0wdjbjk = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_29f0wdjbjk();
+cov_29f0wdjbjk().s[0]++;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* istanbul ignore next */
+cov_29f0wdjbjk().s[1]++;
+exports.CacheStrategy = exports.CacheType = void 0;
+/**
+ * @enum CacheType
+ * @description 缓存类型枚举
+ */
+var CacheType;
+/* istanbul ignore next */
+cov_29f0wdjbjk().s[2]++;
+(function (CacheType) {
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().f[0]++;
+  cov_29f0wdjbjk().s[3]++;
+  CacheType["MEMORY"] = "memory";
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().s[4]++;
+  CacheType["REDIS"] = "redis";
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().s[5]++;
+  CacheType["HYBRID"] = "hybrid";
+})(
+/* istanbul ignore next */
+(cov_29f0wdjbjk().b[0][0]++, CacheType) ||
+/* istanbul ignore next */
+(cov_29f0wdjbjk().b[0][1]++, exports.CacheType = CacheType = {}));
+/**
+ * @enum CacheStrategy
+ * @description 缓存策略枚举
+ */
+var CacheStrategy;
+/* istanbul ignore next */
+cov_29f0wdjbjk().s[6]++;
+(function (CacheStrategy) {
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().f[1]++;
+  cov_29f0wdjbjk().s[7]++;
+  CacheStrategy["LRU"] = "lru";
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().s[8]++;
+  CacheStrategy["LFU"] = "lfu";
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().s[9]++;
+  CacheStrategy["FIFO"] = "fifo";
+  /* istanbul ignore next */
+  cov_29f0wdjbjk().s[10]++;
+  CacheStrategy["TTL"] = "ttl";
+})(
+/* istanbul ignore next */
+(cov_29f0wdjbjk().b[1][0]++, CacheStrategy) ||
+/* istanbul ignore next */
+(cov_29f0wdjbjk().b[1][1]++, exports.CacheStrategy = CacheStrategy = {}));
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJDYWNoZVR5cGUiLCJjb3ZfMjlmMHdkamJqayIsInMiLCJmIiwiYiIsImV4cG9ydHMiLCJDYWNoZVN0cmF0ZWd5Il0sInNvdXJjZXMiOlsiL2hvbWUvYXJsaWdsZS9WMS9BaW9maXgvYWlvZml4LWFpLXNhYXMtcGxhdGZvcm0vcGFja2FnZXMvY2FjaGUvc3JjL2ludGVyZmFjZXMvY2FjaGUuaW50ZXJmYWNlLnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQGVudW0gQ2FjaGVUeXBlXG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y57G75Z6L5p6a5Li+XG4gKi9cbmV4cG9ydCBlbnVtIENhY2hlVHlwZSB7XG4gIE1FTU9SWSA9ICdtZW1vcnknLFxuICBSRURJUyA9ICdyZWRpcycsXG4gIEhZQlJJRCA9ICdoeWJyaWQnLFxufVxuXG4vKipcbiAqIEBlbnVtIENhY2hlU3RyYXRlZ3lcbiAqIEBkZXNjcmlwdGlvbiDnvJPlrZjnrZbnlaXmnprkuL5cbiAqL1xuZXhwb3J0IGVudW0gQ2FjaGVTdHJhdGVneSB7XG4gIExSVSA9ICdscnUnLCAvLyDmnIDov5HmnIDlsJHkvb/nlKhcbiAgTEZVID0gJ2xmdScsIC8vIOacgOWwkeS9v+eUqOmikeeOh1xuICBGSUZPID0gJ2ZpZm8nLCAvLyDlhYjov5vlhYjlh7pcbiAgVFRMID0gJ3R0bCcsIC8vIOWfuuS6juaXtumXtOi/h+acn1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgQ2FjaGVPcHRpb25zXG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y6YCJ6aG55o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgQ2FjaGVPcHRpb25zIHtcbiAgLyoqIOe8k+WtmOexu+WeiyAqL1xuICB0eXBlOiBDYWNoZVR5cGU7XG4gIC8qKiDnvJPlrZjnrZbnlaUgKi9cbiAgc3RyYXRlZ3k6IENhY2hlU3RyYXRlZ3k7XG4gIC8qKiDpu5jorqTov4fmnJ/ml7bpl7TvvIjmr6vnp5LvvIkgKi9cbiAgdHRsPzogbnVtYmVyO1xuICAvKiog5pyA5aSn57yT5a2Y6aG55pWw6YePICovXG4gIG1heFNpemU/OiBudW1iZXI7XG4gIC8qKiDmmK/lkKblkK/nlKjljovnvKkgKi9cbiAgY29tcHJlc3M/OiBib29sZWFuO1xuICAvKiog5piv5ZCm5ZCv55So5Yqg5a+GICovXG4gIGVuY3J5cHQ/OiBib29sZWFuO1xuICAvKiog6YeN6K+V5qyh5pWwICovXG4gIHJldHJpZXM/OiBudW1iZXI7XG4gIC8qKiDph43or5Xlu7bov5/vvIjmr6vnp5LvvIkgKi9cbiAgcmV0cnlEZWxheT86IG51bWJlcjtcbiAgLyoqIOi/nuaOpei2heaXtu+8iOavq+enku+8iSAqL1xuICB0aW1lb3V0PzogbnVtYmVyO1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgQ2FjaGVLZXlcbiAqIEBkZXNjcmlwdGlvbiDnvJPlrZjplK7mjqXlj6NcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBDYWNoZUtleSB7XG4gIC8qKiDplK7lkI0gKi9cbiAga2V5OiBzdHJpbmc7XG4gIC8qKiDlkb3lkI3nqbrpl7QgKi9cbiAgbmFtZXNwYWNlPzogc3RyaW5nO1xuICAvKiog54mI5pys5Y+3ICovXG4gIHZlcnNpb24/OiBzdHJpbmc7XG4gIC8qKiDnp5/miLdJRCAqL1xuICB0ZW5hbnRJZD86IHN0cmluZztcbiAgLyoqIOeUqOaIt0lEICovXG4gIHVzZXJJZD86IHN0cmluZztcbiAgLyoqIOagh+etviAqL1xuICB0YWdzPzogc3RyaW5nW107XG59XG5cbi8qKlxuICogQGludGVyZmFjZSBDYWNoZVZhbHVlPFQ+XG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y5YC85o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgQ2FjaGVWYWx1ZTxUID0gdW5rbm93bj4ge1xuICAvKiog5a6e6ZmF5YC8ICovXG4gIHZhbHVlOiBUO1xuICAvKiog5Yib5bu65pe26Ze0ICovXG4gIGNyZWF0ZWRBdDogbnVtYmVyO1xuICAvKiog6L+H5pyf5pe26Ze0ICovXG4gIGV4cGlyZXNBdD86IG51bWJlcjtcbiAgLyoqIOiuv+mXruasoeaVsCAqL1xuICBhY2Nlc3NDb3VudDogbnVtYmVyO1xuICAvKiog5pyA5ZCO6K6/6Zeu5pe26Ze0ICovXG4gIGxhc3RBY2Nlc3NlZDogbnVtYmVyO1xuICAvKiog54mI5pys5Y+3ICovXG4gIHZlcnNpb24/OiBzdHJpbmc7XG4gIC8qKiDmoIfnrb4gKi9cbiAgdGFncz86IHN0cmluZ1tdO1xuICAvKiog5YWD5pWw5o2uICovXG4gIG1ldGFkYXRhPzogUmVjb3JkPHN0cmluZywgdW5rbm93bj47XG59XG5cbi8qKlxuICogQGludGVyZmFjZSBDYWNoZUVudHJ5PFQ+XG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y5p2h55uu5o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgQ2FjaGVFbnRyeTxUID0gdW5rbm93bj4ge1xuICAvKiog57yT5a2Y6ZSuICovXG4gIGtleTogQ2FjaGVLZXk7XG4gIC8qKiDnvJPlrZjlgLwgKi9cbiAgdmFsdWU6IENhY2hlVmFsdWU8VD47XG4gIC8qKiDlpKflsI/vvIjlrZfoioLvvIkgKi9cbiAgc2l6ZTogbnVtYmVyO1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgQ2FjaGVTdGF0c1xuICogQGRlc2NyaXB0aW9uIOe8k+WtmOe7n+iuoeaOpeWPo1xuICovXG5leHBvcnQgaW50ZXJmYWNlIENhY2hlU3RhdHMge1xuICAvKiog5oC75p2h55uu5pWwICovXG4gIHRvdGFsRW50cmllczogbnVtYmVyO1xuICAvKiog5ZG95Lit5qyh5pWwICovXG4gIGhpdHM6IG51bWJlcjtcbiAgLyoqIOacquWRveS4reasoeaVsCAqL1xuICBtaXNzZXM6IG51bWJlcjtcbiAgLyoqIOWRveS4reeOhyAqL1xuICBoaXRSYXRlOiBudW1iZXI7XG4gIC8qKiDmgLvlpKflsI/vvIjlrZfoioLvvIkgKi9cbiAgdG90YWxTaXplOiBudW1iZXI7XG4gIC8qKiDlubPlnYflpKflsI/vvIjlrZfoioLvvIkgKi9cbiAgYXZlcmFnZVNpemU6IG51bWJlcjtcbiAgLyoqIOi/h+acn+adoeebruaVsCAqL1xuICBleHBpcmVkRW50cmllczogbnVtYmVyO1xuICAvKiog6amx6YCQ5p2h55uu5pWwICovXG4gIGV2aWN0ZWRFbnRyaWVzOiBudW1iZXI7XG4gIC8qKiDmnIDlkI7ph43nva7ml7bpl7QgKi9cbiAgbGFzdFJlc2V0OiBudW1iZXI7XG59XG5cbi8qKlxuICogQGludGVyZmFjZSBDYWNoZUhlYWx0aFxuICogQGRlc2NyaXB0aW9uIOe8k+WtmOWBpeW6t+eKtuaAgeaOpeWPo1xuICovXG5leHBvcnQgaW50ZXJmYWNlIENhY2hlSGVhbHRoIHtcbiAgLyoqIOaYr+WQpuWBpeW6tyAqL1xuICBoZWFsdGh5OiBib29sZWFuO1xuICAvKiog6L+e5o6l54q25oCBICovXG4gIGNvbm5lY3RlZDogYm9vbGVhbjtcbiAgLyoqIOWTjeW6lOaXtumXtO+8iOavq+enku+8iSAqL1xuICByZXNwb25zZVRpbWU6IG51bWJlcjtcbiAgLyoqIOmUmeivr+S/oeaBryAqL1xuICBlcnJvcj86IHN0cmluZztcbiAgLyoqIOacgOWQjuajgOafpeaXtumXtCAqL1xuICBsYXN0Q2hlY2s6IG51bWJlcjtcbn1cblxuLyoqXG4gKiBAaW50ZXJmYWNlIElDYWNoZVNlcnZpY2VcbiAqIEBkZXNjcmlwdGlvbiDnvJPlrZjmnI3liqHmjqXlj6NcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBJQ2FjaGVTZXJ2aWNlIHtcbiAgLyoqXG4gICAqIEBtZXRob2QgZ2V0XG4gICAqIEBkZXNjcmlwdGlvbiDojrflj5bnvJPlrZjlgLxcbiAgICogQHBhcmFtIHtDYWNoZUtleX0ga2V5IOe8k+WtmOmUrlxuICAgKiBAcmV0dXJucyB7UHJvbWlzZTxUIHwgbnVsbD59IOe8k+WtmOWAvOaIlm51bGxcbiAgICovXG4gIGdldDxUID0gdW5rbm93bj4oa2V5OiBDYWNoZUtleSk6IFByb21pc2U8VCB8IG51bGw+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIHNldFxuICAgKiBAZGVzY3JpcHRpb24g6K6+572u57yT5a2Y5YC8XG4gICAqIEBwYXJhbSB7Q2FjaGVLZXl9IGtleSDnvJPlrZjplK5cbiAgICogQHBhcmFtIHtUfSB2YWx1ZSDnvJPlrZjlgLxcbiAgICogQHBhcmFtIHtQYXJ0aWFsPENhY2hlT3B0aW9ucz59IG9wdGlvbnMg57yT5a2Y6YCJ6aG5XG4gICAqIEByZXR1cm5zIHtQcm9taXNlPGJvb2xlYW4+fSDmmK/lkKbmiJDlip9cbiAgICovXG4gIHNldDxUID0gdW5rbm93bj4oXG4gICAga2V5OiBDYWNoZUtleSxcbiAgICB2YWx1ZTogVCxcbiAgICBvcHRpb25zPzogUGFydGlhbDxDYWNoZU9wdGlvbnM+LFxuICApOiBQcm9taXNlPGJvb2xlYW4+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGRlbGV0ZVxuICAgKiBAZGVzY3JpcHRpb24g5Yig6Zmk57yT5a2Y5YC8XG4gICAqIEBwYXJhbSB7Q2FjaGVLZXl9IGtleSDnvJPlrZjplK5cbiAgICogQHJldHVybnMge1Byb21pc2U8Ym9vbGVhbj59IOaYr+WQpuaIkOWKn1xuICAgKi9cbiAgZGVsZXRlKGtleTogQ2FjaGVLZXkpOiBQcm9taXNlPGJvb2xlYW4+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGV4aXN0c1xuICAgKiBAZGVzY3JpcHRpb24g5qOA5p+l57yT5a2Y6ZSu5piv5ZCm5a2Y5ZyoXG4gICAqIEBwYXJhbSB7Q2FjaGVLZXl9IGtleSDnvJPlrZjplK5cbiAgICogQHJldHVybnMge1Byb21pc2U8Ym9vbGVhbj59IOaYr+WQpuWtmOWcqFxuICAgKi9cbiAgZXhpc3RzKGtleTogQ2FjaGVLZXkpOiBQcm9taXNlPGJvb2xlYW4+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGNsZWFyXG4gICAqIEBkZXNjcmlwdGlvbiDmuIXnqbrnvJPlrZhcbiAgICogQHBhcmFtIHtzdHJpbmd9IG5hbWVzcGFjZSDlkb3lkI3nqbrpl7TvvIjlj6/pgInvvIlcbiAgICogQHJldHVybnMge1Byb21pc2U8Ym9vbGVhbj59IOaYr+WQpuaIkOWKn1xuICAgKi9cbiAgY2xlYXIobmFtZXNwYWNlPzogc3RyaW5nKTogUHJvbWlzZTxib29sZWFuPjtcblxuICAvKipcbiAgICogQG1ldGhvZCBnZXRTdGF0c1xuICAgKiBAZGVzY3JpcHRpb24g6I635Y+W57yT5a2Y57uf6K6hXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPENhY2hlU3RhdHM+fSDnvJPlrZjnu5/orqFcbiAgICovXG4gIGdldFN0YXRzKCk6IFByb21pc2U8Q2FjaGVTdGF0cz47XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgZ2V0SGVhbHRoXG4gICAqIEBkZXNjcmlwdGlvbiDojrflj5bnvJPlrZjlgaXlurfnirbmgIFcbiAgICogQHJldHVybnMge1Byb21pc2U8Q2FjaGVIZWFsdGg+fSDnvJPlrZjlgaXlurfnirbmgIFcbiAgICovXG4gIGdldEhlYWx0aCgpOiBQcm9taXNlPENhY2hlSGVhbHRoPjtcblxuICAvKipcbiAgICogQG1ldGhvZCByZXNldFN0YXRzXG4gICAqIEBkZXNjcmlwdGlvbiDph43nva7nvJPlrZjnu5/orqFcbiAgICogQHJldHVybnMge1Byb21pc2U8dm9pZD59XG4gICAqL1xuICByZXNldFN0YXRzKCk6IFByb21pc2U8dm9pZD47XG59XG5cbi8qKlxuICogQGludGVyZmFjZSBJQ2FjaGVNYW5hZ2VyXG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y566h55CG5Zmo5o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgSUNhY2hlTWFuYWdlciB7XG4gIC8qKlxuICAgKiBAbWV0aG9kIGdldENhY2hlXG4gICAqIEBkZXNjcmlwdGlvbiDojrflj5bnvJPlrZjmnI3liqHlrp7kvotcbiAgICogQHBhcmFtIHtDYWNoZVR5cGV9IHR5cGUg57yT5a2Y57G75Z6LXG4gICAqIEByZXR1cm5zIHtJQ2FjaGVTZXJ2aWNlfSDnvJPlrZjmnI3liqHlrp7kvotcbiAgICovXG4gIGdldENhY2hlKHR5cGU6IENhY2hlVHlwZSk6IElDYWNoZVNlcnZpY2U7XG5cbiAgLyoqXG4gICAqIEBtZXRob2Qgc2V0RGVmYXVsdENhY2hlXG4gICAqIEBkZXNjcmlwdGlvbiDorr7nva7pu5jorqTnvJPlrZjnsbvlnotcbiAgICogQHBhcmFtIHtDYWNoZVR5cGV9IHR5cGUg57yT5a2Y57G75Z6LXG4gICAqIEByZXR1cm5zIHt2b2lkfVxuICAgKi9cbiAgc2V0RGVmYXVsdENhY2hlKHR5cGU6IENhY2hlVHlwZSk6IHZvaWQ7XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgZ2V0RGVmYXVsdENhY2hlXG4gICAqIEBkZXNjcmlwdGlvbiDojrflj5bpu5jorqTnvJPlrZjmnI3liqFcbiAgICogQHJldHVybnMge0lDYWNoZVNlcnZpY2V9IOm7mOiupOe8k+WtmOacjeWKoVxuICAgKi9cbiAgZ2V0RGVmYXVsdENhY2hlKCk6IElDYWNoZVNlcnZpY2U7XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgcmVnaXN0ZXJDYWNoZVxuICAgKiBAZGVzY3JpcHRpb24g5rOo5YaM57yT5a2Y5pyN5YqhXG4gICAqIEBwYXJhbSB7Q2FjaGVUeXBlfSB0eXBlIOe8k+WtmOexu+Wei1xuICAgKiBAcGFyYW0ge0lDYWNoZVNlcnZpY2V9IHNlcnZpY2Ug57yT5a2Y5pyN5YqhXG4gICAqIEByZXR1cm5zIHt2b2lkfVxuICAgKi9cbiAgcmVnaXN0ZXJDYWNoZSh0eXBlOiBDYWNoZVR5cGUsIHNlcnZpY2U6IElDYWNoZVNlcnZpY2UpOiB2b2lkO1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIHVucmVnaXN0ZXJDYWNoZVxuICAgKiBAZGVzY3JpcHRpb24g5rOo6ZSA57yT5a2Y5pyN5YqhXG4gICAqIEBwYXJhbSB7Q2FjaGVUeXBlfSB0eXBlIOe8k+WtmOexu+Wei1xuICAgKiBAcmV0dXJucyB7Ym9vbGVhbn0g5piv5ZCm5oiQ5YqfXG4gICAqL1xuICB1bnJlZ2lzdGVyQ2FjaGUodHlwZTogQ2FjaGVUeXBlKTogYm9vbGVhbjtcblxuICAvKipcbiAgICogQG1ldGhvZCBnZXRBbGxDYWNoZXNcbiAgICogQGRlc2NyaXB0aW9uIOiOt+WPluaJgOaciee8k+WtmOacjeWKoVxuICAgKiBAcmV0dXJucyB7TWFwPENhY2hlVHlwZSwgSUNhY2hlU2VydmljZT59IOe8k+WtmOacjeWKoeaYoOWwhFxuICAgKi9cbiAgZ2V0QWxsQ2FjaGVzKCk6IE1hcDxDYWNoZVR5cGUsIElDYWNoZVNlcnZpY2U+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGdldFN0YXRzXG4gICAqIEBkZXNjcmlwdGlvbiDojrflj5bmiYDmnInnvJPlrZjnu5/orqFcbiAgICogQHJldHVybnMge1Byb21pc2U8TWFwPENhY2hlVHlwZSwgQ2FjaGVTdGF0cz4+fSDnvJPlrZjnu5/orqHmmKDlsIRcbiAgICovXG4gIGdldFN0YXRzKCk6IFByb21pc2U8TWFwPENhY2hlVHlwZSwgQ2FjaGVTdGF0cz4+O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGdldEhlYWx0aFxuICAgKiBAZGVzY3JpcHRpb24g6I635Y+W5omA5pyJ57yT5a2Y5YGl5bq354q25oCBXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPE1hcDxDYWNoZVR5cGUsIENhY2hlSGVhbHRoPj59IOe8k+WtmOWBpeW6t+eKtuaAgeaYoOWwhFxuICAgKi9cbiAgZ2V0SGVhbHRoKCk6IFByb21pc2U8TWFwPENhY2hlVHlwZSwgQ2FjaGVIZWFsdGg+Pjtcbn1cblxuLyoqXG4gKiBAaW50ZXJmYWNlIElDYWNoZUtleUZhY3RvcnlcbiAqIEBkZXNjcmlwdGlvbiDnvJPlrZjplK7lt6XljoLmjqXlj6NcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBJQ2FjaGVLZXlGYWN0b3J5IHtcbiAgLyoqXG4gICAqIEBtZXRob2QgY3JlYXRlXG4gICAqIEBkZXNjcmlwdGlvbiDliJvlu7rnvJPlrZjplK5cbiAgICogQHBhcmFtIHtzdHJpbmd9IGtleSDln7rnoYDplK7lkI1cbiAgICogQHBhcmFtIHtQYXJ0aWFsPENhY2hlS2V5Pn0gb3B0aW9ucyDplK7pgInpoblcbiAgICogQHJldHVybnMge0NhY2hlS2V5fSDnvJPlrZjplK5cbiAgICovXG4gIGNyZWF0ZShrZXk6IHN0cmluZywgb3B0aW9ucz86IFBhcnRpYWw8Q2FjaGVLZXk+KTogQ2FjaGVLZXk7XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgY3JlYXRlTmFtZXNwYWNlXG4gICAqIEBkZXNjcmlwdGlvbiDliJvlu7rlkb3lkI3nqbrpl7TplK5cbiAgICogQHBhcmFtIHtzdHJpbmd9IG5hbWVzcGFjZSDlkb3lkI3nqbrpl7RcbiAgICogQHBhcmFtIHtzdHJpbmd9IGtleSDplK7lkI1cbiAgICogQHBhcmFtIHtQYXJ0aWFsPENhY2hlS2V5Pn0gb3B0aW9ucyDplK7pgInpoblcbiAgICogQHJldHVybnMge0NhY2hlS2V5fSDnvJPlrZjplK5cbiAgICovXG4gIGNyZWF0ZU5hbWVzcGFjZShcbiAgICBuYW1lc3BhY2U6IHN0cmluZyxcbiAgICBrZXk6IHN0cmluZyxcbiAgICBvcHRpb25zPzogUGFydGlhbDxDYWNoZUtleT4sXG4gICk6IENhY2hlS2V5O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGNyZWF0ZVRlbmFudFxuICAgKiBAZGVzY3JpcHRpb24g5Yib5bu656ef5oi36ZSuXG4gICAqIEBwYXJhbSB7c3RyaW5nfSB0ZW5hbnRJZCDnp5/miLdJRFxuICAgKiBAcGFyYW0ge3N0cmluZ30ga2V5IOmUruWQjVxuICAgKiBAcGFyYW0ge1BhcnRpYWw8Q2FjaGVLZXk+fSBvcHRpb25zIOmUrumAiemhuVxuICAgKiBAcmV0dXJucyB7Q2FjaGVLZXl9IOe8k+WtmOmUrlxuICAgKi9cbiAgY3JlYXRlVGVuYW50KFxuICAgIHRlbmFudElkOiBzdHJpbmcsXG4gICAga2V5OiBzdHJpbmcsXG4gICAgb3B0aW9ucz86IFBhcnRpYWw8Q2FjaGVLZXk+LFxuICApOiBDYWNoZUtleTtcblxuICAvKipcbiAgICogQG1ldGhvZCBjcmVhdGVVc2VyXG4gICAqIEBkZXNjcmlwdGlvbiDliJvlu7rnlKjmiLfplK5cbiAgICogQHBhcmFtIHtzdHJpbmd9IHVzZXJJZCDnlKjmiLdJRFxuICAgKiBAcGFyYW0ge3N0cmluZ30ga2V5IOmUruWQjVxuICAgKiBAcGFyYW0ge1BhcnRpYWw8Q2FjaGVLZXk+fSBvcHRpb25zIOmUrumAiemhuVxuICAgKiBAcmV0dXJucyB7Q2FjaGVLZXl9IOe8k+WtmOmUrlxuICAgKi9cbiAgY3JlYXRlVXNlcihcbiAgICB1c2VySWQ6IHN0cmluZyxcbiAgICBrZXk6IHN0cmluZyxcbiAgICBvcHRpb25zPzogUGFydGlhbDxDYWNoZUtleT4sXG4gICk6IENhY2hlS2V5O1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGNyZWF0ZVRhZ2dlZFxuICAgKiBAZGVzY3JpcHRpb24g5Yib5bu65bim5qCH562+55qE6ZSuXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBrZXkg6ZSu5ZCNXG4gICAqIEBwYXJhbSB7c3RyaW5nW119IHRhZ3Mg5qCH562+5pWw57uEXG4gICAqIEBwYXJhbSB7UGFydGlhbDxDYWNoZUtleT59IG9wdGlvbnMg6ZSu6YCJ6aG5XG4gICAqIEByZXR1cm5zIHtDYWNoZUtleX0g57yT5a2Y6ZSuXG4gICAqL1xuICBjcmVhdGVUYWdnZWQoXG4gICAga2V5OiBzdHJpbmcsXG4gICAgdGFnczogc3RyaW5nW10sXG4gICAgb3B0aW9ucz86IFBhcnRpYWw8Q2FjaGVLZXk+LFxuICApOiBDYWNoZUtleTtcblxuICAvKipcbiAgICogQG1ldGhvZCB0b1N0cmluZ1xuICAgKiBAZGVzY3JpcHRpb24g5bCG57yT5a2Y6ZSu6L2s5o2i5Li65a2X56ym5LiyXG4gICAqIEBwYXJhbSB7Q2FjaGVLZXl9IGNhY2hlS2V5IOe8k+WtmOmUrlxuICAgKiBAcmV0dXJucyB7c3RyaW5nfSDlrZfnrKbkuLLlvaLlvI/nmoTplK5cbiAgICovXG4gIHRvU3RyaW5nKGNhY2hlS2V5OiBDYWNoZUtleSk6IHN0cmluZztcblxuICAvKipcbiAgICogQG1ldGhvZCBwYXJzZVxuICAgKiBAZGVzY3JpcHRpb24g6Kej5p6Q5a2X56ym5Liy5Li657yT5a2Y6ZSuXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBrZXlTdHJpbmcg6ZSu5a2X56ym5LiyXG4gICAqIEByZXR1cm5zIHtDYWNoZUtleX0g57yT5a2Y6ZSuXG4gICAqL1xuICBwYXJzZShrZXlTdHJpbmc6IHN0cmluZyk6IENhY2hlS2V5O1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgSUNhY2hlSW52YWxpZGF0aW9uU2VydmljZVxuICogQGRlc2NyaXB0aW9uIOe8k+WtmOWkseaViOacjeWKoeaOpeWPo1xuICovXG5leHBvcnQgaW50ZXJmYWNlIElDYWNoZUludmFsaWRhdGlvblNlcnZpY2Uge1xuICAvKipcbiAgICogQG1ldGhvZCBpbnZhbGlkYXRlQnlLZXlcbiAgICogQGRlc2NyaXB0aW9uIOagueaNrumUruWkseaViOe8k+WtmFxuICAgKiBAcGFyYW0ge0NhY2hlS2V5fSBrZXkg57yT5a2Y6ZSuXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPGJvb2xlYW4+fSDmmK/lkKbmiJDlip9cbiAgICovXG4gIGludmFsaWRhdGVCeUtleShrZXk6IENhY2hlS2V5KTogUHJvbWlzZTxib29sZWFuPjtcblxuICAvKipcbiAgICogQG1ldGhvZCBpbnZhbGlkYXRlQnlOYW1lc3BhY2VcbiAgICogQGRlc2NyaXB0aW9uIOagueaNruWRveWQjeepuumXtOWkseaViOe8k+WtmFxuICAgKiBAcGFyYW0ge3N0cmluZ30gbmFtZXNwYWNlIOWRveWQjeepuumXtFxuICAgKiBAcmV0dXJucyB7UHJvbWlzZTxudW1iZXI+fSDlpLHmlYjnmoTmnaHnm67mlbBcbiAgICovXG4gIGludmFsaWRhdGVCeU5hbWVzcGFjZShuYW1lc3BhY2U6IHN0cmluZyk6IFByb21pc2U8bnVtYmVyPjtcblxuICAvKipcbiAgICogQG1ldGhvZCBpbnZhbGlkYXRlQnlUZW5hbnRcbiAgICogQGRlc2NyaXB0aW9uIOagueaNruenn+aIt+WkseaViOe8k+WtmFxuICAgKiBAcGFyYW0ge3N0cmluZ30gdGVuYW50SWQg56ef5oi3SURcbiAgICogQHJldHVybnMge1Byb21pc2U8bnVtYmVyPn0g5aSx5pWI55qE5p2h55uu5pWwXG4gICAqL1xuICBpbnZhbGlkYXRlQnlUZW5hbnQodGVuYW50SWQ6IHN0cmluZyk6IFByb21pc2U8bnVtYmVyPjtcblxuICAvKipcbiAgICogQG1ldGhvZCBpbnZhbGlkYXRlQnlVc2VyXG4gICAqIEBkZXNjcmlwdGlvbiDmoLnmja7nlKjmiLflpLHmlYjnvJPlrZhcbiAgICogQHBhcmFtIHtzdHJpbmd9IHVzZXJJZCDnlKjmiLdJRFxuICAgKiBAcmV0dXJucyB7UHJvbWlzZTxudW1iZXI+fSDlpLHmlYjnmoTmnaHnm67mlbBcbiAgICovXG4gIGludmFsaWRhdGVCeVVzZXIodXNlcklkOiBzdHJpbmcpOiBQcm9taXNlPG51bWJlcj47XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgaW52YWxpZGF0ZUJ5VGFnc1xuICAgKiBAZGVzY3JpcHRpb24g5qC55o2u5qCH562+5aSx5pWI57yT5a2YXG4gICAqIEBwYXJhbSB7c3RyaW5nW119IHRhZ3Mg5qCH562+5pWw57uEXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPG51bWJlcj59IOWkseaViOeahOadoeebruaVsFxuICAgKi9cbiAgaW52YWxpZGF0ZUJ5VGFncyh0YWdzOiBzdHJpbmdbXSk6IFByb21pc2U8bnVtYmVyPjtcblxuICAvKipcbiAgICogQG1ldGhvZCBpbnZhbGlkYXRlQnlQYXR0ZXJuXG4gICAqIEBkZXNjcmlwdGlvbiDmoLnmja7mqKHlvI/lpLHmlYjnvJPlrZhcbiAgICogQHBhcmFtIHtzdHJpbmd9IHBhdHRlcm4g5qih5byP5a2X56ym5LiyXG4gICAqIEByZXR1cm5zIHtQcm9taXNlPG51bWJlcj59IOWkseaViOeahOadoeebruaVsFxuICAgKi9cbiAgaW52YWxpZGF0ZUJ5UGF0dGVybihwYXR0ZXJuOiBzdHJpbmcpOiBQcm9taXNlPG51bWJlcj47XG5cbiAgLyoqXG4gICAqIEBtZXRob2Qgc2NoZWR1bGVJbnZhbGlkYXRpb25cbiAgICogQGRlc2NyaXB0aW9uIOiuoeWIkuWkseaViOe8k+WtmFxuICAgKiBAcGFyYW0ge0NhY2hlS2V5fSBrZXkg57yT5a2Y6ZSuXG4gICAqIEBwYXJhbSB7bnVtYmVyfSBkZWxheSDlu7bov5/ml7bpl7TvvIjmr6vnp5LvvIlcbiAgICogQHJldHVybnMge1Byb21pc2U8c3RyaW5nPn0g6K6h5YiSSURcbiAgICovXG4gIHNjaGVkdWxlSW52YWxpZGF0aW9uKGtleTogQ2FjaGVLZXksIGRlbGF5OiBudW1iZXIpOiBQcm9taXNlPHN0cmluZz47XG5cbiAgLyoqXG4gICAqIEBtZXRob2QgY2FuY2VsU2NoZWR1bGVkSW52YWxpZGF0aW9uXG4gICAqIEBkZXNjcmlwdGlvbiDlj5bmtojorqHliJLlpLHmlYhcbiAgICogQHBhcmFtIHtzdHJpbmd9IHNjaGVkdWxlSWQg6K6h5YiSSURcbiAgICogQHJldHVybnMge1Byb21pc2U8Ym9vbGVhbj59IOaYr+WQpuaIkOWKn1xuICAgKi9cbiAgY2FuY2VsU2NoZWR1bGVkSW52YWxpZGF0aW9uKHNjaGVkdWxlSWQ6IHN0cmluZyk6IFByb21pc2U8Ym9vbGVhbj47XG59XG5cbi8qKlxuICogQGludGVyZmFjZSBSZWRpc0NvbmZpZ1xuICogQGRlc2NyaXB0aW9uIFJlZGlz6YWN572u5o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgUmVkaXNDb25maWcge1xuICAvKiogUmVkaXPkuLvmnLrlnLDlnYAgKi9cbiAgaG9zdDogc3RyaW5nO1xuICAvKiogUmVkaXPnq6/lj6MgKi9cbiAgcG9ydDogbnVtYmVyO1xuICAvKiogUmVkaXPlr4bnoIEgKi9cbiAgcGFzc3dvcmQ/OiBzdHJpbmc7XG4gIC8qKiDmlbDmja7lupPntKLlvJUgKi9cbiAgZGI/OiBudW1iZXI7XG4gIC8qKiDov57mjqXotoXml7bml7bpl7TvvIjmr6vnp5LvvIkgKi9cbiAgY29ubmVjdFRpbWVvdXQ/OiBudW1iZXI7XG4gIC8qKiDlkb3ku6TotoXml7bml7bpl7TvvIjmr6vnp5LvvIkgKi9cbiAgY29tbWFuZFRpbWVvdXQ/OiBudW1iZXI7XG4gIC8qKiDph43or5XmrKHmlbAgKi9cbiAgcmV0cmllcz86IG51bWJlcjtcbiAgLyoqIOmHjeivleW7tui/n++8iOavq+enku+8iSAqL1xuICByZXRyeURlbGF5PzogbnVtYmVyO1xuICAvKiog5piv5ZCm5ZCv55So6ZuG576k5qih5byPICovXG4gIGNsdXN0ZXI/OiBib29sZWFuO1xuICAvKiog6ZuG576k6IqC54K5ICovXG4gIG5vZGVzPzogQXJyYXk8eyBob3N0OiBzdHJpbmc7IHBvcnQ6IG51bWJlciB9PjtcbiAgLyoqIOaYr+WQpuWQr+eUqOWTqOWFteaooeW8jyAqL1xuICBzZW50aW5lbD86IGJvb2xlYW47XG4gIC8qKiDlk6jlhbXphY3nva4gKi9cbiAgc2VudGluZWxzPzogQXJyYXk8eyBob3N0OiBzdHJpbmc7IHBvcnQ6IG51bWJlciB9PjtcbiAgLyoqIOS4u+iKgueCueWQjeensCAqL1xuICBuYW1lPzogc3RyaW5nO1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgTWVtb3J5Q2FjaGVDb25maWdcbiAqIEBkZXNjcmlwdGlvbiDlhoXlrZjnvJPlrZjphY3nva7mjqXlj6NcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBNZW1vcnlDYWNoZUNvbmZpZyB7XG4gIC8qKiDpu5jorqTov4fmnJ/ml7bpl7TvvIjmr6vnp5LvvIkgKi9cbiAgZGVmYXVsdFR0bD86IG51bWJlcjtcbiAgLyoqIOacgOWkp+e8k+WtmOmhueaVsOmHjyAqL1xuICBtYXhTaXplPzogbnVtYmVyO1xuICAvKiog6buY6K6k57yT5a2Y562W55WlICovXG4gIGRlZmF1bHRTdHJhdGVneT86IENhY2hlU3RyYXRlZ3k7XG4gIC8qKiDmuIXnkIbpl7TpmpTvvIjmr6vnp5LvvIkgKi9cbiAgY2xlYW51cEludGVydmFsPzogbnVtYmVyO1xuICAvKiog5piv5ZCm5ZCv55So5Y6L57ypICovXG4gIGVuYWJsZUNvbXByZXNzaW9uPzogYm9vbGVhbjtcbiAgLyoqIOaYr+WQpuWQr+eUqOWKoOWvhiAqL1xuICBlbmFibGVFbmNyeXB0aW9uPzogYm9vbGVhbjtcbn1cblxuLyoqXG4gKiBAaW50ZXJmYWNlIENhY2hlTWFuYWdlckNvbmZpZ1xuICogQGRlc2NyaXB0aW9uIOe8k+WtmOeuoeeQhuWZqOmFjee9ruaOpeWPo1xuICovXG5leHBvcnQgaW50ZXJmYWNlIENhY2hlTWFuYWdlckNvbmZpZyB7XG4gIC8qKiDpu5jorqTnvJPlrZjpgInpobkgKi9cbiAgZGVmYXVsdE9wdGlvbnM/OiBDYWNoZU9wdGlvbnM7XG4gIC8qKiDpu5jorqTnvJPlrZjnrZbnlaUgKi9cbiAgZGVmYXVsdFN0cmF0ZWd5PzogQ2FjaGVTdHJhdGVneTtcbiAgLyoqIOaYr+WQpuWQr+eUqOe8k+WtmCAqL1xuICBlbmFibGVkPzogYm9vbGVhbjtcbiAgLyoqIOe8k+WtmOWxgumFjee9riAqL1xuICBsYXllcnM/OiBDYWNoZUxheWVyQ29uZmlnW107XG4gIC8qKiDnm5Hmjqfpl7TpmpTvvIjmr6vnp5LvvIkgKi9cbiAgbW9uaXRvcmluZ0ludGVydmFsPzogbnVtYmVyO1xuICAvKiog6Ieq5Yqo5riF55CG6Ze06ZqU77yI5q+r56eS77yJICovXG4gIGNsZWFudXBJbnRlcnZhbD86IG51bWJlcjtcbiAgLyoqIOacgOWkp+e8k+WtmOWkp+WwjyAqL1xuICBtYXhTaXplPzogbnVtYmVyO1xuICAvKiog5piv5ZCm5ZCv55So57uf6K6hICovXG4gIGVuYWJsZVN0YXRzPzogYm9vbGVhbjtcbiAgLyoqIOaYr+WQpuWQr+eUqOS6i+S7tiAqL1xuICBlbmFibGVFdmVudHM/OiBib29sZWFuO1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgQ2FjaGVMYXllckNvbmZpZ1xuICogQGRlc2NyaXB0aW9uIOe8k+WtmOWxgumFjee9ruaOpeWPo1xuICovXG5leHBvcnQgaW50ZXJmYWNlIENhY2hlTGF5ZXJDb25maWcge1xuICAvKiog57yT5a2Y5bGC5ZCN56ewICovXG4gIG5hbWU6IHN0cmluZztcbiAgLyoqIOe8k+WtmOWxguS8mOWFiOe6p++8iOaVsOWtl+i2iuWwj+S8mOWFiOe6p+i2iumrmO+8iSAqL1xuICBwcmlvcml0eTogbnVtYmVyO1xuICAvKiog57yT5a2Y5pyN5Yqh5a6e5L6LICovXG4gIHNlcnZpY2U6IElDYWNoZVNlcnZpY2UgfCBudWxsO1xuICAvKiog57yT5a2Y5bGC6YCJ6aG5ICovXG4gIG9wdGlvbnM/OiBDYWNoZU9wdGlvbnM7XG4gIC8qKiDmmK/lkKblkK/nlKggKi9cbiAgZW5hYmxlZD86IGJvb2xlYW47XG4gIC8qKiDmmK/lkKblj6ror7sgKi9cbiAgcmVhZE9ubHk/OiBib29sZWFuO1xuICAvKiog5piv5ZCm5L2c5Li65ZCO5aSH57yT5a2YICovXG4gIGZhbGxiYWNrPzogYm9vbGVhbjtcbn1cblxuLyoqXG4gKiBAaW50ZXJmYWNlIENhY2hlSW52YWxpZGF0aW9uQ29uZmlnXG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y5aSx5pWI5pyN5Yqh6YWN572u5o6l5Y+jXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgQ2FjaGVJbnZhbGlkYXRpb25Db25maWcge1xuICAvKiog5piv5ZCm5ZCv55So6Ieq5Yqo5aSx5pWIICovXG4gIGVuYWJsZWQ/OiBib29sZWFuO1xuICAvKiog6buY6K6k5aSx5pWI562W55WlICovXG4gIGRlZmF1bHRTdHJhdGVneT86IHN0cmluZztcbiAgLyoqIOaJuemHj+WkseaViOWkp+WwjyAqL1xuICBiYXRjaFNpemU/OiBudW1iZXI7XG4gIC8qKiDlubblj5HlpLHmlYjmlbAgKi9cbiAgY29uY3VycmVuY3k/OiBudW1iZXI7XG4gIC8qKiDotoXml7bml7bpl7TvvIjmr6vnp5LvvIkgKi9cbiAgdGltZW91dD86IG51bWJlcjtcbiAgLyoqIOmHjeivleasoeaVsCAqL1xuICByZXRyaWVzPzogbnVtYmVyO1xuICAvKiog6YeN6K+V5bu26L+f77yI5q+r56eS77yJICovXG4gIHJldHJ5RGVsYXk/OiBudW1iZXI7XG4gIC8qKiDmmK/lkKblkK/nlKjnu5/orqEgKi9cbiAgZW5hYmxlU3RhdHM/OiBib29sZWFuO1xuICAvKiog5piv5ZCm5ZCv55So5LqL5Lu2ICovXG4gIGVuYWJsZUV2ZW50cz86IGJvb2xlYW47XG4gIC8qKiDnm5Hmjqfpl7TpmpTvvIjmr6vnp5LvvIkgKi9cbiAgbW9uaXRvcmluZ0ludGVydmFsPzogbnVtYmVyO1xufVxuXG4vKipcbiAqIEBpbnRlcmZhY2UgSW52YWxpZGF0aW9uUmVzdWx0XG4gKiBAZGVzY3JpcHRpb24g57yT5a2Y5aSx5pWI57uT5p6c5o6l5Y+j77yM5a6a5LmJ5aSx5pWI5pON5L2c55qE57uT5p6c5L+h5oGv44CCXG4gKi9cbmV4cG9ydCBpbnRlcmZhY2UgSW52YWxpZGF0aW9uUmVzdWx0IHtcbiAgLyoqIOWkseaViOeahOmUruaVsOmHjyAqL1xuICBpbnZhbGlkYXRlZEtleXM6IG51bWJlcjtcbiAgLyoqIOWkseaViOeahOWRveWQjeepuumXtOaVsOmHjyAqL1xuICBpbnZhbGlkYXRlZE5hbWVzcGFjZXM6IG51bWJlcjtcbiAgLyoqIOWkseaViOeahOagh+etvuaVsOmHjyAqL1xuICBpbnZhbGlkYXRlZFRhZ3M6IG51bWJlcjtcbiAgLyoqIOWkseaViOeahOmUruWIl+ihqCAqL1xuICBrZXlzOiBzdHJpbmdbXTtcbiAgLyoqIOWkseaViOeahOWRveWQjeepuumXtOWIl+ihqCAqL1xuICBuYW1lc3BhY2VzOiBzdHJpbmdbXTtcbiAgLyoqIOWkseaViOeahOagh+etvuWIl+ihqCAqL1xuICB0YWdzOiBzdHJpbmdbXTtcbiAgLyoqIOWkseaViOaXtumXtCAqL1xuICBpbnZhbGlkYXRlZEF0OiBEYXRlO1xuICAvKiog5omn6KGM5pe26Ze077yI5q+r56eS77yJICovXG4gIGV4ZWN1dGlvblRpbWU6IG51bWJlcjtcbiAgLyoqIOaYr+WQpuaIkOWKnyAqL1xuICBzdWNjZXNzOiBib29sZWFuO1xuICAvKiog6ZSZ6K+v5L+h5oGvICovXG4gIGVycm9yPzogc3RyaW5nO1xuICAvKiog5YWD5pWw5o2uICovXG4gIG1ldGFkYXRhPzogUmVjb3JkPHN0cmluZywgdW5rbm93bj47XG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUE7Ozs7QUFJQSxJQUFZQSxTQUlYO0FBQUE7QUFBQUMsY0FBQSxHQUFBQyxDQUFBO0FBSkQsV0FBWUYsU0FBUztFQUFBO0VBQUFDLGNBQUEsR0FBQUUsQ0FBQTtFQUFBRixjQUFBLEdBQUFDLENBQUE7RUFDbkJGLFNBQUEscUJBQWlCO0VBQUE7RUFBQUMsY0FBQSxHQUFBQyxDQUFBO0VBQ2pCRixTQUFBLG1CQUFlO0VBQUE7RUFBQUMsY0FBQSxHQUFBQyxDQUFBO0VBQ2ZGLFNBQUEscUJBQWlCO0FBQ25CLENBQUM7QUFKVztBQUFBLENBQUFDLGNBQUEsR0FBQUcsQ0FBQSxVQUFBSixTQUFTO0FBQUE7QUFBQSxDQUFBQyxjQUFBLEdBQUFHLENBQUEsVUFBQUMsT0FBQSxDQUFBTCxTQUFBLEdBQVRBLFNBQVM7QUFNckI7Ozs7QUFJQSxJQUFZTSxhQUtYO0FBQUE7QUFBQUwsY0FBQSxHQUFBQyxDQUFBO0FBTEQsV0FBWUksYUFBYTtFQUFBO0VBQUFMLGNBQUEsR0FBQUUsQ0FBQTtFQUFBRixjQUFBLEdBQUFDLENBQUE7RUFDdkJJLGFBQUEsZUFBVztFQUFBO0VBQUFMLGNBQUEsR0FBQUMsQ0FBQTtFQUNYSSxhQUFBLGVBQVc7RUFBQTtFQUFBTCxjQUFBLEdBQUFDLENBQUE7RUFDWEksYUFBQSxpQkFBYTtFQUFBO0VBQUFMLGNBQUEsR0FBQUMsQ0FBQTtFQUNiSSxhQUFBLGVBQVc7QUFDYixDQUFDO0FBTFc7QUFBQSxDQUFBTCxjQUFBLEdBQUFHLENBQUEsVUFBQUUsYUFBYTtBQUFBO0FBQUEsQ0FBQUwsY0FBQSxHQUFBRyxDQUFBLFVBQUFDLE9BQUEsQ0FBQUMsYUFBQSxHQUFiQSxhQUFhIiwiaWdub3JlTGlzdCI6W119

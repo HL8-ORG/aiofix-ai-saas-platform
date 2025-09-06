@@ -1,0 +1,202 @@
+a1ff56652f4528ae59f7bca53216ec21
+"use strict";
+/**
+ * @file logging.module.ts
+ * @description 日志管理模块
+ *
+ * 该模块整合了所有日志相关的服务，包括：
+ * - Pino日志服务
+ * - 日志配置服务
+ * - 日志传输器
+ * - 日志格式化器
+ * - 日志中间件
+ * - 日志拦截器
+ *
+ * 遵循DDD和Clean Architecture原则，提供统一的日志管理功能。
+ */
+var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+    function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
+    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+    var _, done = false;
+    for (var i = decorators.length - 1; i >= 0; i--) {
+        var context = {};
+        for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
+        for (var p in contextIn.access) context.access[p] = contextIn.access[p];
+        context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
+        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
+        if (kind === "accessor") {
+            if (result === void 0) continue;
+            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+            if (_ = accept(result.get)) descriptor.get = _;
+            if (_ = accept(result.set)) descriptor.set = _;
+            if (_ = accept(result.init)) initializers.unshift(_);
+        }
+        else if (_ = accept(result)) {
+            if (kind === "field") initializers.unshift(_);
+            else descriptor[key] = _;
+        }
+    }
+    if (target) Object.defineProperty(target, contextIn.name, descriptor);
+    done = true;
+};
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+};
+var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
+    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
+    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LoggingModule = void 0;
+const common_1 = require("@nestjs/common");
+const event_emitter_1 = require("@nestjs/event-emitter");
+const nestjs_cls_1 = require("nestjs-cls");
+const pino_logger_service_1 = require("./services/pino-logger.service");
+const pino_logger_config_service_1 = require("./services/pino-logger-config.service");
+const pino_logger_factory_1 = require("./factories/pino-logger.factory");
+const pino_logging_middleware_1 = require("./middleware/pino-logging.middleware");
+const pino_logging_interceptor_1 = require("./interceptors/pino-logging.interceptor");
+/**
+ * @class LoggingModule
+ * @description
+ * Aiofix IAM平台日志模块，提供高性能的日志服务。
+ *
+ * 主要功能：
+ * 1. 提供PinoLoggerService日志服务
+ * 2. 提供PinoLoggerConfigService配置服务
+ * 3. 提供PinoLoggerFactory日志工厂
+ * 4. 提供PinoLoggingMiddleware日志中间件
+ * 5. 提供PinoLoggingInterceptor日志拦截器
+ *
+ * 使用示例：
+ * ```typescript
+ * import { LoggingModule } from '@aiofix/logging';
+ *
+ * @Module({
+ *   imports: [
+ *     LoggingModule.register({
+ *       config: {
+ *         level: 'info',
+ *         format: 'json',
+ *         colorize: false
+ *       },
+ *       global: true,
+ *       middleware: true,
+ *       interceptor: true
+ *     })
+ *   ]
+ * })
+ * export class AppModule {}
+ * ```
+ */
+let LoggingModule = (() => {
+    let _classDecorators = [(0, common_1.Module)({})];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    var LoggingModule = _classThis = class {
+        /**
+         * @function register
+         * @description
+         * 注册日志模块，支持自定义配置。
+         *
+         * @param {LoggingModuleOptions} options - 模块配置选项
+         * @returns {DynamicModule} 动态模块配置
+         */
+        static register(options = {}) {
+            const { config = {}, global = false, middleware = false, interceptor = false, } = options;
+            const moduleConfig = {
+                module: LoggingModule,
+                imports: [
+                    event_emitter_1.EventEmitterModule.forRoot(),
+                    nestjs_cls_1.ClsModule.forRoot({
+                        global: true,
+                        middleware: {
+                            mount: true,
+                            setup: (cls, req) => {
+                                // 设置请求上下文
+                                cls.set('requestId', req.headers['x-request-id'] || cls.get('requestId'));
+                                cls.set('tenantId', req.headers['x-tenant-id'] || cls.get('tenantId'));
+                                cls.set('userId', req.headers['x-user-id'] || cls.get('userId'));
+                                cls.set('sessionId', req.headers['x-session-id'] || cls.get('sessionId'));
+                            },
+                        },
+                    }),
+                ],
+                providers: [
+                    {
+                        provide: 'LOGGING_CONFIG',
+                        useValue: config,
+                    },
+                    pino_logger_config_service_1.PinoLoggerConfigService,
+                    pino_logger_service_1.PinoLoggerService,
+                    pino_logger_factory_1.PinoLoggerFactory,
+                ],
+                exports: [pino_logger_service_1.PinoLoggerService, pino_logger_config_service_1.PinoLoggerConfigService, pino_logger_factory_1.PinoLoggerFactory],
+            };
+            // 根据配置添加中间件和拦截器
+            if (middleware) {
+                moduleConfig.providers.push(pino_logging_middleware_1.PinoLoggingMiddleware);
+                moduleConfig.exports.push(pino_logging_middleware_1.PinoLoggingMiddleware);
+            }
+            if (interceptor) {
+                moduleConfig.providers.push(pino_logging_interceptor_1.PinoLoggingInterceptor);
+                moduleConfig.exports.push(pino_logging_interceptor_1.PinoLoggingInterceptor);
+            }
+            // 设置为全局模块
+            if (global) {
+                moduleConfig.global = true;
+            }
+            return moduleConfig;
+        }
+        /**
+         * @function forRoot
+         * @description
+         * 注册日志模块的便捷方法，使用默认配置。
+         *
+         * @param {LoggingModuleOptions} options - 模块配置选项
+         * @returns {DynamicModule} 动态模块配置
+         */
+        static forRoot(options = {}) {
+            return this.register({
+                global: true,
+                middleware: true,
+                interceptor: true,
+                ...options,
+            });
+        }
+        /**
+         * @function forFeature
+         * @description
+         * 注册日志模块的特性版本，不包含中间件和拦截器。
+         *
+         * @param {LoggingModuleOptions} options - 模块配置选项
+         * @returns {DynamicModule} 动态模块配置
+         */
+        static forFeature(options = {}) {
+            return this.register({
+                global: false,
+                middleware: false,
+                interceptor: false,
+                ...options,
+            });
+        }
+    };
+    __setFunctionName(_classThis, "LoggingModule");
+    (() => {
+        const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
+        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+        LoggingModule = _classThis = _classDescriptor.value;
+        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+        __runInitializers(_classThis, _classExtraInitializers);
+    })();
+    return LoggingModule = _classThis;
+})();
+exports.LoggingModule = LoggingModule;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL2hvbWUvYXJsaWdsZS9WMS9BaW9maXgvYWlvZml4LWFpLXNhYXMtcGxhdGZvcm0vcGFja2FnZXMvbG9nZ2luZy9zcmMvbG9nZ2luZy5tb2R1bGUudHMiLCJtYXBwaW5ncyI6IjtBQUFBOzs7Ozs7Ozs7Ozs7O0dBYUc7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBRUgsMkNBQXVEO0FBQ3ZELHlEQUEyRDtBQUMzRCwyQ0FBdUM7QUFDdkMsd0VBQW1FO0FBQ25FLHNGQUFnRjtBQUNoRix5RUFBb0U7QUFDcEUsa0ZBQTZFO0FBQzdFLHNGQUFpRjtBQXlCakY7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0dBZ0NHO0lBRVUsYUFBYTs0QkFEekIsSUFBQSxlQUFNLEVBQUMsRUFBRSxDQUFDOzs7OztRQUVUOzs7Ozs7O1dBT0c7UUFDSCxNQUFNLENBQUMsUUFBUSxDQUFDLFVBQWdDLEVBQUU7WUFDaEQsTUFBTSxFQUNKLE1BQU0sR0FBRyxFQUFFLEVBQ1gsTUFBTSxHQUFHLEtBQUssRUFDZCxVQUFVLEdBQUcsS0FBSyxFQUNsQixXQUFXLEdBQUcsS0FBSyxHQUNwQixHQUFHLE9BQU8sQ0FBQztZQUVaLE1BQU0sWUFBWSxHQUFrQjtnQkFDbEMsTUFBTSxFQUFFLGFBQWE7Z0JBQ3JCLE9BQU8sRUFBRTtvQkFDUCxrQ0FBa0IsQ0FBQyxPQUFPLEVBQUU7b0JBQzVCLHNCQUFTLENBQUMsT0FBTyxDQUFDO3dCQUNoQixNQUFNLEVBQUUsSUFBSTt3QkFDWixVQUFVLEVBQUU7NEJBQ1YsS0FBSyxFQUFFLElBQUk7NEJBQ1gsS0FBSyxFQUFFLENBQUMsR0FBRyxFQUFFLEdBQUcsRUFBRSxFQUFFO2dDQUNsQixVQUFVO2dDQUNWLEdBQUcsQ0FBQyxHQUFHLENBQ0wsV0FBVyxFQUNYLEdBQUcsQ0FBQyxPQUFPLENBQUMsY0FBYyxDQUFDLElBQUksR0FBRyxDQUFDLEdBQUcsQ0FBQyxXQUFXLENBQUMsQ0FDcEQsQ0FBQztnQ0FDRixHQUFHLENBQUMsR0FBRyxDQUNMLFVBQVUsRUFDVixHQUFHLENBQUMsT0FBTyxDQUFDLGFBQWEsQ0FBQyxJQUFJLEdBQUcsQ0FBQyxHQUFHLENBQUMsVUFBVSxDQUFDLENBQ2xELENBQUM7Z0NBQ0YsR0FBRyxDQUFDLEdBQUcsQ0FBQyxRQUFRLEVBQUUsR0FBRyxDQUFDLE9BQU8sQ0FBQyxXQUFXLENBQUMsSUFBSSxHQUFHLENBQUMsR0FBRyxDQUFDLFFBQVEsQ0FBQyxDQUFDLENBQUM7Z0NBQ2pFLEdBQUcsQ0FBQyxHQUFHLENBQ0wsV0FBVyxFQUNYLEdBQUcsQ0FBQyxPQUFPLENBQUMsY0FBYyxDQUFDLElBQUksR0FBRyxDQUFDLEdBQUcsQ0FBQyxXQUFXLENBQUMsQ0FDcEQsQ0FBQzs0QkFDSixDQUFDO3lCQUNGO3FCQUNGLENBQUM7aUJBQ0g7Z0JBQ0QsU0FBUyxFQUFFO29CQUNUO3dCQUNFLE9BQU8sRUFBRSxnQkFBZ0I7d0JBQ3pCLFFBQVEsRUFBRSxNQUFNO3FCQUNqQjtvQkFDRCxvREFBdUI7b0JBQ3ZCLHVDQUFpQjtvQkFDakIsdUNBQWlCO2lCQUNsQjtnQkFDRCxPQUFPLEVBQUUsQ0FBQyx1Q0FBaUIsRUFBRSxvREFBdUIsRUFBRSx1Q0FBaUIsQ0FBQzthQUN6RSxDQUFDO1lBRUYsZ0JBQWdCO1lBQ2hCLElBQUksVUFBVSxFQUFFLENBQUM7Z0JBQ2YsWUFBWSxDQUFDLFNBQVUsQ0FBQyxJQUFJLENBQUMsK0NBQXFCLENBQUMsQ0FBQztnQkFDcEQsWUFBWSxDQUFDLE9BQVEsQ0FBQyxJQUFJLENBQUMsK0NBQXFCLENBQUMsQ0FBQztZQUNwRCxDQUFDO1lBRUQsSUFBSSxXQUFXLEVBQUUsQ0FBQztnQkFDaEIsWUFBWSxDQUFDLFNBQVUsQ0FBQyxJQUFJLENBQUMsaURBQXNCLENBQUMsQ0FBQztnQkFDckQsWUFBWSxDQUFDLE9BQVEsQ0FBQyxJQUFJLENBQUMsaURBQXNCLENBQUMsQ0FBQztZQUNyRCxDQUFDO1lBRUQsVUFBVTtZQUNWLElBQUksTUFBTSxFQUFFLENBQUM7Z0JBQ1gsWUFBWSxDQUFDLE1BQU0sR0FBRyxJQUFJLENBQUM7WUFDN0IsQ0FBQztZQUVELE9BQU8sWUFBWSxDQUFDO1FBQ3RCLENBQUM7UUFFRDs7Ozs7OztXQU9HO1FBQ0gsTUFBTSxDQUFDLE9BQU8sQ0FBQyxVQUFnQyxFQUFFO1lBQy9DLE9BQU8sSUFBSSxDQUFDLFFBQVEsQ0FBQztnQkFDbkIsTUFBTSxFQUFFLElBQUk7Z0JBQ1osVUFBVSxFQUFFLElBQUk7Z0JBQ2hCLFdBQVcsRUFBRSxJQUFJO2dCQUNqQixHQUFHLE9BQU87YUFDWCxDQUFDLENBQUM7UUFDTCxDQUFDO1FBRUQ7Ozs7Ozs7V0FPRztRQUNILE1BQU0sQ0FBQyxVQUFVLENBQUMsVUFBZ0MsRUFBRTtZQUNsRCxPQUFPLElBQUksQ0FBQyxRQUFRLENBQUM7Z0JBQ25CLE1BQU0sRUFBRSxLQUFLO2dCQUNiLFVBQVUsRUFBRSxLQUFLO2dCQUNqQixXQUFXLEVBQUUsS0FBSztnQkFDbEIsR0FBRyxPQUFPO2FBQ1gsQ0FBQyxDQUFDO1FBQ0wsQ0FBQzs7Ozs7UUEzR0gsNktBNEdDOzs7UUE1R1ksdURBQWE7Ozs7QUFBYixzQ0FBYSIsIm5hbWVzIjpbXSwic291cmNlcyI6WyIvaG9tZS9hcmxpZ2xlL1YxL0Fpb2ZpeC9haW9maXgtYWktc2Fhcy1wbGF0Zm9ybS9wYWNrYWdlcy9sb2dnaW5nL3NyYy9sb2dnaW5nLm1vZHVsZS50cyJdLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBmaWxlIGxvZ2dpbmcubW9kdWxlLnRzXG4gKiBAZGVzY3JpcHRpb24g5pel5b+X566h55CG5qih5Z2XXG4gKlxuICog6K+l5qih5Z2X5pW05ZCI5LqG5omA5pyJ5pel5b+X55u45YWz55qE5pyN5Yqh77yM5YyF5ous77yaXG4gKiAtIFBpbm/ml6Xlv5fmnI3liqFcbiAqIC0g5pel5b+X6YWN572u5pyN5YqhXG4gKiAtIOaXpeW/l+S8oOi+k+WZqFxuICogLSDml6Xlv5fmoLzlvI/ljJblmahcbiAqIC0g5pel5b+X5Lit6Ze05Lu2XG4gKiAtIOaXpeW/l+aLpuaIquWZqFxuICpcbiAqIOmBteW+qkREROWSjENsZWFuIEFyY2hpdGVjdHVyZeWOn+WIme+8jOaPkOS+m+e7n+S4gOeahOaXpeW/l+euoeeQhuWKn+iDveOAglxuICovXG5cbmltcG9ydCB7IER5bmFtaWNNb2R1bGUsIE1vZHVsZSB9IGZyb20gJ0BuZXN0anMvY29tbW9uJztcbmltcG9ydCB7IEV2ZW50RW1pdHRlck1vZHVsZSB9IGZyb20gJ0BuZXN0anMvZXZlbnQtZW1pdHRlcic7XG5pbXBvcnQgeyBDbHNNb2R1bGUgfSBmcm9tICduZXN0anMtY2xzJztcbmltcG9ydCB7IFBpbm9Mb2dnZXJTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9waW5vLWxvZ2dlci5zZXJ2aWNlJztcbmltcG9ydCB7IFBpbm9Mb2dnZXJDb25maWdTZXJ2aWNlIH0gZnJvbSAnLi9zZXJ2aWNlcy9waW5vLWxvZ2dlci1jb25maWcuc2VydmljZSc7XG5pbXBvcnQgeyBQaW5vTG9nZ2VyRmFjdG9yeSB9IGZyb20gJy4vZmFjdG9yaWVzL3Bpbm8tbG9nZ2VyLmZhY3RvcnknO1xuaW1wb3J0IHsgUGlub0xvZ2dpbmdNaWRkbGV3YXJlIH0gZnJvbSAnLi9taWRkbGV3YXJlL3Bpbm8tbG9nZ2luZy5taWRkbGV3YXJlJztcbmltcG9ydCB7IFBpbm9Mb2dnaW5nSW50ZXJjZXB0b3IgfSBmcm9tICcuL2ludGVyY2VwdG9ycy9waW5vLWxvZ2dpbmcuaW50ZXJjZXB0b3InO1xuaW1wb3J0IHsgTG9nQ29uZmlnIH0gZnJvbSAnLi9pbnRlcmZhY2VzL2xvZ2dpbmcuaW50ZXJmYWNlJztcblxuLyoqXG4gKiBAaW50ZXJmYWNlIExvZ2dpbmdNb2R1bGVPcHRpb25zXG4gKiBAZGVzY3JpcHRpb25cbiAqIOaXpeW/l+aooeWdl+mFjee9rumAiemhueaOpeWPo++8jOeUqOS6juiHquWumuS5ieaXpeW/l+aooeWdl+eahOihjOS4uuOAglxuICpcbiAqIOS4u+imgemFjee9rumhue+8mlxuICogMS4gY29uZmlnOiDml6Xlv5fphY3nva7lr7nosaFcbiAqIDIuIGdsb2JhbDog5piv5ZCm5rOo5YaM5Li65YWo5bGA5qih5Z2XXG4gKiAzLiBtaWRkbGV3YXJlOiDmmK/lkKboh6rliqjms6jlhozkuK3pl7Tku7ZcbiAqIDQuIGludGVyY2VwdG9yOiDmmK/lkKboh6rliqjms6jlhozmi6bmiKrlmahcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBMb2dnaW5nTW9kdWxlT3B0aW9ucyB7XG4gIC8qKiDml6Xlv5fphY3nva4gKi9cbiAgY29uZmlnPzogUGFydGlhbDxMb2dDb25maWc+O1xuICAvKiog5piv5ZCm5rOo5YaM5Li65YWo5bGA5qih5Z2XICovXG4gIGdsb2JhbD86IGJvb2xlYW47XG4gIC8qKiDmmK/lkKboh6rliqjms6jlhozkuK3pl7Tku7YgKi9cbiAgbWlkZGxld2FyZT86IGJvb2xlYW47XG4gIC8qKiDmmK/lkKboh6rliqjms6jlhozmi6bmiKrlmaggKi9cbiAgaW50ZXJjZXB0b3I/OiBib29sZWFuO1xufVxuXG4vKipcbiAqIEBjbGFzcyBMb2dnaW5nTW9kdWxlXG4gKiBAZGVzY3JpcHRpb25cbiAqIEFpb2ZpeCBJQU3lubPlj7Dml6Xlv5fmqKHlnZfvvIzmj5Dkvpvpq5jmgKfog73nmoTml6Xlv5fmnI3liqHjgIJcbiAqXG4gKiDkuLvopoHlip/og73vvJpcbiAqIDEuIOaPkOS+m1Bpbm9Mb2dnZXJTZXJ2aWNl5pel5b+X5pyN5YqhXG4gKiAyLiDmj5DkvptQaW5vTG9nZ2VyQ29uZmlnU2VydmljZemFjee9ruacjeWKoVxuICogMy4g5o+Q5L6bUGlub0xvZ2dlckZhY3Rvcnnml6Xlv5flt6XljoJcbiAqIDQuIOaPkOS+m1Bpbm9Mb2dnaW5nTWlkZGxld2FyZeaXpeW/l+S4remXtOS7tlxuICogNS4g5o+Q5L6bUGlub0xvZ2dpbmdJbnRlcmNlcHRvcuaXpeW/l+aLpuaIquWZqFxuICpcbiAqIOS9v+eUqOekuuS+i++8mlxuICogYGBgdHlwZXNjcmlwdFxuICogaW1wb3J0IHsgTG9nZ2luZ01vZHVsZSB9IGZyb20gJ0BhaW9maXgvbG9nZ2luZyc7XG4gKlxuICogQE1vZHVsZSh7XG4gKiAgIGltcG9ydHM6IFtcbiAqICAgICBMb2dnaW5nTW9kdWxlLnJlZ2lzdGVyKHtcbiAqICAgICAgIGNvbmZpZzoge1xuICogICAgICAgICBsZXZlbDogJ2luZm8nLFxuICogICAgICAgICBmb3JtYXQ6ICdqc29uJyxcbiAqICAgICAgICAgY29sb3JpemU6IGZhbHNlXG4gKiAgICAgICB9LFxuICogICAgICAgZ2xvYmFsOiB0cnVlLFxuICogICAgICAgbWlkZGxld2FyZTogdHJ1ZSxcbiAqICAgICAgIGludGVyY2VwdG9yOiB0cnVlXG4gKiAgICAgfSlcbiAqICAgXVxuICogfSlcbiAqIGV4cG9ydCBjbGFzcyBBcHBNb2R1bGUge31cbiAqIGBgYFxuICovXG5ATW9kdWxlKHt9KVxuZXhwb3J0IGNsYXNzIExvZ2dpbmdNb2R1bGUge1xuICAvKipcbiAgICogQGZ1bmN0aW9uIHJlZ2lzdGVyXG4gICAqIEBkZXNjcmlwdGlvblxuICAgKiDms6jlhozml6Xlv5fmqKHlnZfvvIzmlK/mjIHoh6rlrprkuYnphY3nva7jgIJcbiAgICpcbiAgICogQHBhcmFtIHtMb2dnaW5nTW9kdWxlT3B0aW9uc30gb3B0aW9ucyAtIOaooeWdl+mFjee9rumAiemhuVxuICAgKiBAcmV0dXJucyB7RHluYW1pY01vZHVsZX0g5Yqo5oCB5qih5Z2X6YWN572uXG4gICAqL1xuICBzdGF0aWMgcmVnaXN0ZXIob3B0aW9uczogTG9nZ2luZ01vZHVsZU9wdGlvbnMgPSB7fSk6IER5bmFtaWNNb2R1bGUge1xuICAgIGNvbnN0IHtcbiAgICAgIGNvbmZpZyA9IHt9LFxuICAgICAgZ2xvYmFsID0gZmFsc2UsXG4gICAgICBtaWRkbGV3YXJlID0gZmFsc2UsXG4gICAgICBpbnRlcmNlcHRvciA9IGZhbHNlLFxuICAgIH0gPSBvcHRpb25zO1xuXG4gICAgY29uc3QgbW9kdWxlQ29uZmlnOiBEeW5hbWljTW9kdWxlID0ge1xuICAgICAgbW9kdWxlOiBMb2dnaW5nTW9kdWxlLFxuICAgICAgaW1wb3J0czogW1xuICAgICAgICBFdmVudEVtaXR0ZXJNb2R1bGUuZm9yUm9vdCgpLFxuICAgICAgICBDbHNNb2R1bGUuZm9yUm9vdCh7XG4gICAgICAgICAgZ2xvYmFsOiB0cnVlLFxuICAgICAgICAgIG1pZGRsZXdhcmU6IHtcbiAgICAgICAgICAgIG1vdW50OiB0cnVlLFxuICAgICAgICAgICAgc2V0dXA6IChjbHMsIHJlcSkgPT4ge1xuICAgICAgICAgICAgICAvLyDorr7nva7or7fmsYLkuIrkuIvmlodcbiAgICAgICAgICAgICAgY2xzLnNldChcbiAgICAgICAgICAgICAgICAncmVxdWVzdElkJyxcbiAgICAgICAgICAgICAgICByZXEuaGVhZGVyc1sneC1yZXF1ZXN0LWlkJ10gfHwgY2xzLmdldCgncmVxdWVzdElkJyksXG4gICAgICAgICAgICAgICk7XG4gICAgICAgICAgICAgIGNscy5zZXQoXG4gICAgICAgICAgICAgICAgJ3RlbmFudElkJyxcbiAgICAgICAgICAgICAgICByZXEuaGVhZGVyc1sneC10ZW5hbnQtaWQnXSB8fCBjbHMuZ2V0KCd0ZW5hbnRJZCcpLFxuICAgICAgICAgICAgICApO1xuICAgICAgICAgICAgICBjbHMuc2V0KCd1c2VySWQnLCByZXEuaGVhZGVyc1sneC11c2VyLWlkJ10gfHwgY2xzLmdldCgndXNlcklkJykpO1xuICAgICAgICAgICAgICBjbHMuc2V0KFxuICAgICAgICAgICAgICAgICdzZXNzaW9uSWQnLFxuICAgICAgICAgICAgICAgIHJlcS5oZWFkZXJzWyd4LXNlc3Npb24taWQnXSB8fCBjbHMuZ2V0KCdzZXNzaW9uSWQnKSxcbiAgICAgICAgICAgICAgKTtcbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgfSxcbiAgICAgICAgfSksXG4gICAgICBdLFxuICAgICAgcHJvdmlkZXJzOiBbXG4gICAgICAgIHtcbiAgICAgICAgICBwcm92aWRlOiAnTE9HR0lOR19DT05GSUcnLFxuICAgICAgICAgIHVzZVZhbHVlOiBjb25maWcsXG4gICAgICAgIH0sXG4gICAgICAgIFBpbm9Mb2dnZXJDb25maWdTZXJ2aWNlLFxuICAgICAgICBQaW5vTG9nZ2VyU2VydmljZSxcbiAgICAgICAgUGlub0xvZ2dlckZhY3RvcnksXG4gICAgICBdLFxuICAgICAgZXhwb3J0czogW1Bpbm9Mb2dnZXJTZXJ2aWNlLCBQaW5vTG9nZ2VyQ29uZmlnU2VydmljZSwgUGlub0xvZ2dlckZhY3RvcnldLFxuICAgIH07XG5cbiAgICAvLyDmoLnmja7phY3nva7mt7vliqDkuK3pl7Tku7blkozmi6bmiKrlmahcbiAgICBpZiAobWlkZGxld2FyZSkge1xuICAgICAgbW9kdWxlQ29uZmlnLnByb3ZpZGVycyEucHVzaChQaW5vTG9nZ2luZ01pZGRsZXdhcmUpO1xuICAgICAgbW9kdWxlQ29uZmlnLmV4cG9ydHMhLnB1c2goUGlub0xvZ2dpbmdNaWRkbGV3YXJlKTtcbiAgICB9XG5cbiAgICBpZiAoaW50ZXJjZXB0b3IpIHtcbiAgICAgIG1vZHVsZUNvbmZpZy5wcm92aWRlcnMhLnB1c2goUGlub0xvZ2dpbmdJbnRlcmNlcHRvcik7XG4gICAgICBtb2R1bGVDb25maWcuZXhwb3J0cyEucHVzaChQaW5vTG9nZ2luZ0ludGVyY2VwdG9yKTtcbiAgICB9XG5cbiAgICAvLyDorr7nva7kuLrlhajlsYDmqKHlnZdcbiAgICBpZiAoZ2xvYmFsKSB7XG4gICAgICBtb2R1bGVDb25maWcuZ2xvYmFsID0gdHJ1ZTtcbiAgICB9XG5cbiAgICByZXR1cm4gbW9kdWxlQ29uZmlnO1xuICB9XG5cbiAgLyoqXG4gICAqIEBmdW5jdGlvbiBmb3JSb290XG4gICAqIEBkZXNjcmlwdGlvblxuICAgKiDms6jlhozml6Xlv5fmqKHlnZfnmoTkvr/mjbfmlrnms5XvvIzkvb/nlKjpu5jorqTphY3nva7jgIJcbiAgICpcbiAgICogQHBhcmFtIHtMb2dnaW5nTW9kdWxlT3B0aW9uc30gb3B0aW9ucyAtIOaooeWdl+mFjee9rumAiemhuVxuICAgKiBAcmV0dXJucyB7RHluYW1pY01vZHVsZX0g5Yqo5oCB5qih5Z2X6YWN572uXG4gICAqL1xuICBzdGF0aWMgZm9yUm9vdChvcHRpb25zOiBMb2dnaW5nTW9kdWxlT3B0aW9ucyA9IHt9KTogRHluYW1pY01vZHVsZSB7XG4gICAgcmV0dXJuIHRoaXMucmVnaXN0ZXIoe1xuICAgICAgZ2xvYmFsOiB0cnVlLFxuICAgICAgbWlkZGxld2FyZTogdHJ1ZSxcbiAgICAgIGludGVyY2VwdG9yOiB0cnVlLFxuICAgICAgLi4ub3B0aW9ucyxcbiAgICB9KTtcbiAgfVxuXG4gIC8qKlxuICAgKiBAZnVuY3Rpb24gZm9yRmVhdHVyZVxuICAgKiBAZGVzY3JpcHRpb25cbiAgICog5rOo5YaM5pel5b+X5qih5Z2X55qE54m55oCn54mI5pys77yM5LiN5YyF5ZCr5Lit6Ze05Lu25ZKM5oum5oiq5Zmo44CCXG4gICAqXG4gICAqIEBwYXJhbSB7TG9nZ2luZ01vZHVsZU9wdGlvbnN9IG9wdGlvbnMgLSDmqKHlnZfphY3nva7pgInpoblcbiAgICogQHJldHVybnMge0R5bmFtaWNNb2R1bGV9IOWKqOaAgeaooeWdl+mFjee9rlxuICAgKi9cbiAgc3RhdGljIGZvckZlYXR1cmUob3B0aW9uczogTG9nZ2luZ01vZHVsZU9wdGlvbnMgPSB7fSk6IER5bmFtaWNNb2R1bGUge1xuICAgIHJldHVybiB0aGlzLnJlZ2lzdGVyKHtcbiAgICAgIGdsb2JhbDogZmFsc2UsXG4gICAgICBtaWRkbGV3YXJlOiBmYWxzZSxcbiAgICAgIGludGVyY2VwdG9yOiBmYWxzZSxcbiAgICAgIC4uLm9wdGlvbnMsXG4gICAgfSk7XG4gIH1cbn1cbiJdLCJ2ZXJzaW9uIjozfQ==

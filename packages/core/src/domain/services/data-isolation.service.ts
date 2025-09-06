@@ -459,7 +459,7 @@ export class DataIsolationService implements IDataIsolationService {
     }
 
     // 其他用户需要检查基本合规性
-    return context.userId && context.isolationLevel;
+    return !!(context.userId && context.isolationLevel);
   }
 
   /**

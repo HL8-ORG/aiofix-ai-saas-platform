@@ -27,11 +27,11 @@ aiofix-saas-platform/
 │   │   ├── domain/             # 领域基础组件
 │   │   ├── application/        # 应用层基础组件
 │   │   └── infrastructure/     # 基础设施基础组件
-│   ├── logger/                 # 日志模块（独立包）
+│   ├── logging/                # 日志模块（独立包）
 │   │   ├── services/           # 日志服务
 │   │   ├── interfaces/         # 日志接口
 │   │   ├── config/             # 日志配置
-│   │   └── logger.module.ts    # 日志模块
+│   │   └── logging.module.ts   # 日志模块
 │   ├── config/                 # 配置模块（独立包）
 │   │   ├── services/           # 配置服务
 │   │   ├── interfaces/         # 配置接口
@@ -256,7 +256,7 @@ export class UserController {
 @Module({
   imports: [
     // 独立模块导入
-    LoggerModule.forRoot({
+    LoggingModule.forRoot({
       level: process.env.LOG_LEVEL || 'info',
       format: 'json',
     }),
@@ -661,15 +661,15 @@ export class MongoDBAdapter implements IDatabaseAdapter {
 
 ## 独立模块详细设计
 
-### 日志模块 (@aiofix/logger)
+### 日志模块 (@aiofix/logging)
 
 ```typescript
-// packages/logger/src/services/logger.service.ts
+// packages/logging/src/services/logging.service.ts
 @Injectable()
-export class LoggerService {
+export class LoggingService {
   private readonly logger: winston.Logger;
 
-  constructor(private readonly config: LoggerConfig) {
+  constructor(private readonly config: LoggingConfig) {
     this.logger = winston.createLogger({
       level: config.level,
       format: winston.format.combine(

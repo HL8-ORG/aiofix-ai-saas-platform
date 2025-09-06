@@ -1,4 +1,12 @@
 packages:
-  - 'libs/**'
-  - 'packages/**'
-  - 'apps/**'
+  - 'packages/*'
+  - 'apps/*'
+
+# 配置 peer dependencies 处理
+strictPeerDependencies: false
+
+# 禁用依赖提升 - 手动维护依赖版本
+hoist: false
+
+# 禁用公共依赖提升
+publicHoistPattern: []

@@ -217,7 +217,7 @@ export class EventStoreError extends Error {
     this.code = code;
 
     if (cause) {
-      this.cause = cause;
+      (this as any).cause = cause;
     }
   }
 }
