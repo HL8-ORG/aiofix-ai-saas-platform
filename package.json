@@ -1,0 +1,48 @@
+{
+  "name": "aiofix-saas-platform",
+  "description": "Template for setting up a TypeScript monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "docs": "doctoc --title '**Table of content**' README.md",
+    "clean": "pnpm run -r clean",
+    "build": "pnpm run -r build",
+    "test": "pnpm run -r test",
+    "libs:fix": "pnpm dlx sherif@latest --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:check": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "cz-config.cjs"
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "~9.33.0",
+    "@jest/globals": "^30.1.2",
+    "commitizen": "^4.3.1",
+    "cz-customizable": "^7.5.0",
+    "doctoc": "~2.2.0",
+    "eslint": "~9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-formatter-compact": "^8.40.0",
+    "eslint-plugin-prettier": "~5.5.0",
+    "eslint-plugin-react": "~7.37.4",
+    "globals": "~16.3.0",
+    "husky": "^9.1.7",
+    "prettier": "~3.6.0",
+    "rimraf": "^6.0.1",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "~8.39.0"
+  },
+  "packageManager": "pnpm@10.14.0"
+}
