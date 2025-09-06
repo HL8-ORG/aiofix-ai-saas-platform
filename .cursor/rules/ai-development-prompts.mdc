@@ -1,3 +1,8 @@
+---
+description: AI开发提示词系统
+globs:
+alwaysApply: true
+---
 # AI开发提示词系统
 
 ## 概述
@@ -14,20 +19,22 @@
 项目背景：
 - 这是一个现代化的SAAS平台项目，支持多租户架构
 - 采用DDD（领域驱动设计）+ Clean Architecture + CQRS + 事件溯源架构
-- 技术栈：NestJS + TypeScript + MikroORM + PostgreSQL + MongoDB + Redis
+- 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis
 - 支持从单体应用到微服务架构的渐进式演进
 
 开发原则：
 - 使用中文回答问题和编写注释
+- 编写注释应当按照TSDoc规范，并加入代码设计原理或机制，以及业务规则或业务逻辑
 - 修改代码时应当同时修改相应的注释，确保代码与注释一致
 - 创建文件时优先采用分段创建文件的策略，避免工具调用超时
 - 使用pnpm作为包管理器
 - 完成代码编写后应当进行代码linter检查，及时修复报错
+- 检查和修复linter错误时你可以调用mcp-server lint-files
 - 开发任务完成后应当进行编译检查，及时处理报错
 
 项目文档：
-- 业务需求文档：docs/business-requirements.md
-- 技术设计文档：docs/technical-design/README.md
+- 业务需求文档：../../docs/business-requirements.md
+- 技术设计文档：../../docs/technical-design/README.md
 - 请仔细阅读相关文档，理解业务需求和技术架构
 ```
 
@@ -366,12 +373,12 @@ export class [Module]Controller {
 基于以下信息开发[具体功能]：
 
 业务需求：
-- 参考：docs/business-requirements.md 第[X]节
+- 参考：../../docs/business-requirements.md 第[X]节
 - 核心功能：[具体功能描述]
 - 业务规则：[具体业务规则]
 
 技术实现：
-- 参考：docs/technical-design/[相关文档]
+- 参考：../../docs/technical-design/[相关文档]
 - 架构模式：[具体架构模式]
 - 技术栈：[具体技术栈]
 

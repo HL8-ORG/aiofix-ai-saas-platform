@@ -9,41 +9,55 @@
 ### 业务驱动因素
 
 #### 完整的审计追踪需求
+
 ```typescript
 // SAAS平台需要完整的操作审计
 export class AuditTrailService {
-  async getAuditTrail(aggregateId: string, fromDate: Date, toDate: Date): Promise<AuditEntry[]> {
-    const events = await this.eventStore.getEvents(aggregateId, fromDate, toDate);
-    
+  async getAuditTrail(
+    aggregateId: string,
+    fromDate: Date,
+    toDate: Date,
+  ): Promise<AuditEntry[]> {
+    const events = await this.eventStore.getEvents(
+      aggregateId,
+      fromDate,
+      toDate,
+    );
+
     return events.map(event => ({
       timestamp: event.occurredOn,
       userId: event.metadata.userId,
       action: event.eventType,
       details: event.toJSON(),
       ipAddress: event.metadata.ipAddress,
-      userAgent: event.metadata.userAgent
+      userAgent: event.metadata.userAgent,
     }));
   }
 }
 ```
 
 #### 合规性要求
+
 - **GDPR合规**：用户数据变更的完整记录
 - **SOX合规**：财务数据的审计追踪
 - **行业标准**：医疗、金融等行业的合规要求
 
 #### 业务分析需求
+
 ```typescript
 // 基于事件数据的业务分析
 export class BusinessAnalyticsService {
   async analyzeUserBehavior(userId: string): Promise<UserBehaviorAnalysis> {
-    const events = await this.eventStore.getEventsByType('UserActionEvent', userId);
-    
+    const events = await this.eventStore.getEventsByType(
+      'UserActionEvent',
+      userId,
+    );
+
     return {
       loginFrequency: this.calculateLoginFrequency(events),
       featureUsage: this.analyzeFeatureUsage(events),
       userJourney: this.reconstructUserJourney(events),
-      churnRisk: this.calculateChurnRisk(events)
+      churnRisk: this.calculateChurnRisk(events),
     };
   }
 }
@@ -52,36 +66,39 @@ export class BusinessAnalyticsService {
 ### 技术优势
 
 #### 时间旅行调试
+
 ```typescript
 // 可以重现任意时间点的系统状态
 export class TimeTravelService {
   async restoreSystemState(pointInTime: Date): Promise<SystemState> {
     const events = await this.eventStore.getEventsUpTo(pointInTime);
-    
+
     // 重建所有聚合的状态
     const aggregates = new Map<string, any>();
-    
+
     for (const event of events) {
-      const aggregate = aggregates.get(event.aggregateId) || 
+      const aggregate =
+        aggregates.get(event.aggregateId) ||
         this.createAggregate(event.aggregateType);
-      
+
       aggregate.apply(event);
       aggregates.set(event.aggregateId, aggregate);
     }
-    
+
     return { aggregates, timestamp: pointInTime };
   }
 }
 ```
 
 #### 数据一致性保证
+
 ```typescript
 // 事件溯源天然支持最终一致性
 export class ConsistencyService {
   async ensureConsistency(): Promise<void> {
     // 检查读模型与事件存储的一致性
     const inconsistencies = await this.findInconsistencies();
-    
+
     for (const inconsistency of inconsistencies) {
       // 重新投影读模型
       await this.reprojectReadModel(inconsistency.aggregateId);
@@ -95,30 +112,35 @@ export class ConsistencyService {
 ### 业务价值
 
 #### 完整的业务历史
+
 ```typescript
 // 业务决策支持
 export class BusinessDecisionService {
   async analyzeBusinessTrends(timeRange: DateRange): Promise<BusinessTrends> {
     const events = await this.eventStore.getEventsInRange(timeRange);
-    
+
     return {
       userGrowth: this.calculateUserGrowth(events),
       featureAdoption: this.analyzeFeatureAdoption(events),
       revenueTrends: this.calculateRevenueTrends(events),
-      churnPatterns: this.identifyChurnPatterns(events)
+      churnPatterns: this.identifyChurnPatterns(events),
     };
   }
 }
 ```
 
 #### 业务规则演进
+
 ```typescript
 // 支持业务规则的灵活变更
 export class BusinessRuleEngine {
-  async applyRuleAtPointInTime(ruleId: string, pointInTime: Date): Promise<RuleResult> {
+  async applyRuleAtPointInTime(
+    ruleId: string,
+    pointInTime: Date,
+  ): Promise<RuleResult> {
     const events = await this.eventStore.getEventsUpTo(pointInTime);
     const rule = await this.getRuleVersion(ruleId, pointInTime);
-    
+
     return this.evaluateRule(rule, events);
   }
 }
@@ -127,32 +149,36 @@ export class BusinessRuleEngine {
 ### 技术价值
 
 #### 系统可观测性
+
 ```typescript
 // 完整的系统行为追踪
 export class SystemObservabilityService {
   async getSystemHealthMetrics(): Promise<SystemHealthMetrics> {
-    const events = await this.eventStore.getRecentEvents(TimeRange.LAST_24_HOURS);
-    
+    const events = await this.eventStore.getRecentEvents(
+      TimeRange.LAST_24_HOURS,
+    );
+
     return {
       eventVolume: events.length,
       errorRate: this.calculateErrorRate(events),
       performanceMetrics: this.calculatePerformanceMetrics(events),
-      userActivity: this.calculateUserActivity(events)
+      userActivity: this.calculateUserActivity(events),
     };
   }
 }
 ```
 
 #### 故障恢复能力
+
 ```typescript
 // 快速故障恢复
 export class DisasterRecoveryService {
   async recoverFromBackup(backupTimestamp: Date): Promise<void> {
     const events = await this.eventStore.getEventsFromBackup(backupTimestamp);
-    
+
     // 重建所有读模型
     await this.rebuildAllReadModels(events);
-    
+
     // 验证数据一致性
     await this.verifyDataConsistency();
   }
@@ -164,6 +190,7 @@ export class DisasterRecoveryService {
 ### 事件设计原则
 
 #### 事件不可变性
+
 ```typescript
 // 事件一旦创建就不能修改
 export class UserCreatedEvent implements IDomainEvent {
@@ -177,7 +204,7 @@ export class UserCreatedEvent implements IDomainEvent {
     aggregateId: string,
     public readonly email: string,
     public readonly hashedPassword: string,
-    public readonly metadata: EventMetadata
+    public readonly metadata: EventMetadata,
   ) {
     this.eventId = uuid.v4();
     this.aggregateId = aggregateId;
@@ -194,59 +221,65 @@ export class UserCreatedEvent implements IDomainEvent {
       eventVersion: this.eventVersion,
       email: this.email,
       hashedPassword: this.hashedPassword,
-      metadata: this.metadata
+      metadata: this.metadata,
     };
   }
 }
 ```
 
 #### 事件版本管理
+
 ```typescript
 // 支持事件模式的演进
 export class UserProfileUpdatedEventV1 implements IDomainEvent {
   public readonly eventVersion: number = 1;
-  
+
   constructor(
     public readonly aggregateId: string,
     public readonly firstName: string,
     public readonly lastName: string,
-    public readonly email: string
+    public readonly email: string,
   ) {}
 }
 
 export class UserProfileUpdatedEventV2 implements IDomainEvent {
   public readonly eventVersion: number = 2;
-  
+
   constructor(
     public readonly aggregateId: string,
     public readonly profile: UserProfile, // 更丰富的用户资料对象
-    public readonly updatedFields: string[] // 记录具体更新的字段
+    public readonly updatedFields: string[], // 记录具体更新的字段
   ) {}
 }
 
 // 事件升级器
 export class EventUpgrader {
   upgradeEvent(event: IDomainEvent): IDomainEvent {
-    if (event.eventType === 'UserProfileUpdatedEvent' && event.eventVersion === 1) {
+    if (
+      event.eventType === 'UserProfileUpdatedEvent' &&
+      event.eventVersion === 1
+    ) {
       return this.upgradeToV2(event as UserProfileUpdatedEventV1);
     }
     return event;
   }
 
-  private upgradeToV2(event: UserProfileUpdatedEventV1): UserProfileUpdatedEventV2 {
+  private upgradeToV2(
+    event: UserProfileUpdatedEventV1,
+  ): UserProfileUpdatedEventV2 {
     const profile = new UserProfile(
       event.firstName,
       event.lastName,
       event.email,
       '', // 默认值
-      new UserPreferences('en', 'UTC', 'light', new NotificationSettings())
+      new UserPreferences('en', 'UTC', 'light', new NotificationSettings()),
     );
-    
-    return new UserProfileUpdatedEventV2(
-      event.aggregateId,
-      profile,
-      ['firstName', 'lastName', 'email']
-    );
+
+    return new UserProfileUpdatedEventV2(event.aggregateId, profile, [
+      'firstName',
+      'lastName',
+      'email',
+    ]);
   }
 }
 ```
@@ -254,23 +287,36 @@ export class EventUpgrader {
 ### 性能考量
 
 #### 快照机制
+
 ```typescript
 // 定期创建聚合快照以优化性能
 export class SnapshotService {
   private readonly SNAPSHOT_INTERVAL = 100; // 每100个事件创建一个快照
 
-  async createSnapshotIfNeeded(aggregateId: string, currentVersion: number): Promise<void> {
+  async createSnapshotIfNeeded(
+    aggregateId: string,
+    currentVersion: number,
+  ): Promise<void> {
     const lastSnapshot = await this.getLastSnapshot(aggregateId);
-    
-    if (!lastSnapshot || (currentVersion - lastSnapshot.version) >= this.SNAPSHOT_INTERVAL) {
-      const aggregate = await this.reconstructAggregate(aggregateId, lastSnapshot?.version || 0);
+
+    if (
+      !lastSnapshot ||
+      currentVersion - lastSnapshot.version >= this.SNAPSHOT_INTERVAL
+    ) {
+      const aggregate = await this.reconstructAggregate(
+        aggregateId,
+        lastSnapshot?.version || 0,
+      );
       const snapshot = aggregate.createSnapshot();
-      
+
       await this.saveSnapshot(snapshot);
     }
   }
 
-  async reconstructAggregate(aggregateId: string, fromVersion: number = 0): Promise<EventSourcedAggregateRoot> {
+  async reconstructAggregate(
+    aggregateId: string,
+    fromVersion: number = 0,
+  ): Promise<EventSourcedAggregateRoot> {
     // 1. 从快照开始重建
     const snapshot = await this.getLastSnapshot(aggregateId);
     let aggregate: EventSourcedAggregateRoot;
@@ -295,24 +341,35 @@ export class SnapshotService {
 ```
 
 #### 事件压缩
+
 ```typescript
 // 压缩历史事件以减少存储空间
 export class EventCompressionService {
-  async compressOldEvents(aggregateId: string, beforeDate: Date): Promise<void> {
-    const oldEvents = await this.eventStore.getEventsBefore(aggregateId, beforeDate);
-    
+  async compressOldEvents(
+    aggregateId: string,
+    beforeDate: Date,
+  ): Promise<void> {
+    const oldEvents = await this.eventStore.getEventsBefore(
+      aggregateId,
+      beforeDate,
+    );
+
     if (oldEvents.length > 0) {
       // 创建压缩事件
       const compressedEvent = new CompressedEvent(
         aggregateId,
         oldEvents[0].version,
         oldEvents[oldEvents.length - 1].version,
-        this.compressEvents(oldEvents)
+        this.compressEvents(oldEvents),
       );
-      
+
       // 保存压缩事件并删除原始事件
       await this.eventStore.saveCompressedEvent(compressedEvent);
-      await this.eventStore.deleteEvents(aggregateId, oldEvents[0].version, oldEvents[oldEvents.length - 1].version);
+      await this.eventStore.deleteEvents(
+        aggregateId,
+        oldEvents[0].version,
+        oldEvents[oldEvents.length - 1].version,
+      );
     }
   }
 
@@ -321,7 +378,7 @@ export class EventCompressionService {
     return {
       eventTypes: events.map(e => e.eventType),
       timestamps: events.map(e => e.occurredOn),
-      keyData: events.map(e => this.extractKeyData(e))
+      keyData: events.map(e => this.extractKeyData(e)),
     };
   }
 }
@@ -330,12 +387,13 @@ export class EventCompressionService {
 ### 数据一致性考量
 
 #### 最终一致性保证
+
 ```typescript
 // 读模型的最终一致性
 export class ReadModelConsistencyService {
   async ensureReadModelConsistency(): Promise<void> {
     const inconsistencies = await this.findInconsistencies();
-    
+
     for (const inconsistency of inconsistencies) {
       await this.reprojectReadModel(inconsistency.aggregateId);
     }
@@ -343,43 +401,43 @@ export class ReadModelConsistencyService {
 
   private async findInconsistencies(): Promise<Inconsistency[]> {
     const inconsistencies: Inconsistency[] = [];
-    
+
     // 检查事件存储与读模型的一致性
     const aggregates = await this.getAllAggregateIds();
-    
+
     for (const aggregateId of aggregates) {
       const events = await this.eventStore.getEvents(aggregateId);
       const readModel = await this.readModelRepository.findById(aggregateId);
-      
+
       if (this.isInconsistent(events, readModel)) {
-        inconsistencies.push({ aggregateId, type: 'EVENT_READ_MODEL_MISMATCH' });
+        inconsistencies.push({
+          aggregateId,
+          type: 'EVENT_READ_MODEL_MISMATCH',
+        });
       }
     }
-    
+
     return inconsistencies;
   }
 }
 ```
 
 #### 并发控制
+
 ```typescript
 // 乐观锁控制并发
 export class ConcurrencyControlService {
   async saveEventsWithOptimisticLock(
     aggregateId: string,
     events: IDomainEvent[],
-    expectedVersion: number
+    expectedVersion: number,
   ): Promise<void> {
     const currentVersion = await this.getCurrentVersion(aggregateId);
-    
+
     if (currentVersion !== expectedVersion) {
-      throw new ConcurrencyError(
-        aggregateId,
-        expectedVersion,
-        currentVersion
-      );
+      throw new ConcurrencyError(aggregateId, expectedVersion, currentVersion);
     }
-    
+
     await this.eventStore.saveEvents(aggregateId, events, expectedVersion);
   }
 }
@@ -388,6 +446,7 @@ export class ConcurrencyControlService {
 ## 事件溯源在SAAS平台中的具体应用
 
 ### 用户行为追踪
+
 ```typescript
 // 用户行为事件
 export class UserActionEvent implements IDomainEvent {
@@ -395,7 +454,7 @@ export class UserActionEvent implements IDomainEvent {
     public readonly aggregateId: string,
     public readonly action: string,
     public readonly resource: string,
-    public readonly metadata: UserActionMetadata
+    public readonly metadata: UserActionMetadata,
   ) {
     super(aggregateId);
   }
@@ -404,19 +463,23 @@ export class UserActionEvent implements IDomainEvent {
 // 用户行为分析
 export class UserBehaviorAnalytics {
   async analyzeUserJourney(userId: string): Promise<UserJourney> {
-    const events = await this.eventStore.getEventsByType('UserActionEvent', userId);
-    
+    const events = await this.eventStore.getEventsByType(
+      'UserActionEvent',
+      userId,
+    );
+
     return {
       loginPattern: this.analyzeLoginPattern(events),
       featureUsage: this.analyzeFeatureUsage(events),
       sessionDuration: this.calculateSessionDuration(events),
-      conversionFunnel: this.buildConversionFunnel(events)
+      conversionFunnel: this.buildConversionFunnel(events),
     };
   }
 }
 ```
 
 ### 计费事件追踪
+
 ```typescript
 // 计费相关事件
 export class BillingEvent implements IDomainEvent {
@@ -425,7 +488,7 @@ export class BillingEvent implements IDomainEvent {
     public readonly billingType: BillingType,
     public readonly amount: number,
     public readonly currency: string,
-    public readonly metadata: BillingMetadata
+    public readonly metadata: BillingMetadata,
   ) {
     super(aggregateId);
   }
@@ -434,19 +497,23 @@ export class BillingEvent implements IDomainEvent {
 // 计费分析
 export class BillingAnalytics {
   async generateRevenueReport(timeRange: DateRange): Promise<RevenueReport> {
-    const billingEvents = await this.eventStore.getEventsByType('BillingEvent', timeRange);
-    
+    const billingEvents = await this.eventStore.getEventsByType(
+      'BillingEvent',
+      timeRange,
+    );
+
     return {
       totalRevenue: this.calculateTotalRevenue(billingEvents),
       revenueByType: this.calculateRevenueByType(billingEvents),
       revenueTrends: this.calculateRevenueTrends(billingEvents),
-      churnAnalysis: this.analyzeChurn(billingEvents)
+      churnAnalysis: this.analyzeChurn(billingEvents),
     };
   }
 }
 ```
 
 ### 系统性能监控
+
 ```typescript
 // 性能监控事件
 export class PerformanceEvent implements IDomainEvent {
@@ -454,7 +521,7 @@ export class PerformanceEvent implements IDomainEvent {
     public readonly aggregateId: string,
     public readonly operation: string,
     public readonly duration: number,
-    public readonly metadata: PerformanceMetadata
+    public readonly metadata: PerformanceMetadata,
   ) {
     super(aggregateId);
   }
@@ -463,13 +530,14 @@ export class PerformanceEvent implements IDomainEvent {
 // 性能分析
 export class PerformanceAnalytics {
   async analyzeSystemPerformance(): Promise<PerformanceReport> {
-    const performanceEvents = await this.eventStore.getEventsByType('PerformanceEvent');
-    
+    const performanceEvents =
+      await this.eventStore.getEventsByType('PerformanceEvent');
+
     return {
       averageResponseTime: this.calculateAverageResponseTime(performanceEvents),
       slowestOperations: this.identifySlowestOperations(performanceEvents),
       performanceTrends: this.calculatePerformanceTrends(performanceEvents),
-      bottleneckAnalysis: this.analyzeBottlenecks(performanceEvents)
+      bottleneckAnalysis: this.analyzeBottlenecks(performanceEvents),
     };
   }
 }
@@ -480,6 +548,7 @@ export class PerformanceAnalytics {
 ### 渐进式实施策略
 
 #### 阶段1：核心领域事件溯源
+
 ```typescript
 // 从用户管理开始实施事件溯源
 export class UserEventSourcingModule {
@@ -488,32 +557,29 @@ export class UserEventSourcingModule {
       module: UserEventSourcingModule,
       imports: [
         EventStoreModule.forFeature([UserCreatedEvent, UserUpdatedEvent]),
-        ReadModelModule.forFeature([UserReadModel])
+        ReadModelModule.forFeature([UserReadModel]),
       ],
-      providers: [
-        UserEventStore,
-        UserReadModelProjector,
-        UserSnapshotService
-      ]
+      providers: [UserEventStore, UserReadModelProjector, UserSnapshotService],
     };
   }
 }
 ```
 
 #### 阶段2：扩展到其他领域
+
 ```typescript
 // 逐步扩展到其他业务领域
 export class EventSourcingExpansionService {
   async expandToNewDomain(domain: string): Promise<void> {
     // 1. 设计领域事件
     await this.designDomainEvents(domain);
-    
+
     // 2. 实现事件存储
     await this.implementEventStore(domain);
-    
+
     // 3. 创建读模型
     await this.createReadModels(domain);
-    
+
     // 4. 迁移现有数据
     await this.migrateExistingData(domain);
   }
@@ -523,6 +589,7 @@ export class EventSourcingExpansionService {
 ### 团队培训计划
 
 #### 开发团队培训
+
 ```typescript
 // 事件溯源开发指南
 export class EventSourcingGuidelines {
@@ -531,7 +598,7 @@ export class EventSourcingGuidelines {
     IMMUTABILITY: '事件一旦创建就不能修改',
     VERSIONING: '支持事件模式的演进',
     GRANULARITY: '事件粒度要适中，不能太细也不能太粗',
-    BUSINESS_MEANING: '事件要有明确的业务含义'
+    BUSINESS_MEANING: '事件要有明确的业务含义',
   };
 
   // 2. 聚合设计原则
@@ -539,7 +606,7 @@ export class EventSourcingGuidelines {
     CONSISTENCY_BOUNDARY: '聚合是事务边界',
     SINGLE_RESPONSIBILITY: '每个聚合只负责一个业务概念',
     EVENT_DRIVEN: '通过事件进行状态变更',
-    SNAPSHOT_SUPPORT: '支持快照以优化性能'
+    SNAPSHOT_SUPPORT: '支持快照以优化性能',
   };
 }
 ```
@@ -551,12 +618,14 @@ export class EventSourcingGuidelines {
 #### 技术复杂度对比
 
 **事件溯源复杂度**
+
 - 事件存储设计和管理
 - 聚合重建机制
 - 读模型同步
 - 快照管理
 
 **事件驱动复杂度**
+
 - 消息队列管理
 - 事件路由和分发
 - 分布式事务处理
@@ -568,11 +637,13 @@ export class EventSourcingGuidelines {
 #### 资源开销对比
 
 **事件溯源资源需求**
+
 - 事件存储空间
 - 聚合重建计算
 - 读模型维护
 
 **事件驱动资源需求**
+
 - 消息队列基础设施
 - 网络通信开销
 - 服务发现和注册
@@ -582,11 +653,13 @@ export class EventSourcingGuidelines {
 #### 开发效率对比
 
 **事件溯源开发效率**
+
 - 业务逻辑集中
 - 调试相对简单
 - 测试容易编写
 
 **事件驱动开发效率**
+
 - 分布式调试复杂
 - 集成测试困难
 - 错误排查耗时
@@ -594,11 +667,13 @@ export class EventSourcingGuidelines {
 #### 团队技能要求对比
 
 **事件溯源技能要求**
+
 - DDD概念理解
 - 事件设计能力
 - 聚合建模技能
 
 **事件驱动技能要求**
+
 - 分布式系统设计
 - 消息队列技术
 - 微服务架构
@@ -608,11 +683,13 @@ export class EventSourcingGuidelines {
 #### 运维复杂度对比
 
 **事件溯源运维**
+
 - 事件存储备份
 - 读模型监控
 - 性能优化
 
 **事件驱动运维**
+
 - 消息队列监控
 - 服务健康检查
 - 分布式追踪

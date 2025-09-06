@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 运行ESLint检查
+echo "🔍 Running ESLint..."
+pnpm lint:check
+
+# 运行Prettier检查
+echo "🎨 Running Prettier check..."
+pnpm format:check
+
+# 运行类型检查
+echo "📝 Running TypeScript type check..."
+pnpm run -r build
+
+echo "✅ Pre-commit checks passed!"

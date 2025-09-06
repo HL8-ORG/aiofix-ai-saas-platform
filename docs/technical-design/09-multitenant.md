@@ -89,8 +89,8 @@
 ```typescript
 // 数据分类枚举
 export enum DataClassification {
-  SHAREABLE = 'shareable',    // 可共享数据
-  PROTECTED = 'protected'     // 受保护数据
+  SHAREABLE = 'shareable', // 可共享数据
+  PROTECTED = 'protected', // 受保护数据
 }
 
 // 数据访问权限
@@ -98,16 +98,16 @@ export enum DataAccessLevel {
   READ = 'read',
   WRITE = 'write',
   DELETE = 'delete',
-  SHARE = 'share'
+  SHARE = 'share',
 }
 
 // 数据分类上下文
 export interface DataClassificationContext {
   classification: DataClassification;
   accessLevel: DataAccessLevel;
-  shareableScopes: IsolationLevel[];  // 可共享的范围
-  protectedScopes: IsolationLevel[];  // 受保护的范围
-  ownerLevel: IsolationLevel;         // 数据所有者层级
+  shareableScopes: IsolationLevel[]; // 可共享的范围
+  protectedScopes: IsolationLevel[]; // 受保护的范围
+  ownerLevel: IsolationLevel; // 数据所有者层级
 }
 
 // 数据分类服务
@@ -115,35 +115,35 @@ export interface DataClassificationContext {
 export class DataClassificationService {
   constructor(
     private readonly isolationService: DataIsolationService,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
   ) {}
 
   // 检查数据访问权限
   async checkDataAccess(
     dataId: string,
     requesterContext: DataIsolationContext,
-    accessLevel: DataAccessLevel
+    accessLevel: DataAccessLevel,
   ): Promise<boolean> {
     const dataClassification = await this.getDataClassification(dataId);
-    
+
     // 检查数据分类
     if (dataClassification.classification === DataClassification.PROTECTED) {
       return this.checkProtectedDataAccess(
         dataClassification,
         requesterContext,
-        accessLevel
+        accessLevel,
       );
     }
-    
+
     // 检查可共享数据访问
     if (dataClassification.classification === DataClassification.SHAREABLE) {
       return this.checkShareableDataAccess(
         dataClassification,
         requesterContext,
-        accessLevel
+        accessLevel,
       );
     }
-    
+
     return false;
   }
 
@@ -151,15 +151,15 @@ export class DataClassificationService {
   private async checkProtectedDataAccess(
     classification: DataClassificationContext,
     requesterContext: DataIsolationContext,
-    accessLevel: DataAccessLevel
+    accessLevel: DataAccessLevel,
   ): Promise<boolean> {
     // 受保护数据只能被所有者或具有特殊权限的用户访问
     const isOwner = this.isDataOwner(classification, requesterContext);
     const hasSpecialPermission = await this.hasSpecialPermission(
       requesterContext,
-      accessLevel
+      accessLevel,
     );
-    
+
     return isOwner || hasSpecialPermission;
   }
 
@@ -167,21 +167,21 @@ export class DataClassificationService {
   private async checkShareableDataAccess(
     classification: DataClassificationContext,
     requesterContext: DataIsolationContext,
-    accessLevel: DataAccessLevel
+    accessLevel: DataAccessLevel,
   ): Promise<boolean> {
     // 检查请求者是否在可共享范围内
-    const isInShareableScope = classification.shareableScopes.some(
-      scope => this.isInScope(requesterContext, scope)
+    const isInShareableScope = classification.shareableScopes.some(scope =>
+      this.isInScope(requesterContext, scope),
     );
-    
+
     if (!isInShareableScope) {
       return false;
     }
-    
+
     // 检查具体的访问权限
     return await this.permissionService.checkPermission(
       requesterContext,
-      accessLevel
+      accessLevel,
     );
   }
 }
@@ -208,14 +208,14 @@ export interface DataIsolationContext {
 export class DataIsolationService {
   constructor(
     private readonly userService: UserService,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
   ) {}
 
   // 获取用户的数据隔离上下文
   async getDataIsolationContext(userId: string): Promise<DataIsolationContext> {
     const user = await this.userService.findById(userId);
     const permissions = await this.permissionService.getUserPermissions(userId);
-    
+
     return {
       platformId: user.platformId,
       tenantId: user.tenantId,
@@ -223,7 +223,7 @@ export class DataIsolationService {
       departmentId: user.departmentId,
       userId: user.id,
       isolationLevel: this.determineIsolationLevel(user),
-      permissions
+      permissions,
     };
   }
 
@@ -232,52 +232,54 @@ export class DataIsolationService {
     if (user.isPlatformAdmin) {
       return IsolationLevel.PLATFORM;
     }
-    
+
     if (user.tenantId && user.isTenantAdmin) {
       return IsolationLevel.TENANT;
     }
-    
+
     if (user.organizationId && user.isOrganizationAdmin) {
       return IsolationLevel.ORGANIZATION;
     }
-    
+
     if (user.departmentId && user.isDepartmentAdmin) {
       return IsolationLevel.DEPARTMENT;
     }
-    
+
     return IsolationLevel.USER;
   }
 
   // 应用数据隔离过滤器
   applyDataIsolation<T>(
     query: SelectQueryBuilder<T>,
-    context: DataIsolationContext
+    context: DataIsolationContext,
   ): SelectQueryBuilder<T> {
     switch (context.isolationLevel) {
       case IsolationLevel.PLATFORM:
         // 平台级用户可以访问所有数据
         return query;
-        
+
       case IsolationLevel.TENANT:
         // 租户级用户只能访问本租户数据
-        return query.where('tenantId = :tenantId', { tenantId: context.tenantId });
-        
+        return query.where('tenantId = :tenantId', {
+          tenantId: context.tenantId,
+        });
+
       case IsolationLevel.ORGANIZATION:
         // 组织级用户只能访问本组织数据
-        return query.where('organizationId = :organizationId', { 
-          organizationId: context.organizationId 
+        return query.where('organizationId = :organizationId', {
+          organizationId: context.organizationId,
         });
-        
+
       case IsolationLevel.DEPARTMENT:
         // 部门级用户只能访问本部门数据
-        return query.where('departmentId = :departmentId', { 
-          departmentId: context.departmentId 
+        return query.where('departmentId = :departmentId', {
+          departmentId: context.departmentId,
         });
-        
+
       case IsolationLevel.USER:
         // 用户级只能访问自己的数据
         return query.where('userId = :userId', { userId: context.userId });
-        
+
       default:
         throw new UnauthorizedException('Invalid isolation level');
     }
@@ -290,19 +292,23 @@ export class DataIsolationService {
 ```typescript
 // 数据隔离装饰器
 export function DataIsolation(isolationLevel: IsolationLevel) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: any,
+    propertyName: string,
+    descriptor: PropertyDescriptor,
+  ) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
       const context = this.dataIsolationService.getDataIsolationContext(
-        this.getCurrentUserId()
+        this.getCurrentUserId(),
       );
-      
+
       // 检查隔离级别权限
       if (!this.hasIsolationPermission(context, isolationLevel)) {
         throw new ForbiddenException('Insufficient isolation level permission');
       }
-      
+
       // 应用数据隔离
       const result = await method.apply(this, args);
       return this.applyDataIsolationToResult(result, context);
@@ -315,7 +321,7 @@ export function DataIsolation(isolationLevel: IsolationLevel) {
 export class UserService {
   constructor(
     private readonly dataIsolationService: DataIsolationService,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
   ) {}
 
   @DataIsolation(IsolationLevel.TENANT)
@@ -344,24 +350,17 @@ export class Platform extends EventSourcedAggregateRoot {
 
   public static create(name: string, settings: PlatformSettings): Platform {
     const platform = new Platform();
-    const event = new PlatformCreatedEvent(
-      uuid.v4(),
-      name,
-      settings
-    );
-    
+    const event = new PlatformCreatedEvent(uuid.v4(), name, settings);
+
     platform.apply(event);
     return platform;
   }
 
   public addTenant(tenant: Tenant): void {
     this.validateTenantLimit();
-    
-    const event = new TenantAddedToPlatformEvent(
-      this._id,
-      tenant.id
-    );
-    
+
+    const event = new TenantAddedToPlatformEvent(this._id, tenant.id);
+
     this.apply(event);
   }
 
@@ -410,39 +409,28 @@ export class Tenant extends EventSourcedAggregateRoot {
   public static create(
     platformId: string,
     name: string,
-    settings: TenantSettings
+    settings: TenantSettings,
   ): Tenant {
     const tenant = new Tenant();
-    const event = new TenantCreatedEvent(
-      uuid.v4(),
-      platformId,
-      name,
-      settings
-    );
-    
+    const event = new TenantCreatedEvent(uuid.v4(), platformId, name, settings);
+
     tenant.apply(event);
     return tenant;
   }
 
   public addOrganization(organization: Organization): void {
     this.validateOrganizationLimit();
-    
-    const event = new OrganizationAddedToTenantEvent(
-      this._id,
-      organization.id
-    );
-    
+
+    const event = new OrganizationAddedToTenantEvent(this._id, organization.id);
+
     this.apply(event);
   }
 
   public addUser(user: User): void {
     this.validateUserLimit();
-    
-    const event = new UserAddedToTenantEvent(
-      this._id,
-      user.id
-    );
-    
+
+    const event = new UserAddedToTenantEvent(this._id, user.id);
+
     this.apply(event);
   }
 
@@ -508,50 +496,44 @@ export class Organization extends EventSourcedAggregateRoot {
   public static create(
     tenantId: string,
     name: string,
-    type: OrganizationType
+    type: OrganizationType,
   ): Organization {
     const organization = new Organization();
-    const event = new OrganizationCreatedEvent(
-      uuid.v4(),
-      tenantId,
-      name,
-      type
-    );
-    
+    const event = new OrganizationCreatedEvent(uuid.v4(), tenantId, name, type);
+
     organization.apply(event);
     return organization;
   }
 
   public addDepartment(department: Department): void {
     this.validateDepartmentLimit();
-    
+
     const event = new DepartmentAddedToOrganizationEvent(
       this._id,
-      department.id
+      department.id,
     );
-    
+
     this.apply(event);
   }
 
   public addUser(user: User): void {
     this.validateUserLimit();
-    
-    const event = new UserAddedToOrganizationEvent(
-      this._id,
-      user.id
-    );
-    
+
+    const event = new UserAddedToOrganizationEvent(this._id, user.id);
+
     this.apply(event);
   }
 
   private validateDepartmentLimit(): void {
-    if (this._departments.length >= 50) { // 默认限制
+    if (this._departments.length >= 50) {
+      // 默认限制
       throw new DepartmentLimitExceededError(this._id);
     }
   }
 
   private validateUserLimit(): void {
-    if (this._users.length >= 1000) { // 默认限制
+    if (this._users.length >= 1000) {
+      // 默认限制
       throw new UserLimitExceededError(this._id);
     }
   }
@@ -605,42 +587,37 @@ export class Department extends EventSourcedAggregateRoot {
   public static create(
     organizationId: string,
     name: string,
-    parentDepartmentId?: string
+    parentDepartmentId?: string,
   ): Department {
     const department = new Department();
     const event = new DepartmentCreatedEvent(
       uuid.v4(),
       organizationId,
       name,
-      parentDepartmentId
+      parentDepartmentId,
     );
-    
+
     department.apply(event);
     return department;
   }
 
   public addUser(user: User): void {
     this.validateUserLimit();
-    
-    const event = new UserAddedToDepartmentEvent(
-      this._id,
-      user.id
-    );
-    
+
+    const event = new UserAddedToDepartmentEvent(this._id, user.id);
+
     this.apply(event);
   }
 
   public removeUser(userId: string): void {
-    const event = new UserRemovedFromDepartmentEvent(
-      this._id,
-      userId
-    );
-    
+    const event = new UserRemovedFromDepartmentEvent(this._id, userId);
+
     this.apply(event);
   }
 
   private validateUserLimit(): void {
-    if (this._users.length >= 100) { // 默认限制
+    if (this._users.length >= 100) {
+      // 默认限制
       throw new UserLimitExceededError(this._id);
     }
   }
@@ -693,16 +670,11 @@ export class User extends EventSourcedAggregateRoot {
   public static create(
     platformId: string,
     email: string,
-    profile: UserProfile
+    profile: UserProfile,
   ): User {
     const user = new User();
-    const event = new UserCreatedEvent(
-      uuid.v4(),
-      platformId,
-      email,
-      profile
-    );
-    
+    const event = new UserCreatedEvent(uuid.v4(), platformId, email, profile);
+
     user.apply(event);
     return user;
   }
@@ -711,12 +683,9 @@ export class User extends EventSourcedAggregateRoot {
     if (this._tenantId) {
       throw new UserAlreadyAssignedToTenantError(this._id, this._tenantId);
     }
-    
-    const event = new UserAssignedToTenantEvent(
-      this._id,
-      tenantId
-    );
-    
+
+    const event = new UserAssignedToTenantEvent(this._id, tenantId);
+
     this.apply(event);
   }
 
@@ -724,12 +693,9 @@ export class User extends EventSourcedAggregateRoot {
     if (!this._tenantId) {
       throw new UserNotAssignedToTenantError(this._id);
     }
-    
-    const event = new UserAssignedToOrganizationEvent(
-      this._id,
-      organizationId
-    );
-    
+
+    const event = new UserAssignedToOrganizationEvent(this._id, organizationId);
+
     this.apply(event);
   }
 
@@ -737,28 +703,23 @@ export class User extends EventSourcedAggregateRoot {
     if (!this._organizationId) {
       throw new UserNotAssignedToOrganizationError(this._id);
     }
-    
-    const event = new UserAssignedToDepartmentEvent(
-      this._id,
-      departmentId
-    );
-    
+
+    const event = new UserAssignedToDepartmentEvent(this._id, departmentId);
+
     this.apply(event);
   }
 
   public addRole(role: UserRole): void {
     this.validateRoleLimit();
-    
-    const event = new UserRoleAddedEvent(
-      this._id,
-      role
-    );
-    
+
+    const event = new UserRoleAddedEvent(this._id, role);
+
     this.apply(event);
   }
 
   private validateRoleLimit(): void {
-    if (this._roles.length >= 10) { // 默认限制
+    if (this._roles.length >= 10) {
+      // 默认限制
       throw new RoleLimitExceededError(this._id);
     }
   }
@@ -789,7 +750,9 @@ export class User extends EventSourcedAggregateRoot {
     this._tenantId = event.tenantId;
   }
 
-  private whenAssignedToOrganization(event: UserAssignedToOrganizationEvent): void {
+  private whenAssignedToOrganization(
+    event: UserAssignedToOrganizationEvent,
+  ): void {
     this._organizationId = event.organizationId;
   }
 
@@ -812,14 +775,15 @@ export class User extends EventSourcedAggregateRoot {
 export abstract class IsolatedRepository<T> {
   constructor(
     protected readonly entityManager: EntityManager,
-    protected readonly dataIsolationService: DataIsolationService
+    protected readonly dataIsolationService: DataIsolationService,
   ) {}
 
   protected async applyIsolation(
     query: SelectQueryBuilder<T>,
-    userId: string
+    userId: string,
   ): Promise<SelectQueryBuilder<T>> {
-    const context = await this.dataIsolationService.getDataIsolationContext(userId);
+    const context =
+      await this.dataIsolationService.getDataIsolationContext(userId);
     return this.dataIsolationService.applyDataIsolation(query, context);
   }
 
@@ -827,25 +791,30 @@ export abstract class IsolatedRepository<T> {
     const query = this.entityManager
       .createQueryBuilder(this.getEntityClass(), 'entity')
       .where('entity.id = :id', { id });
-    
+
     const isolatedQuery = await this.applyIsolation(query, userId);
     return isolatedQuery.getOne();
   }
 
   async find(filters: any, userId: string): Promise<T[]> {
-    const query = this.entityManager
-      .createQueryBuilder(this.getEntityClass(), 'entity');
-    
+    const query = this.entityManager.createQueryBuilder(
+      this.getEntityClass(),
+      'entity',
+    );
+
     // 应用过滤条件
     this.applyFilters(query, filters);
-    
+
     // 应用数据隔离
     const isolatedQuery = await this.applyIsolation(query, userId);
     return isolatedQuery.getMany();
   }
 
   protected abstract getEntityClass(): new () => T;
-  protected abstract applyFilters(query: SelectQueryBuilder<T>, filters: any): void;
+  protected abstract applyFilters(
+    query: SelectQueryBuilder<T>,
+    filters: any,
+  ): void;
 }
 ```
 
@@ -857,7 +826,7 @@ export abstract class IsolatedRepository<T> {
 export class UserRepository extends IsolatedRepository<User> {
   constructor(
     @InjectEntityManager() entityManager: EntityManager,
-    dataIsolationService: DataIsolationService
+    dataIsolationService: DataIsolationService,
   ) {
     super(entityManager, dataIsolationService);
   }
@@ -866,28 +835,35 @@ export class UserRepository extends IsolatedRepository<User> {
     return User;
   }
 
-  protected applyFilters(query: SelectQueryBuilder<User>, filters: UserFilters): void {
+  protected applyFilters(
+    query: SelectQueryBuilder<User>,
+    filters: UserFilters,
+  ): void {
     if (filters.email) {
-      query.andWhere('entity.email LIKE :email', { email: `%${filters.email}%` });
+      query.andWhere('entity.email LIKE :email', {
+        email: `%${filters.email}%`,
+      });
     }
-    
+
     if (filters.status) {
       query.andWhere('entity.status = :status', { status: filters.status });
     }
-    
+
     if (filters.tenantId) {
-      query.andWhere('entity.tenantId = :tenantId', { tenantId: filters.tenantId });
-    }
-    
-    if (filters.organizationId) {
-      query.andWhere('entity.organizationId = :organizationId', { 
-        organizationId: filters.organizationId 
+      query.andWhere('entity.tenantId = :tenantId', {
+        tenantId: filters.tenantId,
       });
     }
-    
+
+    if (filters.organizationId) {
+      query.andWhere('entity.organizationId = :organizationId', {
+        organizationId: filters.organizationId,
+      });
+    }
+
     if (filters.departmentId) {
-      query.andWhere('entity.departmentId = :departmentId', { 
-        departmentId: filters.departmentId 
+      query.andWhere('entity.departmentId = :departmentId', {
+        departmentId: filters.departmentId,
       });
     }
   }
@@ -896,7 +872,7 @@ export class UserRepository extends IsolatedRepository<User> {
     const query = this.entityManager
       .createQueryBuilder(User, 'user')
       .where('user.email = :email', { email });
-    
+
     const isolatedQuery = await this.applyIsolation(query, userId);
     return isolatedQuery.getOne();
   }
@@ -905,7 +881,7 @@ export class UserRepository extends IsolatedRepository<User> {
     const query = this.entityManager
       .createQueryBuilder(User, 'user')
       .where('user.tenantId = :tenantId', { tenantId });
-    
+
     const isolatedQuery = await this.applyIsolation(query, userId);
     return isolatedQuery.getMany();
   }

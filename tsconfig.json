@@ -8,5 +8,6 @@
       "@aiofix/*": ["libs/*/src"]
     },
     "noEmit": true
-  }
+  },
+  "include": ["packages/**/*", "apps/**/*", "scripts/**/*"]
 }

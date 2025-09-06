@@ -1,0 +1,24 @@
+{
+  "name": "@aiofix/common",
+  "version": "1.0.0",
+  "description": "公共基础包 - 提供通用的工具函数、装饰器、异常等基础组件",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.8",
+    "typescript": "~5.9.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  }
+}

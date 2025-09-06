@@ -70,7 +70,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://user:pass@postgres:5432/saas_platform
@@ -91,14 +91,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - '5432:5432'
 
   redis:
     image: redis:7-alpine
     volumes:
       - redis_data:/data
     ports:
-      - "6379:6379"
+      - '6379:6379'
 
   mongodb:
     image: mongo:6
@@ -108,7 +108,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     ports:
-      - "27017:27017"
+      - '27017:27017'
 
 volumes:
   postgres_data:
@@ -135,11 +135,11 @@ metadata:
   name: saas-config
   namespace: saas-platform
 data:
-  NODE_ENV: "production"
-  LOG_LEVEL: "info"
-  DATABASE_URL: "postgresql://user:pass@postgres-service:5432/saas_platform"
-  REDIS_URL: "redis://redis-service:6379"
-  MONGODB_URL: "mongodb://mongodb-service:27017/saas_platform"
+  NODE_ENV: 'production'
+  LOG_LEVEL: 'info'
+  DATABASE_URL: 'postgresql://user:pass@postgres-service:5432/saas_platform'
+  REDIS_URL: 'redis://redis-service:6379'
+  MONGODB_URL: 'mongodb://mongodb-service:27017/saas_platform'
 
 ---
 # k8s/secret.yaml
@@ -172,39 +172,39 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service
-        image: saas-platform/user-service:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: SERVICE_NAME
-          value: "user-service"
-        - name: PORT
-          value: "3000"
-        envFrom:
-        - configMapRef:
-            name: saas-config
-        - secretRef:
-            name: saas-secrets
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: user-service
+          image: saas-platform/user-service:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SERVICE_NAME
+              value: 'user-service'
+            - name: PORT
+              value: '3000'
+          envFrom:
+            - configMapRef:
+                name: saas-config
+            - secretRef:
+                name: saas-secrets
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 # k8s/user-service-service.yaml
@@ -217,8 +217,8 @@ spec:
   selector:
     app: user-service
   ports:
-  - port: 80
-    targetPort: 3000
+    - port: 80
+      targetPort: 3000
   type: ClusterIP
 
 ---
@@ -239,39 +239,39 @@ spec:
         app: tenant-service
     spec:
       containers:
-      - name: tenant-service
-        image: saas-platform/tenant-service:latest
-        ports:
-        - containerPort: 3001
-        env:
-        - name: SERVICE_NAME
-          value: "tenant-service"
-        - name: PORT
-          value: "3001"
-        envFrom:
-        - configMapRef:
-            name: saas-config
-        - secretRef:
-            name: saas-secrets
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3001
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 3001
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: tenant-service
+          image: saas-platform/tenant-service:latest
+          ports:
+            - containerPort: 3001
+          env:
+            - name: SERVICE_NAME
+              value: 'tenant-service'
+            - name: PORT
+              value: '3001'
+          envFrom:
+            - configMapRef:
+                name: saas-config
+            - secretRef:
+                name: saas-secrets
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ```
 
 #### Helm Chart配置
@@ -282,7 +282,7 @@ apiVersion: v2
 name: saas-platform
 description: SAAS Platform Helm Chart
 version: 1.0.0
-appVersion: "1.0.0"
+appVersion: '1.0.0'
 
 ---
 # helm/saas-platform/values.yaml
@@ -299,7 +299,7 @@ service:
 
 ingress:
   enabled: true
-  className: "nginx"
+  className: 'nginx'
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
@@ -330,10 +330,10 @@ autoscaling:
 postgresql:
   enabled: true
   auth:
-    postgresPassword: "postgres"
-    username: "saas"
-    password: "saas"
-    database: "saas_platform"
+    postgresPassword: 'postgres'
+    username: 'saas'
+    password: 'saas'
+    database: 'saas_platform'
   primary:
     persistence:
       enabled: true
@@ -343,7 +343,7 @@ redis:
   enabled: true
   auth:
     enabled: true
-    password: "redis"
+    password: 'redis'
   master:
     persistence:
       enabled: true
@@ -353,8 +353,8 @@ mongodb:
   enabled: true
   auth:
     enabled: true
-    rootUsername: "admin"
-    rootPassword: "password"
+    rootUsername: 'admin'
+    rootPassword: 'password'
   persistence:
     enabled: true
     size: 20Gi
@@ -373,21 +373,21 @@ metadata:
   namespace: saas-platform
 spec:
   instances: 3
-  
+
   postgresql:
     parameters:
-      max_connections: "200"
-      shared_buffers: "256MB"
-      effective_cache_size: "1GB"
-      maintenance_work_mem: "64MB"
-      checkpoint_completion_target: "0.9"
-      wal_buffers: "16MB"
-      default_statistics_target: "100"
-      random_page_cost: "1.1"
-      effective_io_concurrency: "200"
-      work_mem: "4MB"
-      min_wal_size: "1GB"
-      max_wal_size: "4GB"
+      max_connections: '200'
+      shared_buffers: '256MB'
+      effective_cache_size: '1GB'
+      maintenance_work_mem: '64MB'
+      checkpoint_completion_target: '0.9'
+      wal_buffers: '16MB'
+      default_statistics_target: '100'
+      random_page_cost: '1.1'
+      effective_io_concurrency: '200'
+      work_mem: '4MB'
+      min_wal_size: '1GB'
+      max_wal_size: '4GB'
 
   bootstrap:
     initdb:
@@ -407,7 +407,7 @@ spec:
 
   backup:
     barmanObjectStore:
-      destinationPath: "s3://saas-platform-backups/postgres"
+      destinationPath: 's3://saas-platform-backups/postgres'
       s3Credentials:
         accessKeyId:
           name: backup-credentials
@@ -416,9 +416,9 @@ spec:
           name: backup-credentials
           key: SECRET_ACCESS_KEY
       wal:
-        retention: "7d"
+        retention: '7d'
       data:
-        retention: "30d"
+        retention: '30d'
 ```
 
 ### MongoDB集群部署
@@ -433,10 +433,10 @@ metadata:
 spec:
   members: 3
   type: ReplicaSet
-  
+
   security:
     authentication:
-      modes: ["SCRAM"]
+      modes: ['SCRAM']
     tls:
       enabled: true
       certificateKeySecretRef:
@@ -449,14 +449,14 @@ spec:
       template:
         spec:
           containers:
-          - name: mongod
-            resources:
-              requests:
-                cpu: 500m
-                memory: 1Gi
-              limits:
-                cpu: 1000m
-                memory: 2Gi
+            - name: mongod
+              resources:
+                requests:
+                  cpu: 500m
+                  memory: 1Gi
+                limits:
+                  cpu: 1000m
+                  memory: 2Gi
 
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.cacheSizeGB: 1
@@ -464,14 +464,14 @@ spec:
     storage.wiredTiger.collectionConfig.blockCompressor: snappy
 
   volumeClaimTemplates:
-  - metadata:
-      name: data-volume
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 50Gi
-      storageClassName: fast-ssd
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes: ['ReadWriteOnce']
+        resources:
+          requests:
+            storage: 50Gi
+        storageClassName: fast-ssd
 ```
 
 ### Redis集群部署
@@ -486,7 +486,7 @@ metadata:
 spec:
   clusterSize: 6
   clusterVersion: v7
-  
+
   redisExporter:
     enabled: true
     image: oliver006/redis_exporter:latest
@@ -501,18 +501,18 @@ spec:
 
   resources:
     requests:
-      memory: "256Mi"
-      cpu: "250m"
+      memory: '256Mi'
+      cpu: '250m'
     limits:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: '512Mi'
+      cpu: '500m'
 
   redisConfig:
-    maxmemory: "400mb"
-    maxmemory-policy: "allkeys-lru"
-    save: "900 1 300 10 60 10000"
-    appendonly: "yes"
-    appendfsync: "everysec"
+    maxmemory: '400mb'
+    maxmemory-policy: 'allkeys-lru'
+    save: '900 1 300 10 60 10000'
+    appendonly: 'yes'
+    appendfsync: 'everysec'
 ```
 
 ## 监控与告警
@@ -526,13 +526,13 @@ global:
   evaluation_interval: 15s
 
 rule_files:
-  - "rules/*.yml"
+  - 'rules/*.yml'
 
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - alertmanager:9093
 
 scrape_configs:
   - job_name: 'prometheus'
@@ -546,14 +546,16 @@ scrape_configs:
           names:
             - saas-platform
     relabel_configs:
-      - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+      - source_labels:
+          [__meta_kubernetes_service_annotation_prometheus_io_scrape]
         action: keep
         regex: true
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
         action: replace
         target_label: __metrics_path__
         regex: (.+)
-      - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+      - source_labels:
+          [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
         action: replace
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
@@ -661,52 +663,52 @@ scrape_configs:
 ```yaml
 # monitoring/alert-rules.yml
 groups:
-- name: saas-platform
-  rules:
-  - alert: HighErrorRate
-    expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
-    for: 2m
-    labels:
-      severity: critical
-    annotations:
-      summary: "High error rate detected"
-      description: "Error rate is {{ $value }} errors per second"
+  - name: saas-platform
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'High error rate detected'
+          description: 'Error rate is {{ $value }} errors per second'
 
-  - alert: HighResponseTime
-    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
-    for: 5m
-    labels:
-      severity: warning
-    annotations:
-      summary: "High response time detected"
-      description: "95th percentile response time is {{ $value }} seconds"
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High response time detected'
+          description: '95th percentile response time is {{ $value }} seconds'
 
-  - alert: DatabaseConnectionHigh
-    expr: pg_stat_database_numbackends > 150
-    for: 2m
-    labels:
-      severity: warning
-    annotations:
-      summary: "High database connections"
-      description: "Database has {{ $value }} active connections"
+      - alert: DatabaseConnectionHigh
+        expr: pg_stat_database_numbackends > 150
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High database connections'
+          description: 'Database has {{ $value }} active connections'
 
-  - alert: MemoryUsageHigh
-    expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.8
-    for: 5m
-    labels:
-      severity: warning
-    annotations:
-      summary: "High memory usage"
-      description: "Memory usage is {{ $value }}% of limit"
+      - alert: MemoryUsageHigh
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High memory usage'
+          description: 'Memory usage is {{ $value }}% of limit'
 
-  - alert: CPUUsageHigh
-    expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
-    for: 5m
-    labels:
-      severity: warning
-    annotations:
-      summary: "High CPU usage"
-      description: "CPU usage is {{ $value }}%"
+      - alert: CPUUsageHigh
+        expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'High CPU usage'
+          description: 'CPU usage is {{ $value }}%'
 ```
 
 ## 日志管理
@@ -723,31 +725,31 @@ metadata:
 spec:
   version: 8.8.0
   nodeSets:
-  - name: default
-    count: 3
-    config:
-      node.roles: ["master", "data", "ingest"]
-    podTemplate:
-      spec:
-        containers:
-        - name: elasticsearch
-          resources:
-            requests:
-              memory: 2Gi
-              cpu: 1000m
-            limits:
-              memory: 4Gi
-              cpu: 2000m
-    volumeClaimTemplates:
-    - metadata:
-        name: elasticsearch-data
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 50Gi
-        storageClassName: fast-ssd
+    - name: default
+      count: 3
+      config:
+        node.roles: ['master', 'data', 'ingest']
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              resources:
+                requests:
+                  memory: 2Gi
+                  cpu: 1000m
+                limits:
+                  memory: 4Gi
+                  cpu: 2000m
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
+            storageClassName: fast-ssd
 
 ---
 # logging/kibana.yaml
@@ -764,14 +766,14 @@ spec:
   podTemplate:
     spec:
       containers:
-      - name: kibana
-        resources:
-          requests:
-            memory: 1Gi
-            cpu: 500m
-          limits:
-            memory: 2Gi
-            cpu: 1000m
+        - name: kibana
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
 
 ---
 # logging/logstash.yaml
@@ -791,28 +793,28 @@ spec:
         app: logstash
     spec:
       containers:
-      - name: logstash
-        image: logstash:8.8.0
-        ports:
-        - containerPort: 5044
-        - containerPort: 9600
-        env:
-        - name: ELASTICSEARCH_HOSTS
-          value: "http://elasticsearch:9200"
-        resources:
-          requests:
-            memory: 1Gi
-            cpu: 500m
-          limits:
-            memory: 2Gi
-            cpu: 1000m
-        volumeMounts:
-        - name: logstash-config
-          mountPath: /usr/share/logstash/pipeline
+        - name: logstash
+          image: logstash:8.8.0
+          ports:
+            - containerPort: 5044
+            - containerPort: 9600
+          env:
+            - name: ELASTICSEARCH_HOSTS
+              value: 'http://elasticsearch:9200'
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 2Gi
+              cpu: 1000m
+          volumeMounts:
+            - name: logstash-config
+              mountPath: /usr/share/logstash/pipeline
       volumes:
-      - name: logstash-config
-        configMap:
-          name: logstash-config
+        - name: logstash-config
+          configMap:
+            name: logstash-config
 ```
 
 ### 日志收集配置
@@ -885,49 +887,55 @@ export class PerformanceMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction): void {
     const start = Date.now();
-    
+
     res.on('finish', () => {
       const duration = Date.now() - start;
       const { method, url } = req;
       const { statusCode } = res;
-      
+
       this.logger.log({
         method,
         url,
         statusCode,
         duration,
         userAgent: req.get('User-Agent'),
-        ip: req.ip
+        ip: req.ip,
       });
-      
+
       // 记录慢查询
       if (duration > 1000) {
-        this.logger.warn(`Slow request detected: ${method} ${url} took ${duration}ms`);
+        this.logger.warn(
+          `Slow request detected: ${method} ${url} took ${duration}ms`,
+        );
       }
     });
-    
+
     next();
   }
 }
 
 // 缓存装饰器
 export function Cacheable(ttl: number = 300) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return function (
+    target: any,
+    propertyName: string,
+    descriptor: PropertyDescriptor,
+  ) {
     const method = descriptor.value;
-    
+
     descriptor.value = async function (...args: any[]) {
       const cacheKey = `${target.constructor.name}:${propertyName}:${JSON.stringify(args)}`;
-      
+
       // 尝试从缓存获取
       const cached = await this.cacheService.get(cacheKey);
       if (cached) {
         return cached;
       }
-      
+
       // 执行方法并缓存结果
       const result = await method.apply(this, args);
       await this.cacheService.set(cacheKey, result, ttl);
-      
+
       return result;
     };
   };
@@ -944,7 +952,12 @@ export class DatabaseConfigService {
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [UserEntity, TenantEntity, OrganizationEntity, DepartmentEntity],
+      entities: [
+        UserEntity,
+        TenantEntity,
+        OrganizationEntity,
+        DepartmentEntity,
+      ],
       synchronize: false,
       logging: process.env.NODE_ENV === 'development',
       poolSize: 20,
@@ -954,12 +967,12 @@ export class DatabaseConfigService {
         options: {
           host: process.env.REDIS_HOST,
           port: parseInt(process.env.REDIS_PORT),
-          password: process.env.REDIS_PASSWORD
-        }
-      }
+          password: process.env.REDIS_PASSWORD,
+        },
+      },
     };
   }
-  
+
   getMongoDBConfig(): any {
     return {
       type: 'mongo',
@@ -973,7 +986,7 @@ export class DatabaseConfigService {
       logging: process.env.NODE_ENV === 'development',
       maxPoolSize: 20,
       serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000
+      socketTimeoutMS: 45000,
     };
   }
 }
@@ -1030,8 +1043,8 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - api.saas-platform.com
-  - admin.saas-platform.com
+    - api.saas-platform.com
+    - admin.saas-platform.com
 
 ---
 # security/ingress-tls.yaml
@@ -1041,27 +1054,27 @@ metadata:
   name: saas-platform-ingress
   namespace: saas-platform
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
-    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256,ECDHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/ssl-protocols: 'TLSv1.2 TLSv1.3'
+    nginx.ingress.kubernetes.io/ssl-ciphers: 'ECDHE-RSA-AES128-GCM-SHA256,ECDHE-RSA-AES256-GCM-SHA384'
 spec:
   tls:
-  - hosts:
-    - api.saas-platform.com
-    - admin.saas-platform.com
-    secretName: saas-platform-tls
+    - hosts:
+        - api.saas-platform.com
+        - admin.saas-platform.com
+      secretName: saas-platform-tls
   rules:
-  - host: api.saas-platform.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: api-gateway
-            port:
-              number: 80
+    - host: api.saas-platform.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 80
 ```
 
 ### 网络安全策略
@@ -1076,49 +1089,49 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 3000
-    - protocol: TCP
-      port: 3001
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: saas-platform
-    ports:
-    - protocol: TCP
-      port: 3000
-    - protocol: TCP
-      port: 3001
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+        - protocol: TCP
+          port: 3001
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: saas-platform
+      ports:
+        - protocol: TCP
+          port: 3000
+        - protocol: TCP
+          port: 3001
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: saas-platform
-    ports:
-    - protocol: TCP
-      port: 5432
-    - protocol: TCP
-      port: 6379
-    - protocol: TCP
-      port: 27017
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 443
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: saas-platform
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+        - protocol: TCP
+          port: 27017
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
 ```
 
 ## 备份与恢复

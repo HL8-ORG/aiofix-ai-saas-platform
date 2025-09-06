@@ -1,0 +1,38 @@
+{
+  "name": "@aiofix/database",
+  "version": "1.0.0",
+  "description": "Aiofix数据库模块 - 提供统一的数据库管理功能",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "database",
+    "mikroorm",
+    "postgresql",
+    "mongodb",
+    "nest",
+    "typescript"
+  ],
+  "author": "AI开发团队",
+  "license": "MIT",
+  "dependencies": {
+    "@mikro-orm/core": "^6.0.0",
+    "@mikro-orm/postgresql": "^6.0.0",
+    "@mikro-orm/mongodb": "^6.0.0",
+    "@mikro-orm/migrations": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "~5.9.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0"
+  }
+}

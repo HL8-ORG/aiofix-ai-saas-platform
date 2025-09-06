@@ -41,7 +41,7 @@ export class CreateUserCommand {
     public readonly email: string,
     public readonly password: string,
     public readonly profile: UserProfile,
-    public readonly platformId: string
+    public readonly platformId: string,
   ) {}
 }
 
@@ -50,7 +50,7 @@ export class UpdateUserProfileCommand {
   constructor(
     public readonly userId: string,
     public readonly profile: UserProfile,
-    public readonly updatedBy: string
+    public readonly updatedBy: string,
   ) {}
 }
 
@@ -60,7 +60,7 @@ export class AssignUserToTenantCommand {
     public readonly userId: string,
     public readonly tenantId: string,
     public readonly assignedBy: string,
-    public readonly role?: string
+    public readonly role?: string,
   ) {}
 }
 
@@ -70,7 +70,7 @@ export class AssignUserToOrganizationCommand {
     public readonly userId: string,
     public readonly organizationId: string,
     public readonly assignedBy: string,
-    public readonly role?: string
+    public readonly role?: string,
   ) {}
 }
 
@@ -80,7 +80,7 @@ export class AssignUserToDepartmentCommand {
     public readonly userId: string,
     public readonly departmentId: string,
     public readonly assignedBy: string,
-    public readonly role?: string
+    public readonly role?: string,
   ) {}
 }
 
@@ -90,7 +90,7 @@ export class RemoveUserFromTenantCommand {
     public readonly userId: string,
     public readonly tenantId: string,
     public readonly removedBy: string,
-    public readonly reason?: string
+    public readonly reason?: string,
   ) {}
 }
 ```
@@ -104,7 +104,7 @@ export class CreateTenantCommand {
     public readonly name: string,
     public readonly type: TenantType,
     public readonly settings: TenantSettings,
-    public readonly createdBy: string
+    public readonly createdBy: string,
   ) {}
 }
 
@@ -114,7 +114,7 @@ export class UpdateTenantCommand {
     public readonly tenantId: string,
     public readonly name?: string,
     public readonly settings?: TenantSettings,
-    public readonly updatedBy: string
+    public readonly updatedBy: string,
   ) {}
 }
 
@@ -123,7 +123,7 @@ export class DeleteTenantCommand {
   constructor(
     public readonly tenantId: string,
     public readonly deletedBy: string,
-    public readonly reason: string
+    public readonly reason: string,
   ) {}
 }
 ```
@@ -138,7 +138,7 @@ export class CreateOrganizationCommand {
     public readonly name: string,
     public readonly type: OrganizationType,
     public readonly description?: string,
-    public readonly createdBy: string
+    public readonly createdBy: string,
   ) {}
 }
 
@@ -148,7 +148,7 @@ export class UpdateOrganizationCommand {
     public readonly organizationId: string,
     public readonly name?: string,
     public readonly description?: string,
-    public readonly updatedBy: string
+    public readonly updatedBy: string,
   ) {}
 }
 
@@ -157,7 +157,7 @@ export class DeleteOrganizationCommand {
   constructor(
     public readonly organizationId: string,
     public readonly deletedBy: string,
-    public readonly reason: string
+    public readonly reason: string,
   ) {}
 }
 ```
@@ -172,7 +172,7 @@ export class CreateDepartmentCommand {
     public readonly name: string,
     public readonly parentDepartmentId?: string,
     public readonly description?: string,
-    public readonly createdBy: string
+    public readonly createdBy: string,
   ) {}
 }
 
@@ -182,7 +182,7 @@ export class UpdateDepartmentCommand {
     public readonly departmentId: string,
     public readonly name?: string,
     public readonly description?: string,
-    public readonly updatedBy: string
+    public readonly updatedBy: string,
   ) {}
 }
 
@@ -191,7 +191,7 @@ export class DeleteDepartmentCommand {
   constructor(
     public readonly departmentId: string,
     public readonly deletedBy: string,
-    public readonly reason: string
+    public readonly reason: string,
   ) {}
 }
 ```
@@ -206,7 +206,7 @@ export class CreateRoleCommand {
     public readonly description: string,
     public readonly permissions: string[],
     public readonly scope: RoleScope,
-    public readonly createdBy: string
+    public readonly createdBy: string,
   ) {}
 }
 
@@ -216,7 +216,7 @@ export class AssignRoleToUserCommand {
     public readonly userId: string,
     public readonly roleId: string,
     public readonly assignedBy: string,
-    public readonly expiresAt?: Date
+    public readonly expiresAt?: Date,
   ) {}
 }
 
@@ -226,7 +226,7 @@ export class RevokeRoleFromUserCommand {
     public readonly userId: string,
     public readonly roleId: string,
     public readonly revokedBy: string,
-    public readonly reason: string
+    public readonly reason: string,
   ) {}
 }
 ```
@@ -244,7 +244,7 @@ export class CreateUserHandler {
     private readonly userDomainService: UserDomainService,
     private readonly eventStore: IEventStore,
     private readonly passwordService: PasswordService,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
   ) {}
 
   async execute(command: CreateUserCommand): Promise<void> {
@@ -264,7 +264,9 @@ export class CreateUserHandler {
     await this.logAuditEvent(command, user);
   }
 
-  private async validateBusinessRules(command: CreateUserCommand): Promise<void> {
+  private async validateBusinessRules(
+    command: CreateUserCommand,
+  ): Promise<void> {
     // 检查邮箱唯一性
     const existingUser = await this.userRepository.findByEmail(command.email);
     if (existingUser) {
@@ -272,7 +274,9 @@ export class CreateUserHandler {
     }
 
     // 验证密码强度
-    const isPasswordStrong = await this.passwordService.validateStrength(command.password);
+    const isPasswordStrong = await this.passwordService.validateStrength(
+      command.password,
+    );
     if (!isPasswordStrong) {
       throw new WeakPasswordError();
     }
@@ -287,13 +291,13 @@ export class CreateUserHandler {
   private async createUserAggregate(command: CreateUserCommand): Promise<User> {
     const userId = uuid.v4();
     const hashedPassword = await this.passwordService.hash(command.password);
-    
+
     return User.create(
       userId,
       command.email,
       hashedPassword,
       command.profile,
-      command.platformId
+      command.platformId,
     );
   }
 
@@ -301,26 +305,32 @@ export class CreateUserHandler {
     await this.eventStore.saveEvents(
       user.id,
       user.uncommittedEvents,
-      user.version
+      user.version,
     );
-    
+
     user.markEventsAsCommitted();
   }
 
   private async sendWelcomeEmail(user: User): Promise<void> {
-    await this.emailService.sendWelcomeEmail(user.email, user.profile.firstName);
+    await this.emailService.sendWelcomeEmail(
+      user.email,
+      user.profile.firstName,
+    );
   }
 
-  private async logAuditEvent(command: CreateUserCommand, user: User): Promise<void> {
+  private async logAuditEvent(
+    command: CreateUserCommand,
+    user: User,
+  ): Promise<void> {
     await this.auditService.logEvent({
       eventType: 'USER_CREATED',
       userId: user.id,
       performedBy: 'system',
       details: {
         email: user.email,
-        platformId: command.platformId
+        platformId: command.platformId,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 }
@@ -332,13 +342,13 @@ export class AssignUserToTenantHandler {
     private readonly userRepository: IUserRepository,
     private readonly tenantRepository: ITenantRepository,
     private readonly eventStore: IEventStore,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
   ) {}
 
   async execute(command: AssignUserToTenantCommand): Promise<void> {
     // 1. 获取用户聚合
     const user = await this.getUserAggregate(command.userId);
-    
+
     // 2. 获取租户聚合
     const tenant = await this.getTenantAggregate(command.tenantId);
 
@@ -372,23 +382,31 @@ export class AssignUserToTenantHandler {
   }
 
   private async validateAssignmentRules(
-    user: User, 
-    tenant: Tenant, 
-    command: AssignUserToTenantCommand
+    user: User,
+    tenant: Tenant,
+    command: AssignUserToTenantCommand,
   ): Promise<void> {
     // 检查用户是否已经在其他租户中
     if (user.tenantId && user.tenantId !== command.tenantId) {
-      throw new UserAlreadyAssignedToDifferentTenantError(user.id, user.tenantId);
+      throw new UserAlreadyAssignedToDifferentTenantError(
+        user.id,
+        user.tenantId,
+      );
     }
 
     // 检查租户用户数量限制
-    const currentUserCount = await this.tenantRepository.getUserCount(command.tenantId);
+    const currentUserCount = await this.tenantRepository.getUserCount(
+      command.tenantId,
+    );
     if (currentUserCount >= tenant.settings.maxUsers) {
       throw new TenantUserLimitExceededError(command.tenantId);
     }
 
     // 检查分配者权限
-    await this.validateAssignerPermissions(command.assignedBy, command.tenantId);
+    await this.validateAssignerPermissions(
+      command.assignedBy,
+      command.tenantId,
+    );
   }
 
   private async saveEvents(user: User, tenant: Tenant): Promise<void> {
@@ -396,14 +414,14 @@ export class AssignUserToTenantHandler {
     await this.eventStore.saveEvents(
       user.id,
       user.uncommittedEvents,
-      user.version
+      user.version,
     );
 
     // 保存租户事件
     await this.eventStore.saveEvents(
       tenant.id,
       tenant.uncommittedEvents,
-      tenant.version
+      tenant.version,
     );
 
     user.markEventsAsCommitted();
@@ -411,9 +429,9 @@ export class AssignUserToTenantHandler {
   }
 
   private async sendNotifications(
-    user: User, 
-    tenant: Tenant, 
-    command: AssignUserToTenantCommand
+    user: User,
+    tenant: Tenant,
+    command: AssignUserToTenantCommand,
   ): Promise<void> {
     // 通知用户
     await this.notificationService.sendNotification({
@@ -421,7 +439,7 @@ export class AssignUserToTenantHandler {
       type: 'TENANT_ASSIGNMENT',
       title: '您已被分配到租户',
       message: `您已被分配到租户：${tenant.name}`,
-      data: { tenantId: tenant.id, tenantName: tenant.name }
+      data: { tenantId: tenant.id, tenantName: tenant.name },
     });
 
     // 通知租户管理员
@@ -430,7 +448,7 @@ export class AssignUserToTenantHandler {
       type: 'USER_ASSIGNED',
       title: '用户分配完成',
       message: `用户 ${user.email} 已成功分配到租户`,
-      data: { userId: user.id, userEmail: user.email }
+      data: { userId: user.id, userEmail: user.email },
     });
   }
 }
@@ -446,7 +464,7 @@ export class CreateTenantHandler {
     private readonly tenantRepository: ITenantRepository,
     private readonly platformRepository: IPlatformRepository,
     private readonly eventStore: IEventStore,
-    private readonly resourceQuotaService: ResourceQuotaService
+    private readonly resourceQuotaService: ResourceQuotaService,
   ) {}
 
   async execute(command: CreateTenantCommand): Promise<void> {
@@ -469,14 +487,18 @@ export class CreateTenantHandler {
     await this.initializeTenantConfiguration(tenant);
   }
 
-  private async validateCreationPermissions(command: CreateTenantCommand): Promise<void> {
+  private async validateCreationPermissions(
+    command: CreateTenantCommand,
+  ): Promise<void> {
     const creator = await this.userRepository.findById(command.createdBy);
     if (!creator || !creator.isPlatformAdmin) {
       throw new InsufficientPermissionsError('只有平台管理员可以创建租户');
     }
   }
 
-  private async validateTenantInfo(command: CreateTenantCommand): Promise<void> {
+  private async validateTenantInfo(
+    command: CreateTenantCommand,
+  ): Promise<void> {
     // 检查租户名称唯一性
     const existingTenant = await this.tenantRepository.findByName(command.name);
     if (existingTenant) {
@@ -497,15 +519,17 @@ export class CreateTenantHandler {
     }
   }
 
-  private async createTenantAggregate(command: CreateTenantCommand): Promise<Tenant> {
+  private async createTenantAggregate(
+    command: CreateTenantCommand,
+  ): Promise<Tenant> {
     const tenantId = uuid.v4();
-    
+
     return Tenant.create(
       tenantId,
       command.name,
       command.type,
       command.settings,
-      command.createdBy
+      command.createdBy,
     );
   }
 
@@ -515,7 +539,7 @@ export class CreateTenantHandler {
       maxUsers: tenant.settings.maxUsers,
       maxOrganizations: tenant.settings.maxOrganizations,
       maxStorage: tenant.settings.maxStorage,
-      maxBandwidth: tenant.settings.maxBandwidth
+      maxBandwidth: tenant.settings.maxBandwidth,
     });
   }
 
@@ -523,9 +547,9 @@ export class CreateTenantHandler {
     await this.eventStore.saveEvents(
       tenant.id,
       tenant.uncommittedEvents,
-      tenant.version
+      tenant.version,
     );
-    
+
     tenant.markEventsAsCommitted();
   }
 
@@ -534,26 +558,26 @@ export class CreateTenantHandler {
     const defaultOrganization = Organization.create(
       tenant.id,
       '默认组织',
-      OrganizationType.DEFAULT
+      OrganizationType.DEFAULT,
     );
 
     // 创建默认部门
     const defaultDepartment = Department.create(
       defaultOrganization.id,
-      '默认部门'
+      '默认部门',
     );
 
     // 保存默认组织架构
     await this.eventStore.saveEvents(
       defaultOrganization.id,
       defaultOrganization.uncommittedEvents,
-      defaultOrganization.version
+      defaultOrganization.version,
     );
 
     await this.eventStore.saveEvents(
       defaultDepartment.id,
       defaultDepartment.uncommittedEvents,
-      defaultDepartment.version
+      defaultDepartment.version,
     );
 
     defaultOrganization.markEventsAsCommitted();
@@ -579,7 +603,7 @@ export class GetUsersQuery {
   constructor(
     public readonly filters: UserFilters,
     public readonly pagination: PaginationOptions,
-    public readonly sortOptions?: SortOptions
+    public readonly sortOptions?: SortOptions,
   ) {}
 }
 
@@ -588,7 +612,7 @@ export class SearchUsersQuery {
   constructor(
     public readonly searchTerm: string,
     public readonly filters: UserFilters,
-    public readonly pagination: PaginationOptions
+    public readonly pagination: PaginationOptions,
   ) {}
 }
 
@@ -615,7 +639,7 @@ export class GetTenantQuery {
 export class GetTenantsQuery {
   constructor(
     public readonly filters: TenantFilters,
-    public readonly pagination: PaginationOptions
+    public readonly pagination: PaginationOptions,
   ) {}
 }
 
@@ -623,7 +647,7 @@ export class GetTenantsQuery {
 export class GetTenantUsersQuery {
   constructor(
     public readonly tenantId: string,
-    public readonly pagination: PaginationOptions
+    public readonly pagination: PaginationOptions,
   ) {}
 }
 ```
@@ -641,7 +665,7 @@ export class GetOrganizationsQuery {
   constructor(
     public readonly tenantId: string,
     public readonly filters?: OrganizationFilters,
-    public readonly pagination?: PaginationOptions
+    public readonly pagination?: PaginationOptions,
   ) {}
 }
 
@@ -649,7 +673,7 @@ export class GetOrganizationsQuery {
 export class GetOrganizationDepartmentsQuery {
   constructor(
     public readonly organizationId: string,
-    public readonly pagination?: PaginationOptions
+    public readonly pagination?: PaginationOptions,
   ) {}
 }
 ```
@@ -664,17 +688,19 @@ export class GetOrganizationDepartmentsQuery {
 export class GetUserHandler {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
-    private readonly dataIsolationService: DataIsolationService
+    private readonly dataIsolationService: DataIsolationService,
   ) {}
 
   async execute(query: GetUserQuery, context: QueryContext): Promise<UserDto> {
     // 1. 应用数据隔离
-    const isolationContext = await this.dataIsolationService.getDataIsolationContext(
-      context.userId
-    );
+    const isolationContext =
+      await this.dataIsolationService.getDataIsolationContext(context.userId);
 
     // 2. 获取用户数据
-    const user = await this.userReadRepository.findById(query.userId, isolationContext);
+    const user = await this.userReadRepository.findById(
+      query.userId,
+      isolationContext,
+    );
     if (!user) {
       throw new UserNotFoundError(query.userId);
     }
@@ -696,7 +722,7 @@ export class GetUserHandler {
       roles: user.roles,
       permissions: user.permissions,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
     };
   }
 }
@@ -707,24 +733,29 @@ export class GetUsersHandler {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
     private readonly dataIsolationService: DataIsolationService,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
   ) {}
 
   @Cacheable(300) // 缓存5分钟
-  async execute(query: GetUsersQuery, context: QueryContext): Promise<PaginatedResult<UserDto>> {
+  async execute(
+    query: GetUsersQuery,
+    context: QueryContext,
+  ): Promise<PaginatedResult<UserDto>> {
     // 1. 应用数据隔离
-    const isolationContext = await this.dataIsolationService.getDataIsolationContext(
-      context.userId
-    );
+    const isolationContext =
+      await this.dataIsolationService.getDataIsolationContext(context.userId);
 
     // 2. 构建查询条件
-    const queryConditions = this.buildQueryConditions(query.filters, isolationContext);
+    const queryConditions = this.buildQueryConditions(
+      query.filters,
+      isolationContext,
+    );
 
     // 3. 执行查询
     const result = await this.userReadRepository.find(
       queryConditions,
       query.pagination,
-      query.sortOptions
+      query.sortOptions,
     );
 
     // 4. 转换为DTO
@@ -735,13 +766,13 @@ export class GetUsersHandler {
       total: result.total,
       page: query.pagination.page,
       limit: query.pagination.limit,
-      totalPages: Math.ceil(result.total / query.pagination.limit)
+      totalPages: Math.ceil(result.total / query.pagination.limit),
     };
   }
 
   private buildQueryConditions(
-    filters: UserFilters, 
-    isolationContext: DataIsolationContext
+    filters: UserFilters,
+    isolationContext: DataIsolationContext,
   ): any {
     const conditions: any = {};
 
@@ -786,7 +817,7 @@ export class GetUsersHandler {
       roles: user.roles,
       permissions: user.permissions,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
     };
   }
 }
@@ -805,7 +836,7 @@ export class UserCreatedHandler {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
     private readonly emailService: EmailService,
-    private readonly auditService: AuditService
+    private readonly auditService: AuditService,
   ) {}
 
   async handle(event: UserCreatedEvent): Promise<void> {
@@ -833,7 +864,7 @@ export class UserCreatedHandler {
       permissions: this.getDefaultPermissions(),
       createdAt: event.occurredOn,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
 
     await this.userReadRepository.save(userReadModel);
@@ -842,7 +873,7 @@ export class UserCreatedHandler {
   private async sendWelcomeEmail(event: UserCreatedEvent): Promise<void> {
     await this.emailService.sendWelcomeEmail(
       event.email,
-      event.profile.firstName
+      event.profile.firstName,
     );
   }
 
@@ -853,18 +884,14 @@ export class UserCreatedHandler {
       userId: event.aggregateId,
       details: {
         email: event.email,
-        platformId: event.platformId
+        platformId: event.platformId,
       },
-      timestamp: event.occurredOn
+      timestamp: event.occurredOn,
     });
   }
 
   private getDefaultPermissions(): string[] {
-    return [
-      'user:read:own',
-      'user:update:own',
-      'platform:service:use'
-    ];
+    return ['user:read:own', 'user:update:own', 'platform:service:use'];
   }
 }
 
@@ -874,7 +901,7 @@ export class UserAssignedToTenantHandler {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
     private readonly tenantReadRepository: ITenantReadRepository,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
   ) {}
 
   async handle(event: UserAssignedToTenantEvent): Promise<void> {
@@ -888,27 +915,33 @@ export class UserAssignedToTenantHandler {
     await this.sendNotifications(event);
   }
 
-  private async updateUserReadModel(event: UserAssignedToTenantEvent): Promise<void> {
+  private async updateUserReadModel(
+    event: UserAssignedToTenantEvent,
+  ): Promise<void> {
     await this.userReadRepository.updateTenantAssignment(
       event.aggregateId,
       event.tenantId,
       event.role,
-      event.occurredOn
+      event.occurredOn,
     );
   }
 
-  private async updateTenantReadModel(event: UserAssignedToTenantEvent): Promise<void> {
+  private async updateTenantReadModel(
+    event: UserAssignedToTenantEvent,
+  ): Promise<void> {
     await this.tenantReadRepository.incrementUserCount(event.tenantId);
   }
 
-  private async sendNotifications(event: UserAssignedToTenantEvent): Promise<void> {
+  private async sendNotifications(
+    event: UserAssignedToTenantEvent,
+  ): Promise<void> {
     // 通知用户
     await this.notificationService.sendNotification({
       userId: event.aggregateId,
       type: 'TENANT_ASSIGNMENT',
       title: '您已被分配到租户',
       message: `您已被分配到租户，角色：${event.role}`,
-      data: { tenantId: event.tenantId, role: event.role }
+      data: { tenantId: event.tenantId, role: event.role },
     });
   }
 }
@@ -924,7 +957,7 @@ export class UserAssignedToTenantHandler {
 export class UserProjector {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
-    private readonly eventStore: IEventStore
+    private readonly eventStore: IEventStore,
   ) {}
 
   async projectUser(userId: string): Promise<void> {
@@ -938,29 +971,46 @@ export class UserProjector {
     await this.userReadRepository.save(userReadModel);
   }
 
-  private async rebuildUserReadModel(events: IDomainEvent[]): Promise<UserReadModel> {
+  private async rebuildUserReadModel(
+    events: IDomainEvent[],
+  ): Promise<UserReadModel> {
     let userReadModel: Partial<UserReadModel> = {
       id: events[0]?.aggregateId,
       roles: [],
-      permissions: []
+      permissions: [],
     };
 
     for (const event of events) {
       switch (event.eventType) {
         case 'UserCreatedEvent':
-          userReadModel = this.applyUserCreatedEvent(userReadModel, event as UserCreatedEvent);
+          userReadModel = this.applyUserCreatedEvent(
+            userReadModel,
+            event as UserCreatedEvent,
+          );
           break;
         case 'UserAssignedToTenantEvent':
-          userReadModel = this.applyUserAssignedToTenantEvent(userReadModel, event as UserAssignedToTenantEvent);
+          userReadModel = this.applyUserAssignedToTenantEvent(
+            userReadModel,
+            event as UserAssignedToTenantEvent,
+          );
           break;
         case 'UserAssignedToOrganizationEvent':
-          userReadModel = this.applyUserAssignedToOrganizationEvent(userReadModel, event as UserAssignedToOrganizationEvent);
+          userReadModel = this.applyUserAssignedToOrganizationEvent(
+            userReadModel,
+            event as UserAssignedToOrganizationEvent,
+          );
           break;
         case 'UserAssignedToDepartmentEvent':
-          userReadModel = this.applyUserAssignedToDepartmentEvent(userReadModel, event as UserAssignedToDepartmentEvent);
+          userReadModel = this.applyUserAssignedToDepartmentEvent(
+            userReadModel,
+            event as UserAssignedToDepartmentEvent,
+          );
           break;
         case 'UserRoleAddedEvent':
-          userReadModel = this.applyUserRoleAddedEvent(userReadModel, event as UserRoleAddedEvent);
+          userReadModel = this.applyUserRoleAddedEvent(
+            userReadModel,
+            event as UserRoleAddedEvent,
+          );
           break;
       }
     }
@@ -969,8 +1019,8 @@ export class UserProjector {
   }
 
   private applyUserCreatedEvent(
-    userReadModel: Partial<UserReadModel>, 
-    event: UserCreatedEvent
+    userReadModel: Partial<UserReadModel>,
+    event: UserCreatedEvent,
   ): Partial<UserReadModel> {
     return {
       ...userReadModel,
@@ -980,59 +1030,62 @@ export class UserProjector {
       platformId: event.platformId,
       createdAt: event.occurredOn,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
   }
 
   private applyUserAssignedToTenantEvent(
-    userReadModel: Partial<UserReadModel>, 
-    event: UserAssignedToTenantEvent
+    userReadModel: Partial<UserReadModel>,
+    event: UserAssignedToTenantEvent,
   ): Partial<UserReadModel> {
     return {
       ...userReadModel,
       tenantId: event.tenantId,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
   }
 
   private applyUserAssignedToOrganizationEvent(
-    userReadModel: Partial<UserReadModel>, 
-    event: UserAssignedToOrganizationEvent
+    userReadModel: Partial<UserReadModel>,
+    event: UserAssignedToOrganizationEvent,
   ): Partial<UserReadModel> {
     return {
       ...userReadModel,
       organizationId: event.organizationId,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
   }
 
   private applyUserAssignedToDepartmentEvent(
-    userReadModel: Partial<UserReadModel>, 
-    event: UserAssignedToDepartmentEvent
+    userReadModel: Partial<UserReadModel>,
+    event: UserAssignedToDepartmentEvent,
   ): Partial<UserReadModel> {
     return {
       ...userReadModel,
       departmentId: event.departmentId,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
   }
 
   private applyUserRoleAddedEvent(
-    userReadModel: Partial<UserReadModel>, 
-    event: UserRoleAddedEvent
+    userReadModel: Partial<UserReadModel>,
+    event: UserRoleAddedEvent,
   ): Partial<UserReadModel> {
     const roles = [...(userReadModel.roles || []), event.role];
-    const permissions = [...(userReadModel.permissions || []), ...event.role.permissions];
+    const permissions = [
+      ...(userReadModel.permissions || []),
+      ...event.role.permissions,
+    ];
 
     return {
       ...userReadModel,
       roles,
       permissions: [...new Set(permissions)], // 去重
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     };
   }
 }
@@ -1051,7 +1104,7 @@ export class UserApplicationService {
     private readonly queryBus: QueryBus,
     private readonly eventBus: EventBus,
     private readonly userRepository: IUserRepository,
-    private readonly dataIsolationService: DataIsolationService
+    private readonly dataIsolationService: DataIsolationService,
   ) {}
 
   // 创建用户
@@ -1060,11 +1113,11 @@ export class UserApplicationService {
     password: string,
     profile: UserProfile,
     platformId: string,
-    createdBy: string
+    createdBy: string,
   ): Promise<string> {
     const command = new CreateUserCommand(email, password, profile, platformId);
     await this.commandBus.execute(command);
-    
+
     // 返回用户ID（从事件中获取）
     const user = await this.userRepository.findByEmail(email);
     return user.id;
@@ -1075,9 +1128,14 @@ export class UserApplicationService {
     userId: string,
     tenantId: string,
     assignedBy: string,
-    role?: string
+    role?: string,
   ): Promise<void> {
-    const command = new AssignUserToTenantCommand(userId, tenantId, assignedBy, role);
+    const command = new AssignUserToTenantCommand(
+      userId,
+      tenantId,
+      assignedBy,
+      role,
+    );
     await this.commandBus.execute(command);
   }
 
@@ -1086,9 +1144,14 @@ export class UserApplicationService {
     userId: string,
     organizationId: string,
     assignedBy: string,
-    role?: string
+    role?: string,
   ): Promise<void> {
-    const command = new AssignUserToOrganizationCommand(userId, organizationId, assignedBy, role);
+    const command = new AssignUserToOrganizationCommand(
+      userId,
+      organizationId,
+      assignedBy,
+      role,
+    );
     await this.commandBus.execute(command);
   }
 
@@ -1097,9 +1160,14 @@ export class UserApplicationService {
     userId: string,
     departmentId: string,
     assignedBy: string,
-    role?: string
+    role?: string,
   ): Promise<void> {
-    const command = new AssignUserToDepartmentCommand(userId, departmentId, assignedBy, role);
+    const command = new AssignUserToDepartmentCommand(
+      userId,
+      departmentId,
+      assignedBy,
+      role,
+    );
     await this.commandBus.execute(command);
   }
 
@@ -1115,7 +1183,7 @@ export class UserApplicationService {
     filters: UserFilters,
     pagination: PaginationOptions,
     requesterId: string,
-    sortOptions?: SortOptions
+    sortOptions?: SortOptions,
   ): Promise<PaginatedResult<UserDto>> {
     const query = new GetUsersQuery(filters, pagination, sortOptions);
     const context = new QueryContext(requesterId);
@@ -1127,7 +1195,7 @@ export class UserApplicationService {
     searchTerm: string,
     filters: UserFilters,
     pagination: PaginationOptions,
-    requesterId: string
+    requesterId: string,
   ): Promise<PaginatedResult<UserDto>> {
     const query = new SearchUsersQuery(searchTerm, filters, pagination);
     const context = new QueryContext(requesterId);
@@ -1135,7 +1203,10 @@ export class UserApplicationService {
   }
 
   // 获取用户权限
-  async getUserPermissions(userId: string, requesterId: string): Promise<PermissionDto[]> {
+  async getUserPermissions(
+    userId: string,
+    requesterId: string,
+  ): Promise<PermissionDto[]> {
     const query = new GetUserPermissionsQuery(userId);
     const context = new QueryContext(requesterId);
     return this.queryBus.execute(query, context);
@@ -1160,7 +1231,7 @@ export class TenantApplicationService {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly eventBus: EventBus,
-    private readonly tenantRepository: ITenantRepository
+    private readonly tenantRepository: ITenantRepository,
   ) {}
 
   // 创建租户
@@ -1168,11 +1239,11 @@ export class TenantApplicationService {
     name: string,
     type: TenantType,
     settings: TenantSettings,
-    createdBy: string
+    createdBy: string,
   ): Promise<string> {
     const command = new CreateTenantCommand(name, type, settings, createdBy);
     await this.commandBus.execute(command);
-    
+
     // 返回租户ID
     const tenant = await this.tenantRepository.findByName(name);
     return tenant.id;
@@ -1183,9 +1254,14 @@ export class TenantApplicationService {
     tenantId: string,
     name?: string,
     settings?: TenantSettings,
-    updatedBy: string
+    updatedBy: string,
   ): Promise<void> {
-    const command = new UpdateTenantCommand(tenantId, name, settings, updatedBy);
+    const command = new UpdateTenantCommand(
+      tenantId,
+      name,
+      settings,
+      updatedBy,
+    );
     await this.commandBus.execute(command);
   }
 
@@ -1193,7 +1269,7 @@ export class TenantApplicationService {
   async deleteTenant(
     tenantId: string,
     deletedBy: string,
-    reason: string
+    reason: string,
   ): Promise<void> {
     const command = new DeleteTenantCommand(tenantId, deletedBy, reason);
     await this.commandBus.execute(command);
@@ -1210,7 +1286,7 @@ export class TenantApplicationService {
   async getTenants(
     filters: TenantFilters,
     pagination: PaginationOptions,
-    requesterId: string
+    requesterId: string,
   ): Promise<PaginatedResult<TenantDto>> {
     const query = new GetTenantsQuery(filters, pagination);
     const context = new QueryContext(requesterId);
@@ -1221,7 +1297,7 @@ export class TenantApplicationService {
   async getTenantUsers(
     tenantId: string,
     pagination: PaginationOptions,
-    requesterId: string
+    requesterId: string,
   ): Promise<PaginatedResult<UserDto>> {
     const query = new GetTenantUsersQuery(tenantId, pagination);
     const context = new QueryContext(requesterId);
@@ -1240,21 +1316,21 @@ export class TenantApplicationService {
 export class TransactionManager {
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
-    private readonly eventStore: IEventStore
+    private readonly eventStore: IEventStore,
   ) {}
 
   async executeInTransaction<T>(
     operation: () => Promise<T>,
-    options?: TransactionOptions
+    options?: TransactionOptions,
   ): Promise<T> {
-    return this.entityManager.transaction(async (transactionalEntityManager) => {
+    return this.entityManager.transaction(async transactionalEntityManager => {
       try {
         // 执行业务操作
         const result = await operation();
-        
+
         // 提交事务
         await transactionalEntityManager.commit();
-        
+
         return result;
       } catch (error) {
         // 回滚事务
@@ -1266,19 +1342,19 @@ export class TransactionManager {
 
   async executeWithEventSourcing<T>(
     operation: () => Promise<T>,
-    eventHandlers?: EventHandler[]
+    eventHandlers?: EventHandler[],
   ): Promise<T> {
     return this.executeInTransaction(async () => {
       // 执行业务操作
       const result = await operation();
-      
+
       // 处理事件
       if (eventHandlers) {
         for (const handler of eventHandlers) {
           await handler.handle();
         }
       }
-      
+
       return result;
     });
   }

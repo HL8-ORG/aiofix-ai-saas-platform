@@ -29,9 +29,9 @@ export class User extends EventSourcedAggregateRoot {
       userId,
       new Date(),
       email,
-      await hashPassword(password)
+      await hashPassword(password),
     );
-    
+
     user.apply(event);
     return user;
   }
@@ -60,14 +60,14 @@ export class User extends EventSourcedAggregateRoot {
   // 更新用户资料的领域方法
   public updateProfile(profile: UserProfile): void {
     this.validateUserStatus();
-    
+
     const event = new UserProfileUpdatedEvent(
       uuid.v4(),
       this._id,
       new Date(),
-      profile
+      profile,
     );
-    
+
     this.apply(event);
   }
 
@@ -94,7 +94,7 @@ export class UserCreatedEvent implements IDomainEvent {
     public readonly aggregateId: string,
     public readonly occurredOn: Date,
     public readonly email: string,
-    public readonly hashedPassword: string
+    public readonly hashedPassword: string,
   ) {}
 
   toJSON(): any {
@@ -103,7 +103,7 @@ export class UserCreatedEvent implements IDomainEvent {
       aggregateId: this.aggregateId,
       occurredOn: this.occurredOn.toISOString(),
       email: this.email,
-      hashedPassword: this.hashedPassword
+      hashedPassword: this.hashedPassword,
     };
   }
 }
@@ -117,7 +117,7 @@ export class UserProfileUpdatedEvent implements IDomainEvent {
     public readonly eventId: string,
     public readonly aggregateId: string,
     public readonly occurredOn: Date,
-    public readonly profile: UserProfile
+    public readonly profile: UserProfile,
   ) {}
 
   toJSON(): any {
@@ -125,7 +125,7 @@ export class UserProfileUpdatedEvent implements IDomainEvent {
       eventId: this.eventId,
       aggregateId: this.aggregateId,
       occurredOn: this.occurredOn.toISOString(),
-      profile: this.profile
+      profile: this.profile,
     };
   }
 }
@@ -141,7 +141,7 @@ export class UserProfile {
     public readonly lastName: string,
     public readonly phoneNumber: string,
     public readonly avatar: string,
-    public readonly preferences: UserPreferences
+    public readonly preferences: UserPreferences,
   ) {
     this.validate();
   }
@@ -150,11 +150,11 @@ export class UserProfile {
     if (!this.firstName || this.firstName.trim().length === 0) {
       throw new InvalidUserProfileError('First name is required');
     }
-    
+
     if (!this.lastName || this.lastName.trim().length === 0) {
       throw new InvalidUserProfileError('Last name is required');
     }
-    
+
     if (this.phoneNumber && !this.isValidPhoneNumber(this.phoneNumber)) {
       throw new InvalidUserProfileError('Invalid phone number format');
     }
@@ -175,7 +175,7 @@ export class UserProfile {
       this.lastName,
       this.phoneNumber,
       this.avatar,
-      preferences
+      preferences,
     );
   }
 }
@@ -186,7 +186,7 @@ export class UserPreferences {
     public readonly language: string,
     public readonly timezone: string,
     public readonly theme: string,
-    public readonly notifications: NotificationSettings
+    public readonly notifications: NotificationSettings,
   ) {
     this.validate();
   }
@@ -195,7 +195,7 @@ export class UserPreferences {
     if (!this.language || this.language.trim().length === 0) {
       throw new InvalidUserPreferencesError('Language is required');
     }
-    
+
     if (!this.timezone || this.timezone.trim().length === 0) {
       throw new InvalidUserPreferencesError('Timezone is required');
     }
@@ -214,7 +214,7 @@ export class UserSession {
     public readonly token: string,
     public readonly expiresAt: Date,
     public readonly deviceInfo: DeviceInfo,
-    public readonly ipAddress: string
+    public readonly ipAddress: string,
   ) {
     this.validate();
   }
@@ -223,15 +223,15 @@ export class UserSession {
     if (!this.id || this.id.trim().length === 0) {
       throw new InvalidUserSessionError('Session ID is required');
     }
-    
+
     if (!this.userId || this.userId.trim().length === 0) {
       throw new InvalidUserSessionError('User ID is required');
     }
-    
+
     if (!this.token || this.token.trim().length === 0) {
       throw new InvalidUserSessionError('Token is required');
     }
-    
+
     if (this.expiresAt <= new Date()) {
       throw new InvalidUserSessionError('Session has already expired');
     }
@@ -249,7 +249,7 @@ export class UserSession {
       this.token,
       newExpiresAt,
       this.deviceInfo,
-      this.ipAddress
+      this.ipAddress,
     );
   }
 }
@@ -263,7 +263,7 @@ export class UserSession {
 export class UserDomainService {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly passwordService: PasswordService
+    private readonly passwordService: PasswordService,
   ) {}
 
   async isEmailUnique(email: string): Promise<boolean> {
@@ -283,7 +283,10 @@ export class UserDomainService {
     return this.passwordService.hash(password);
   }
 
-  async verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+  async verifyPassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
     return this.passwordService.verify(password, hashedPassword);
   }
 }
@@ -323,15 +326,15 @@ export interface IEventStore {
   saveEvents(
     aggregateId: string,
     events: IDomainEvent[],
-    expectedVersion: number
+    expectedVersion: number,
   ): Promise<void>;
-  
+
   getEvents(aggregateId: string, fromVersion?: number): Promise<IDomainEvent[]>;
-  
+
   getEventsByType(eventType: string, fromDate?: Date): Promise<IDomainEvent[]>;
-  
+
   getSnapshot(aggregateId: string): Promise<IAggregateSnapshot | null>;
-  
+
   saveSnapshot(snapshot: IAggregateSnapshot): Promise<void>;
 }
 ```
@@ -360,7 +363,10 @@ export abstract class EventSourcedAggregateRoot {
     }
   }
 
-  protected abstract handleEvent(event: IDomainEvent, isFromHistory: boolean): void;
+  protected abstract handleEvent(
+    event: IDomainEvent,
+    isFromHistory: boolean,
+  ): void;
 
   public markEventsAsCommitted(): void {
     this._uncommittedEvents = [];
@@ -371,7 +377,7 @@ export abstract class EventSourcedAggregateRoot {
       aggregateId: this.id,
       version: this._version,
       data: this.toSnapshot(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
   }
 
@@ -429,7 +435,7 @@ export class CreateUserCommand extends Command {
   constructor(
     public readonly email: string,
     public readonly password: string,
-    public readonly profile?: UserProfile
+    public readonly profile?: UserProfile,
   ) {
     super();
   }
@@ -439,7 +445,7 @@ export class CreateUserCommand extends Command {
 export class UpdateUserProfileCommand extends Command {
   constructor(
     public readonly userId: string,
-    public readonly profile: UserProfile
+    public readonly profile: UserProfile,
   ) {
     super();
   }
@@ -471,7 +477,7 @@ export class GetUserQuery extends Query {
 export class GetUsersQuery extends Query {
   constructor(
     public readonly filters: UserFilters,
-    public readonly pagination: PaginationOptions
+    public readonly pagination: PaginationOptions,
   ) {
     super();
   }
@@ -487,31 +493,36 @@ export class CreateUserHandler {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly userDomainService: UserDomainService,
-    private readonly eventStore: IEventStore
+    private readonly eventStore: IEventStore,
   ) {}
 
   async execute(command: CreateUserCommand): Promise<void> {
     // 1. 验证业务规则
-    const isEmailUnique = await this.userDomainService.isEmailUnique(command.email);
+    const isEmailUnique = await this.userDomainService.isEmailUnique(
+      command.email,
+    );
     if (!isEmailUnique) {
       throw new EmailAlreadyExistsError(command.email);
     }
 
-    const isPasswordStrong = await this.userDomainService.validatePasswordStrength(command.password);
+    const isPasswordStrong =
+      await this.userDomainService.validatePasswordStrength(command.password);
     if (!isPasswordStrong) {
       throw new WeakPasswordError();
     }
 
     // 2. 创建聚合
     const userId = uuid.v4();
-    const hashedPassword = await this.userDomainService.hashPassword(command.password);
+    const hashedPassword = await this.userDomainService.hashPassword(
+      command.password,
+    );
     const user = User.create(userId, command.email, hashedPassword);
 
     // 3. 保存事件
     await this.eventStore.saveEvents(
       user.id,
       user.uncommittedEvents,
-      user.version
+      user.version,
     );
 
     // 4. 标记事件为已提交
@@ -526,9 +537,7 @@ export class CreateUserHandler {
 // modules/user/application/queries/handlers/get-user.handler.ts
 @QueryHandler(GetUserQuery)
 export class GetUserHandler {
-  constructor(
-    private readonly userReadRepository: IUserReadRepository
-  ) {}
+  constructor(private readonly userReadRepository: IUserReadRepository) {}
 
   async execute(query: GetUserQuery): Promise<UserDto> {
     const user = await this.userReadRepository.findById(query.userId);
@@ -546,7 +555,7 @@ export class GetUserHandler {
       profile: user.profile,
       status: user.status,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
     };
   }
 }
@@ -560,7 +569,7 @@ export class GetUserHandler {
 export class UserCreatedHandler {
   constructor(
     private readonly userReadRepository: IUserReadRepository,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
   ) {}
 
   async handle(event: UserCreatedEvent): Promise<void> {
@@ -571,7 +580,7 @@ export class UserCreatedHandler {
       status: UserStatus.ACTIVE,
       createdAt: event.occurredOn,
       updatedAt: event.occurredOn,
-      version: event.eventVersion
+      version: event.eventVersion,
     });
 
     // 2. 发送欢迎邮件
@@ -582,15 +591,13 @@ export class UserCreatedHandler {
 // modules/user/application/events/handlers/user-profile-updated.handler.ts
 @EventsHandler(UserProfileUpdatedEvent)
 export class UserProfileUpdatedHandler {
-  constructor(
-    private readonly userReadRepository: IUserReadRepository
-  ) {}
+  constructor(private readonly userReadRepository: IUserReadRepository) {}
 
   async handle(event: UserProfileUpdatedEvent): Promise<void> {
     await this.userReadRepository.updateProfile(
       event.aggregateId,
       event.profile,
-      event.occurredOn
+      event.occurredOn,
     );
   }
 }
@@ -615,24 +622,18 @@ export class User extends EventSourcedAggregateRoot {
   public updateProfile(profile: UserProfile): void {
     this.validateUserStatus();
     this.validateProfile(profile);
-    
-    const event = new UserProfileUpdatedEvent(
-      this._id,
-      profile
-    );
-    
+
+    const event = new UserProfileUpdatedEvent(this._id, profile);
+
     this.apply(event);
   }
 
   public addSession(session: UserSession): void {
     this.validateUserStatus();
     this.validateSessionLimit();
-    
-    const event = new UserSessionAddedEvent(
-      this._id,
-      session
-    );
-    
+
+    const event = new UserSessionAddedEvent(this._id, session);
+
     this.apply(event);
   }
 
@@ -652,7 +653,7 @@ export class UserCreatedEvent implements IDomainEvent {
   constructor(
     public readonly aggregateId: string,
     public readonly email: string,
-    public readonly tenantId?: string
+    public readonly tenantId?: string,
   ) {
     super(aggregateId);
   }
@@ -661,9 +662,7 @@ export class UserCreatedEvent implements IDomainEvent {
 // 租户聚合监听用户创建事件
 @EventsHandler(UserCreatedEvent)
 export class TenantUserCreatedHandler {
-  constructor(
-    private readonly tenantRepository: ITenantRepository
-  ) {}
+  constructor(private readonly tenantRepository: ITenantRepository) {}
 
   async handle(event: UserCreatedEvent): Promise<void> {
     if (event.tenantId) {

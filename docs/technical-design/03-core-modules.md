@@ -11,7 +11,7 @@
 ```
 aiofix-saas-platform/
 ├── packages/                    # 共享包
-│   ├── common/                 # 公共基础包
+│   ├── common/                 # 公共基础包（简化后）
 │   │   ├── constants/          # 常量定义
 │   │   ├── decorators/         # 装饰器
 │   │   ├── exceptions/         # 异常定义
@@ -22,15 +22,36 @@ aiofix-saas-platform/
 │   │   ├── utils/              # 工具函数
 │   │   ├── validators/         # 验证器
 │   │   ├── types/              # 类型定义
-│   │   ├── config/             # 配置管理
-│   │   ├── logging/            # 日志管理
-│   │   ├── cache/              # 缓存管理
-│   │   └── notification/       # 通知管理
+│   │   └── test-factories/     # 测试数据工厂
 │   ├── core/                   # 核心架构包
 │   │   ├── domain/             # 领域基础组件
 │   │   ├── application/        # 应用层基础组件
 │   │   └── infrastructure/     # 基础设施基础组件
-│   └── shared/                 # 共享内核包
+│   ├── logger/                 # 日志模块（独立包）
+│   │   ├── services/           # 日志服务
+│   │   ├── interfaces/         # 日志接口
+│   │   ├── config/             # 日志配置
+│   │   └── logger.module.ts    # 日志模块
+│   ├── config/                 # 配置模块（独立包）
+│   │   ├── services/           # 配置服务
+│   │   ├── interfaces/         # 配置接口
+│   │   ├── config/             # 配置类
+│   │   └── config.module.ts    # 配置模块
+│   ├── cache/                  # 缓存模块（独立包）
+│   │   ├── services/           # 缓存服务
+│   │   ├── interfaces/         # 缓存接口
+│   │   ├── strategies/         # 缓存策略
+│   │   └── cache.module.ts     # 缓存模块
+│   ├── notification/           # 通知模块（独立包）
+│   │   ├── services/           # 通知服务
+│   │   ├── interfaces/         # 通知接口
+│   │   ├── channels/           # 通知渠道
+│   │   └── notification.module.ts # 通知模块
+│   └── database/               # 数据库模块（独立包）
+│       ├── services/           # 数据库服务
+│       ├── interfaces/         # 数据库接口
+│       ├── config/             # 数据库配置
+│       └── database.module.ts  # 数据库模块
 ├── apps/                       # 应用项目
 │   ├── monolith/               # 单体应用
 │   │   ├── src/
@@ -141,24 +162,28 @@ services/user-service/
 ### 开发阶段
 
 #### 阶段1：MVP单体应用
+
 - **目标**：快速验证业务概念
 - **架构**：单体应用，简单分层
 - **数据库**：单一PostgreSQL数据库
 - **部署**：Docker容器化部署
 
 #### 阶段2：模块化单体
+
 - **目标**：提高代码组织和可维护性
 - **架构**：模块化单体，清晰的模块边界
 - **数据库**：PostgreSQL + Redis缓存
 - **部署**：容器化部署，支持水平扩展
 
 #### 阶段3：混合架构
+
 - **目标**：核心服务微服务化
 - **架构**：关键服务独立部署，其他保持单体
 - **数据库**：多数据库支持，服务独立数据存储
 - **部署**：混合部署模式
 
 #### 阶段4：完整微服务
+
 - **目标**：全面微服务化
 - **架构**：所有服务独立部署
 - **数据库**：每个服务独立数据库
@@ -180,7 +205,7 @@ export class UserController {
 @Module({
   imports: [UserModule, AuthModule, TenantModule],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
 })
 export class AppModule {}
 
@@ -189,9 +214,9 @@ export class AppModule {}
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly commandBus: CommandBus
+    private readonly commandBus: CommandBus,
   ) {}
-  
+
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
     const command = new CreateUserCommand(dto);
@@ -204,16 +229,16 @@ export class UserController {
 export class UserController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
-  
+
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
     const command = new CreateUserCommand(dto);
     await this.commandBus.execute(command);
     return { success: true };
   }
-  
+
   @Get(':id')
   async getUser(@Param('id') id: string) {
     const query = new GetUserQuery(id);
@@ -230,14 +255,18 @@ export class UserController {
 // app.module.ts
 @Module({
   imports: [
-    // 核心模块
+    // 独立模块导入
+    LoggerModule.forRoot({
+      level: process.env.LOG_LEVEL || 'info',
+      format: 'json',
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
     }),
-    
-    // 数据库模块
-    MikroOrmModule.forRoot({
+
+    DatabaseModule.forRoot({
       type: 'postgresql',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
@@ -245,22 +274,29 @@ export class UserController {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [UserEntity, TenantEntity],
-      migrations: {
-        path: './src/migrations',
-        pattern: /^[\w-]+\d+\.ts$/,
-      },
     }),
-    
-    // CQRS模块
-    CqrsModule.forRoot(),
-    
-    // 缓存模块
-    CacheModule.register({
-      store: redisStore,
+
+    CacheModule.forRoot({
+      type: 'redis',
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT),
     }),
-    
+
+    NotificationModule.forRoot({
+      email: {
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      },
+    }),
+
+    // CQRS模块
+    CqrsModule.forRoot(),
+
     // 业务模块
     PlatformModule,
     TenantModule,
@@ -288,6 +324,7 @@ export class AppModule {}
 ### 部署模式
 
 #### 模式1：单体部署
+
 ```yaml
 # docker-compose.monolith.yml
 version: '3.8'
@@ -295,7 +332,7 @@ services:
   app:
     build: ./apps/monolith
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
@@ -303,7 +340,7 @@ services:
     depends_on:
       - postgres
       - redis
-  
+
   postgres:
     image: postgres:13
     environment:
@@ -312,7 +349,7 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  
+
   redis:
     image: redis:6-alpine
     volumes:
@@ -324,6 +361,7 @@ volumes:
 ```
 
 #### 模式2：混合部署
+
 ```yaml
 # docker-compose.hybrid.yml
 version: '3.8'
@@ -336,7 +374,7 @@ services:
       - DB_HOST=user-postgres
     depends_on:
       - user-postgres
-  
+
   auth-service:
     build: ./apps/microservices/auth-service
     environment:
@@ -344,7 +382,7 @@ services:
       - DB_HOST=auth-postgres
     depends_on:
       - auth-postgres
-  
+
   # 单体应用（其他模块）
   monolith:
     build: ./apps/monolith
@@ -353,12 +391,12 @@ services:
       - DB_HOST=monolith-postgres
     depends_on:
       - monolith-postgres
-  
+
   # API网关
   gateway:
     build: ./apps/gateway
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - user-service
       - auth-service
@@ -366,6 +404,7 @@ services:
 ```
 
 #### 模式3：完整微服务
+
 ```yaml
 # k8s/microservices.yaml
 apiVersion: apps/v1
@@ -383,15 +422,15 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service
-        image: aiofix/user-service:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DB_HOST
-          value: "user-postgres-service"
-        - name: REDIS_HOST
-          value: "redis-service"
+        - name: user-service
+          image: aiofix/user-service:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_HOST
+              value: 'user-postgres-service'
+            - name: REDIS_HOST
+              value: 'redis-service'
 ---
 apiVersion: v1
 kind: Service
@@ -401,8 +440,8 @@ spec:
   selector:
     app: user-service
   ports:
-  - port: 3000
-    targetPort: 3000
+    - port: 3000
+      targetPort: 3000
 ```
 
 ## 微服务架构优势
@@ -426,25 +465,29 @@ spec:
 ### 同步通信
 
 #### HTTP/REST
+
 ```typescript
 // 服务间HTTP调用
 @Injectable()
 export class UserServiceClient {
   constructor(private readonly httpService: HttpService) {}
-  
+
   async getUser(userId: string): Promise<UserDto> {
     const response = await this.httpService.get(`/users/${userId}`).toPromise();
     return response.data;
   }
-  
+
   async createUser(userData: CreateUserDto): Promise<UserDto> {
-    const response = await this.httpService.post('/users', userData).toPromise();
+    const response = await this.httpService
+      .post('/users', userData)
+      .toPromise();
     return response.data;
   }
 }
 ```
 
 #### gRPC
+
 ```typescript
 // gRPC服务定义
 service UserService {
@@ -457,18 +500,18 @@ service UserService {
 @Injectable()
 export class UserGrpcClient {
   private userService: UserServiceClient;
-  
+
   constructor() {
     this.userService = new UserServiceClient(
       'user-service:50051',
       ChannelCredentials.createInsecure()
     );
   }
-  
+
   async getUser(userId: string): Promise<User> {
     const request = new GetUserRequest();
     request.setUserId(userId);
-    
+
     const response = await this.userService.getUser(request);
     return this.mapToUser(response);
   }
@@ -478,21 +521,22 @@ export class UserGrpcClient {
 ### 异步通信
 
 #### 事件发布/订阅
+
 ```typescript
 // 事件发布
 @Injectable()
 export class UserService {
   constructor(private readonly eventBus: EventBus) {}
-  
+
   async createUser(userData: CreateUserDto): Promise<User> {
     const user = User.create(userData.email, userData.password);
-    
+
     // 保存用户
     await this.userRepository.save(user);
-    
+
     // 发布事件
     this.eventBus.publish(new UserCreatedEvent(user.id, user.email));
-    
+
     return user;
   }
 }
@@ -502,13 +546,13 @@ export class UserService {
 export class UserCreatedHandler {
   constructor(
     private readonly emailService: EmailService,
-    private readonly auditService: AuditService
+    private readonly auditService: AuditService,
   ) {}
-  
+
   async handle(event: UserCreatedEvent): Promise<void> {
     // 发送欢迎邮件
     await this.emailService.sendWelcomeEmail(event.email);
-    
+
     // 记录审计日志
     await this.auditService.logUserCreation(event.userId);
   }
@@ -520,11 +564,13 @@ export class UserCreatedHandler {
 ### 数据库选择策略
 
 #### PostgreSQL（关系型数据库）
+
 - **适用场景**：结构化数据、事务性操作、复杂查询
 - **使用模块**：用户管理、角色权限、计费管理
 - **优势**：ACID事务、复杂查询、数据一致性
 
 #### MongoDB（文档数据库）
+
 - **适用场景**：非结构化数据、快速读写、灵活模式
 - **使用模块**：日志管理、配置管理、缓存数据
 - **优势**：灵活模式、水平扩展、快速开发
@@ -549,7 +595,7 @@ export class UserCreatedHandler {
         path: './src/migrations/postgresql',
       },
     }),
-    
+
     // MongoDB配置
     MikroOrmModule.forRoot({
       name: 'mongodb',
@@ -583,13 +629,13 @@ export interface IDatabaseAdapter {
 export class PostgreSQLAdapter implements IDatabaseAdapter {
   constructor(
     @InjectRepository(UserEntity, 'postgresql')
-    private readonly userRepository: EntityRepository<UserEntity>
+    private readonly userRepository: EntityRepository<UserEntity>,
   ) {}
-  
+
   async save<T>(entity: T): Promise<T> {
     return this.userRepository.persistAndFlush(entity);
   }
-  
+
   async findById<T>(id: string): Promise<T | null> {
     return this.userRepository.findOne(id);
   }
@@ -600,22 +646,197 @@ export class PostgreSQLAdapter implements IDatabaseAdapter {
 export class MongoDBAdapter implements IDatabaseAdapter {
   constructor(
     @InjectRepository(LogEntity, 'mongodb')
-    private readonly logRepository: EntityRepository<LogEntity>
+    private readonly logRepository: EntityRepository<LogEntity>,
   ) {}
-  
+
   async save<T>(entity: T): Promise<T> {
     return this.logRepository.persistAndFlush(entity);
   }
-  
+
   async findById<T>(id: string): Promise<T | null> {
     return this.logRepository.findOne(id);
   }
 }
 ```
 
-## 公共模块详细设计
+## 独立模块详细设计
 
-### 常量定义
+### 日志模块 (@aiofix/logger)
+
+```typescript
+// packages/logger/src/services/logger.service.ts
+@Injectable()
+export class LoggerService {
+  private readonly logger: winston.Logger;
+
+  constructor(private readonly config: LoggerConfig) {
+    this.logger = winston.createLogger({
+      level: config.level,
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        winston.format.json(),
+      ),
+      transports: [
+        new winston.transports.Console(),
+        new winston.transports.DailyRotateFile({
+          filename: 'logs/application-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          maxSize: '20m',
+          maxFiles: '14d',
+        }),
+      ],
+    });
+  }
+
+  log(message: string, context?: string): void {
+    this.logger.info(message, { context });
+  }
+
+  error(message: string, trace?: string, context?: string): void {
+    this.logger.error(message, { trace, context });
+  }
+
+  warn(message: string, context?: string): void {
+    this.logger.warn(message, { context });
+  }
+
+  debug(message: string, context?: string): void {
+    this.logger.debug(message, { context });
+  }
+}
+```
+
+### 配置模块 (@aiofix/config)
+
+```typescript
+// packages/config/src/services/config.service.ts
+@Injectable()
+export class ConfigService {
+  constructor(private readonly config: AppConfig) {}
+
+  get<T = any>(key: string): T {
+    return this.config[key];
+  }
+
+  getDatabaseConfig(): DatabaseConfig {
+    return this.config.database;
+  }
+
+  getRedisConfig(): RedisConfig {
+    return this.config.redis;
+  }
+
+  isDevelopment(): boolean {
+    return this.config.nodeEnv === 'development';
+  }
+
+  isProduction(): boolean {
+    return this.config.nodeEnv === 'production';
+  }
+}
+```
+
+### 缓存模块 (@aiofix/cache)
+
+```typescript
+// packages/cache/src/services/cache.service.ts
+@Injectable()
+export class CacheService {
+  constructor(
+    private readonly redisClient: Redis,
+    private readonly config: CacheConfig,
+  ) {}
+
+  async get<T>(key: string): Promise<T | null> {
+    const value = await this.redisClient.get(key);
+    return value ? JSON.parse(value) : null;
+  }
+
+  async set(key: string, value: any, ttl?: number): Promise<void> {
+    const serialized = JSON.stringify(value);
+    if (ttl) {
+      await this.redisClient.setex(key, ttl, serialized);
+    } else {
+      await this.redisClient.set(key, serialized);
+    }
+  }
+
+  async del(key: string): Promise<void> {
+    await this.redisClient.del(key);
+  }
+
+  async exists(key: string): Promise<boolean> {
+    const result = await this.redisClient.exists(key);
+    return result === 1;
+  }
+}
+```
+
+### 通知模块 (@aiofix/notification)
+
+```typescript
+// packages/notification/src/services/notification.service.ts
+@Injectable()
+export class NotificationService {
+  constructor(
+    private readonly emailChannel: EmailChannel,
+    private readonly smsChannel: SmsChannel,
+    private readonly pushChannel: PushChannel,
+  ) {}
+
+  async sendEmail(to: string, subject: string, content: string): Promise<void> {
+    await this.emailChannel.send({
+      to,
+      subject,
+      html: content,
+    });
+  }
+
+  async sendSms(to: string, message: string): Promise<void> {
+    await this.smsChannel.send({
+      to,
+      body: message,
+    });
+  }
+
+  async sendPush(userId: string, title: string, body: string): Promise<void> {
+    await this.pushChannel.send({
+      userId,
+      title,
+      body,
+    });
+  }
+}
+```
+
+### 数据库模块 (@aiofix/database)
+
+```typescript
+// packages/database/src/services/database.service.ts
+@Injectable()
+export class DatabaseService {
+  constructor(private readonly orm: MikroORM) {}
+
+  async getRepository<T>(entity: EntityName<T>): Promise<EntityRepository<T>> {
+    return this.orm.em.getRepository(entity);
+  }
+
+  async transaction<T>(fn: (em: EntityManager) => Promise<T>): Promise<T> {
+    return this.orm.em.transactional(fn);
+  }
+
+  async flush(): Promise<void> {
+    await this.orm.em.flush();
+  }
+
+  async clear(): Promise<void> {
+    this.orm.em.clear();
+  }
+}
+```
+
+### 通用模块 (@aiofix/common) - 简化后
 
 ```typescript
 // packages/common/constants/index.ts
@@ -656,7 +877,7 @@ export function ApiResponseSuccess<T>(type: new () => T, description?: string) {
       status: 200,
       description: description || '操作成功',
       type,
-    })
+    }),
   );
 }
 
@@ -674,7 +895,7 @@ export function ApiResponseError(status: number, description: string) {
           path: { type: 'string' },
         },
       },
-    })
+    }),
   );
 }
 
@@ -683,7 +904,7 @@ export function RequirePermissions(...permissions: string[]) {
     UseGuards(PermissionGuard),
     SetMetadata('permissions', permissions),
     ApiBearerAuth(),
-    ApiResponseError(403, '权限不足')
+    ApiResponseError(403, '权限不足'),
   );
 }
 ```
@@ -696,7 +917,7 @@ export class DomainException extends Error {
   constructor(
     message: string,
     public readonly code: string,
-    public readonly statusCode: number = 400
+    public readonly statusCode: number = 400,
   ) {
     super(message);
     this.name = 'DomainException';
@@ -704,7 +925,10 @@ export class DomainException extends Error {
 }
 
 export class ValidationException extends DomainException {
-  constructor(message: string, public readonly errors: any[]) {
+  constructor(
+    message: string,
+    public readonly errors: any[],
+  ) {
     super(message, 'VALIDATION_ERROR', 400);
   }
 }
@@ -764,7 +988,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     this.logger.error(
       `${request.method} ${request.url}`,
-      exception instanceof Error ? exception.stack : exception
+      exception instanceof Error ? exception.stack : exception,
     );
 
     response.status(status).json(errorResponse);
@@ -780,13 +1004,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly permissionService: PermissionService
+    private readonly permissionService: PermissionService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermissions = this.reflector.getAllAndOverride<string[]>(
       'permissions',
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     if (!requiredPermissions) {
@@ -802,7 +1026,7 @@ export class PermissionGuard implements CanActivate {
 
     const hasPermission = await this.permissionService.checkPermissions(
       user.id,
-      requiredPermissions
+      requiredPermissions,
     );
 
     if (!hasPermission) {
@@ -834,18 +1058,18 @@ export class LoggingInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse();
         const { statusCode } = response;
         const contentLength = response.get('content-length');
-        
+
         this.logger.log(
-          `Outgoing Response: ${method} ${url} ${statusCode} ${contentLength} - ${Date.now() - now}ms`
+          `Outgoing Response: ${method} ${url} ${statusCode} ${contentLength} - ${Date.now() - now}ms`,
         );
       }),
-      catchError((error) => {
+      catchError(error => {
         this.logger.error(
           `Request Error: ${method} ${url} - ${error.message}`,
-          error.stack
+          error.stack,
         );
         throw error;
-      })
+      }),
     );
   }
 }
@@ -898,7 +1122,8 @@ export class StringUtils {
 
   static maskEmail(email: string): string {
     const [localPart, domain] = email.split('@');
-    const maskedLocal = localPart.substring(0, 2) + '*'.repeat(localPart.length - 2);
+    const maskedLocal =
+      localPart.substring(0, 2) + '*'.repeat(localPart.length - 2);
     return `${maskedLocal}@${domain}`;
   }
 }
@@ -934,18 +1159,24 @@ export function IsStrongPassword(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any) {
           if (typeof value !== 'string') return false;
-          
+
           const hasUpperCase = /[A-Z]/.test(value);
           const hasLowerCase = /[a-z]/.test(value);
           const hasNumbers = /\d/.test(value);
           const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-          
-          return value.length >= 8 && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+
+          return (
+            value.length >= 8 &&
+            hasUpperCase &&
+            hasLowerCase &&
+            hasNumbers &&
+            hasSpecialChar
+          );
         },
         defaultMessage() {
           return 'Password must be at least 8 characters long and contain uppercase, lowercase, numbers, and special characters';
-        }
-      }
+        },
+      },
     });
   };
 }

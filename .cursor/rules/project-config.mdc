@@ -1,0 +1,93 @@
+---
+description: 项目配置规则
+globs:
+alwaysApply: true
+---
+# 项目配置规则
+
+## 概述
+
+本文件引用项目根目录的AI开发配置文件，为Cursor IDE提供项目特定的开发规则和配置。
+
+## 配置文件引用
+
+**主要配置文件**：`../../.ai-config.md`
+
+请在使用Cursor进行开发时，首先阅读项目根目录的`.ai-config.md`文件，了解项目的完整配置信息。
+
+## Cursor特定配置
+
+### 开发环境设置
+- 使用TypeScript严格模式
+- 启用ESLint和Prettier
+- 配置自动格式化
+- 启用代码提示和智能补全
+
+### 文件组织规则
+- 遵循项目的分层架构
+- 保持文件命名一致性
+- 使用相对路径引用
+- 维护清晰的目录结构
+
+### 代码质量规则
+- 所有代码必须通过linter检查
+- 保持测试覆盖率在80%以上
+- 编写详细的中文注释
+- 遵循TSDoc规范
+
+## 快速开始
+
+1. 阅读 `../../.ai-config.md` 了解项目配置
+2. 阅读 `../../docs/business-requirements.md` 理解业务需求
+3. 阅读 `../../docs/development-plan.md` 了解开发计划
+4. 参考 `../../docs/technical-design/README.md` 掌握技术架构
+
+## 开发提示
+
+### 项目初始化提示词
+```
+你是一个全栈工程师，精通TypeScript语言，有丰富的Node.js开发经验。
+
+项目背景：
+- 这是一个现代化的SAAS平台项目，支持多租户架构
+- 采用DDD + Clean Architecture + CQRS + 事件溯源架构
+- 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis
+
+开发原则：
+- 使用中文回答问题和编写注释
+- 编写注释应当按照TSDoc规范，并加入代码设计原理或机制，以及业务规则或业务逻辑
+- 修改代码时应当同时修改相应的注释，确保代码与注释一致
+- 使用pnpm作为包管理器
+- 完成代码编写后应当进行代码linter检查，及时修复报错
+
+项目文档：
+- 业务需求文档：`../../docs/business-requirements.md`
+- 技术设计文档：`../../docs/technical-design/README.md`
+- 开发计划：`../../docs/development-plan.md`
+- AI配置文件：`../../.ai-config.md`
+```
+
+### 架构遵循原则
+- 严格按照DDD和Clean Architecture分层
+- 确保依赖倒置原则
+- 保持领域层的纯净性
+- 实现CQRS和事件溯源模式
+
+### 代码质量标准
+- 使用TypeScript严格模式
+- 编写详细的中文注释
+- 遵循TSDoc规范
+- 实现完整的错误处理
+
+## 注意事项
+
+1. **配置文件优先级**：本文件为Cursor特定配置，主要配置信息请参考根目录的`.ai-config.md`
+2. **路径引用**：所有路径都相对于项目根目录
+3. **文档同步**：保持代码与文档的一致性
+4. **质量保证**：确保代码质量和测试覆盖
+
+---
+
+**Cursor规则版本**：1.0  
+**创建日期**：2024-01-01  
+**维护者**：项目开发团队

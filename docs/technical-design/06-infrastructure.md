@@ -248,7 +248,7 @@ export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,
-    private readonly dataIsolationService: DataIsolationService
+    private readonly dataIsolationService: DataIsolationService,
   ) {}
 
   async save(user: User): Promise<void> {
@@ -282,65 +282,67 @@ export class UserRepository implements IUserRepository {
 
   async findWithIsolation(
     filters: UserFilters,
-    isolationContext: DataIsolationContext
+    isolationContext: DataIsolationContext,
   ): Promise<User[]> {
     const query = this.userRepository.createQueryBuilder('user');
-    
+
     // 应用数据隔离
     this.applyDataIsolation(query, isolationContext);
-    
+
     // 应用过滤条件
     this.applyFilters(query, filters);
-    
+
     const userEntities = await query.getResult();
     return userEntities.map(entity => this.mapToDomain(entity));
   }
 
   private applyDataIsolation(
     query: QueryBuilder<UserEntity>,
-    isolationContext: DataIsolationContext
+    isolationContext: DataIsolationContext,
   ): void {
     if (isolationContext.platformId) {
-      query.andWhere('user.platformId = :platformId', { 
-        platformId: isolationContext.platformId 
+      query.andWhere('user.platformId = :platformId', {
+        platformId: isolationContext.platformId,
       });
     }
-    
+
     if (isolationContext.tenantId) {
-      query.andWhere('user.tenantId = :tenantId', { 
-        tenantId: isolationContext.tenantId 
+      query.andWhere('user.tenantId = :tenantId', {
+        tenantId: isolationContext.tenantId,
       });
     }
-    
+
     if (isolationContext.organizationId) {
-      query.andWhere('user.organizationId = :organizationId', { 
-        organizationId: isolationContext.organizationId 
+      query.andWhere('user.organizationId = :organizationId', {
+        organizationId: isolationContext.organizationId,
       });
     }
-    
+
     if (isolationContext.departmentId) {
-      query.andWhere('user.departmentId = :departmentId', { 
-        departmentId: isolationContext.departmentId 
+      query.andWhere('user.departmentId = :departmentId', {
+        departmentId: isolationContext.departmentId,
       });
     }
   }
 
   private applyFilters(
     query: QueryBuilder<UserEntity>,
-    filters: UserFilters
+    filters: UserFilters,
   ): void {
     if (filters.email) {
-      query.andWhere('user.email ILIKE :email', { 
-        email: `%${filters.email}%` 
+      query.andWhere('user.email ILIKE :email', {
+        email: `%${filters.email}%`,
       });
     }
-    
+
     if (filters.status) {
       query.andWhere('user.status = :status', { status: filters.status });
     }
-    
+
     if (filters.role) {
-      query.andWhere('user.roles @> :role', { role: JSON.stringify([filters.role]) });
+      query.andWhere('user.roles @> :role', {
+        role: JSON.stringify([filters.role]),
+      });
     }
   }
 
@@ -390,7 +392,7 @@ export class UserRepository implements IUserRepository {
 // 用户表迁移
 export class CreateUsersTable1704067200000 implements Migration {
   async up(schema: Schema): Promise<void> {
-    schema.createTable('users', (table) => {
+    schema.createTable('users', table => {
       table.uuid('id').primary();
       table.string('email', 255).unique().notNullable();
       table.string('hashed_password', 255).notNullable();
@@ -405,7 +407,7 @@ export class CreateUsersTable1704067200000 implements Migration {
       table.timestamp('created_at').defaultTo('now()');
       table.timestamp('updated_at').defaultTo('now()');
       table.integer('version').defaultTo(0);
-      
+
       // 索引
       table.index(['email']);
       table.index(['platform_id']);
@@ -424,7 +426,7 @@ export class CreateUsersTable1704067200000 implements Migration {
 // 租户表迁移
 export class CreateTenantsTable1704067200001 implements Migration {
   async up(schema: Schema): Promise<void> {
-    schema.createTable('tenants', (table) => {
+    schema.createTable('tenants', table => {
       table.uuid('id').primary();
       table.string('name', 255).unique().notNullable();
       table.string('type', 50).notNullable();
@@ -434,7 +436,7 @@ export class CreateTenantsTable1704067200001 implements Migration {
       table.timestamp('created_at').defaultTo('now()');
       table.timestamp('updated_at').defaultTo('now()');
       table.integer('version').defaultTo(0);
-      
+
       // 索引
       table.index(['name']);
       table.index(['type']);
@@ -586,7 +588,7 @@ export class ConfigurationDocument {
 export class UserCollection implements IUserCollection {
   constructor(
     @InjectRepository(UserDocument)
-    private readonly userRepository: EntityRepository<UserDocument>
+    private readonly userRepository: EntityRepository<UserDocument>,
   ) {}
 
   async save(user: User): Promise<void> {
@@ -606,19 +608,19 @@ export class UserCollection implements IUserCollection {
 
   async findWithFilters(filters: UserFilters): Promise<User[]> {
     const query: any = {};
-    
+
     if (filters.email) {
       query.email = { $regex: filters.email, $options: 'i' };
     }
-    
+
     if (filters.status) {
       query.status = filters.status;
     }
-    
+
     if (filters.role) {
       query.roles = { $in: [filters.role] };
     }
-    
+
     const userDocuments = await this.userRepository.find(query);
     return userDocuments.map(doc => this.mapToDomain(doc));
   }
@@ -626,13 +628,13 @@ export class UserCollection implements IUserCollection {
   async updateUserProfile(userId: string, profile: UserProfile): Promise<void> {
     await this.userRepository.nativeUpdateOne(
       { id: userId },
-      { 
-        $set: { 
+      {
+        $set: {
           profile,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         },
-        $inc: { version: 1 }
-      }
+        $inc: { version: 1 },
+      },
     );
   }
 
@@ -689,31 +691,38 @@ export class EventStoreService implements IEventStore {
     private readonly eventRepository: EntityRepository<EventEntity>,
     @InjectRepository(AggregateSnapshot)
     private readonly snapshotRepository: EntityRepository<AggregateSnapshot>,
-    @InjectConnection() private readonly connection: Connection
+    @InjectConnection() private readonly connection: Connection,
   ) {}
 
   async saveEvents(
     aggregateId: string,
     events: IDomainEvent[],
-    expectedVersion: number
+    expectedVersion: number,
   ): Promise<void> {
-    await this.connection.transaction(async (manager) => {
+    await this.connection.transaction(async manager => {
       // 乐观锁检查
       const currentVersion = await this.getCurrentVersion(aggregateId);
       if (currentVersion !== expectedVersion) {
-        throw new ConcurrencyError(aggregateId, expectedVersion, currentVersion);
+        throw new ConcurrencyError(
+          aggregateId,
+          expectedVersion,
+          currentVersion,
+        );
       }
 
       // 批量保存事件
-      const eventEntities = events.map((event, index) => 
-        this.mapToEventEntity(event, expectedVersion + index + 1)
+      const eventEntities = events.map((event, index) =>
+        this.mapToEventEntity(event, expectedVersion + index + 1),
       );
-      
+
       await manager.save(EventEntity, eventEntities);
     });
   }
 
-  async getEvents(aggregateId: string, fromVersion?: number): Promise<IDomainEvent[]> {
+  async getEvents(
+    aggregateId: string,
+    fromVersion?: number,
+  ): Promise<IDomainEvent[]> {
     const query = this.eventRepository
       .createQueryBuilder('event')
       .where('event.aggregateId = :aggregateId', { aggregateId })
@@ -727,7 +736,10 @@ export class EventStoreService implements IEventStore {
     return events.map(event => this.mapToDomainEvent(event));
   }
 
-  async getEventsByType(eventType: string, fromDate?: Date): Promise<IDomainEvent[]> {
+  async getEventsByType(
+    eventType: string,
+    fromDate?: Date,
+  ): Promise<IDomainEvent[]> {
     const query = this.eventRepository
       .createQueryBuilder('event')
       .where('event.eventType = :eventType', { eventType })
@@ -744,7 +756,7 @@ export class EventStoreService implements IEventStore {
   async getSnapshot(aggregateId: string): Promise<IAggregateSnapshot | null> {
     const snapshot = await this.snapshotRepository.findOne({
       where: { aggregateId },
-      order: { version: 'DESC' }
+      order: { version: 'DESC' },
     });
 
     return snapshot ? this.mapToSnapshot(snapshot) : null;
@@ -781,18 +793,20 @@ export class EventStoreService implements IEventStore {
     // 根据事件类型创建相应的领域事件
     const eventClass = this.getEventClass(entity.eventType);
     const event = new eventClass(entity.aggregateId, entity.eventVersion);
-    
+
     // 从JSON数据恢复事件属性
     Object.assign(event, entity.eventData);
-    
+
     return event;
   }
 
-  private getEventClass(eventType: string): new (...args: any[]) => IDomainEvent {
+  private getEventClass(
+    eventType: string,
+  ): new (...args: any[]) => IDomainEvent {
     const eventClasses = {
-      'UserCreatedEvent': UserCreatedEvent,
-      'UserAssignedToTenantEvent': UserAssignedToTenantEvent,
-      'TenantCreatedEvent': TenantCreatedEvent,
+      UserCreatedEvent: UserCreatedEvent,
+      UserAssignedToTenantEvent: UserAssignedToTenantEvent,
+      TenantCreatedEvent: TenantCreatedEvent,
       // 添加其他事件类型
     };
 
@@ -804,7 +818,7 @@ export class EventStoreService implements IEventStore {
       aggregateId: snapshot.aggregateId,
       version: snapshot.version,
       data: snapshot.data,
-      createdAt: snapshot.createdAt
+      createdAt: snapshot.createdAt,
     };
   }
 
@@ -829,7 +843,7 @@ export class EventStoreService implements IEventStore {
 export class MessageQueueService {
   constructor(
     private readonly redisService: RedisService,
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {}
 
   async publishMessage(queueName: string, message: any): Promise<void> {
@@ -837,12 +851,18 @@ export class MessageQueueService {
       await this.redisService.lpush(queueName, JSON.stringify(message));
       this.logger.log(`Message published to queue: ${queueName}`);
     } catch (error) {
-      this.logger.error(`Failed to publish message to queue: ${queueName}`, error);
+      this.logger.error(
+        `Failed to publish message to queue: ${queueName}`,
+        error,
+      );
       throw error;
     }
   }
 
-  async consumeMessage(queueName: string, handler: (message: any) => Promise<void>): Promise<void> {
+  async consumeMessage(
+    queueName: string,
+    handler: (message: any) => Promise<void>,
+  ): Promise<void> {
     while (true) {
       try {
         const message = await this.redisService.brpop(queueName, 5);
@@ -851,7 +871,10 @@ export class MessageQueueService {
           await handler(parsedMessage);
         }
       } catch (error) {
-        this.logger.error(`Error consuming message from queue: ${queueName}`, error);
+        this.logger.error(
+          `Error consuming message from queue: ${queueName}`,
+          error,
+        );
         // 继续处理下一个消息
       }
     }
@@ -863,7 +886,7 @@ export class MessageQueueService {
       eventType: event.eventType,
       aggregateId: event.aggregateId,
       eventData: event.toJSON(),
-      occurredOn: event.occurredOn
+      occurredOn: event.occurredOn,
     };
 
     await this.publishMessage('domain_events', eventMessage);
@@ -881,7 +904,7 @@ export class EventBusService {
 
   constructor(
     private readonly messageQueueService: MessageQueueService,
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {}
 
   registerHandler(eventType: string, handler: EventHandler): void {
@@ -926,7 +949,7 @@ export class EmailService {
   constructor(
     private readonly nodemailerService: NodemailerService,
     private readonly templateService: TemplateService,
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {}
 
   async sendWelcomeEmail(email: string, firstName: string): Promise<void> {
@@ -936,7 +959,7 @@ export class EmailService {
     await this.sendEmail({
       to: email,
       subject: '欢迎使用我们的平台',
-      html
+      html,
     });
   }
 
@@ -944,7 +967,7 @@ export class EmailService {
     email: string,
     subject: string,
     templateName: string,
-    data: any
+    data: any,
   ): Promise<void> {
     const template = await this.templateService.getTemplate(templateName);
     const html = template.render(data);
@@ -952,7 +975,7 @@ export class EmailService {
     await this.sendEmail({
       to: email,
       subject,
-      html
+      html,
     });
   }
 
@@ -966,7 +989,7 @@ export class EmailService {
         from: process.env.SMTP_FROM,
         to: options.to,
         subject: options.subject,
-        html: options.html
+        html: options.html,
       });
 
       this.logger.log(`Email sent to: ${options.to}`);
@@ -986,12 +1009,12 @@ export class EmailService {
 export class SMSService {
   constructor(
     private readonly twilioService: TwilioService,
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {}
 
   async sendVerificationCode(phoneNumber: string, code: string): Promise<void> {
     const message = `您的验证码是：${code}，5分钟内有效。`;
-    
+
     await this.sendSMS(phoneNumber, message);
   }
 
@@ -1004,7 +1027,7 @@ export class SMSService {
       await this.twilioService.messages.create({
         body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: phoneNumber
+        to: phoneNumber,
       });
 
       this.logger.log(`SMS sent to: ${phoneNumber}`);
@@ -1026,7 +1049,7 @@ export class SMSService {
 export class RedisCacheService {
   constructor(
     private readonly redisService: RedisService,
-    private readonly logger: Logger
+    private readonly logger: Logger,
   ) {}
 
   async get<T>(key: string): Promise<T | null> {
@@ -1094,13 +1117,11 @@ export class RedisCacheService {
 export class InMemoryCacheService {
   private readonly cache = new Map<string, { value: any; expiresAt: number }>();
 
-  constructor(
-    private readonly logger: Logger
-  ) {}
+  constructor(private readonly logger: Logger) {}
 
   async get<T>(key: string): Promise<T | null> {
     const item = this.cache.get(key);
-    
+
     if (!item) {
       return null;
     }
@@ -1114,7 +1135,7 @@ export class InMemoryCacheService {
   }
 
   async set<T>(key: string, value: T, ttl: number = 300): Promise<void> {
-    const expiresAt = Date.now() + (ttl * 1000);
+    const expiresAt = Date.now() + ttl * 1000;
     this.cache.set(key, { value, expiresAt });
   }
 
@@ -1167,7 +1188,7 @@ export class ConfigurationService {
   constructor(
     @InjectRepository(ConfigurationDocument)
     private readonly configRepository: EntityRepository<ConfigurationDocument>,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
   ) {}
 
   async get<T>(key: string, defaultValue?: T): Promise<T> {
@@ -1189,9 +1210,13 @@ export class ConfigurationService {
     return defaultValue;
   }
 
-  async set<T>(key: string, value: T, scope: ConfigurationScope = ConfigurationScope.GLOBAL): Promise<void> {
+  async set<T>(
+    key: string,
+    value: T,
+    scope: ConfigurationScope = ConfigurationScope.GLOBAL,
+  ): Promise<void> {
     const config = await this.configRepository.findOne({ key });
-    
+
     if (config) {
       config.value = value;
       config.updatedAt = new Date();
@@ -1205,7 +1230,7 @@ export class ConfigurationService {
       newConfig.isActive = true;
       newConfig.createdAt = new Date();
       newConfig.updatedAt = new Date();
-      
+
       await this.configRepository.persistAndFlush(newConfig);
     }
 
@@ -1217,7 +1242,7 @@ export class ConfigurationService {
     scope: ConfigurationScope,
     tenantId?: string,
     organizationId?: string,
-    departmentId?: string
+    departmentId?: string,
   ): Promise<ConfigurationDocument[]> {
     const query: any = { scope, isActive: true };
 

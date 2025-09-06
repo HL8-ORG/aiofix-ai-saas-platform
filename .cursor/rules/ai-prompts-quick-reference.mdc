@@ -1,3 +1,9 @@
+---
+description: AI开发提示词快速参考
+globs:
+alwaysApply: true
+---
+
 # AI开发提示词快速参考
 
 ## 核心提示词（复制即用）
@@ -9,17 +15,19 @@
 项目背景：
 - 这是一个现代化的SAAS平台项目，支持多租户架构
 - 采用DDD + Clean Architecture + CQRS + 事件溯源架构
-- 技术栈：NestJS + TypeScript + MikroORM + PostgreSQL + MongoDB + Redis
+- 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis
 
 开发原则：
 - 使用中文回答问题和编写注释
+- 编写注释应当按照TSDoc规范，并加入代码设计原理或机制，以及业务规则或业务逻辑
 - 修改代码时应当同时修改相应的注释，确保代码与注释一致
 - 使用pnpm作为包管理器
 - 完成代码编写后应当进行代码linter检查，及时修复报错
+- 检查和修复linter错误时你可以调用mcp-server lint-files
 
 项目文档：
-- 业务需求文档：docs/business-requirements.md
-- 技术设计文档：docs/technical-design/README.md
+- 业务需求文档：`../../docs/business-requirements.md`
+- 技术设计文档：`../../docs/technical-design/README.md`
 - 请仔细阅读相关文档，理解业务需求和技术架构
 ```
 
@@ -35,8 +43,8 @@
 5. 添加详细的中文注释
 
 参考文档：
-- 业务需求：docs/business-requirements.md
-- 领域模型设计：docs/technical-design/04-domain-models.md
+- 业务需求：`../../docs/business-requirements.md`
+- 领域模型设计：`../../docs/technical-design/04-domain-models.md`
 
 请确保：
 - 聚合根保持业务不变性
@@ -57,8 +65,8 @@
 5. 添加事务管理
 
 参考文档：
-- 应用层实现：docs/technical-design/05-application-layer.md
-- 事件溯源设计：docs/technical-design/07-event-sourcing.md
+- 应用层实现：`../../docs/technical-design/05-application-layer.md`
+- 事件溯源设计：`../../docs/technical-design/07-event-sourcing.md`
 
 请确保：
 - 命令处理器实现业务用例
@@ -79,8 +87,8 @@
 5. 添加缓存策略
 
 参考文档：
-- 基础设施实现：docs/technical-design/06-infrastructure.md
-- 多租户数据隔离：docs/technical-design/09-multitenant.md
+- 基础设施实现：`../../docs/technical-design/06-infrastructure.md`
+- 多租户数据隔离：`../../docs/technical-design/09-multitenant.md`
 
 请确保：
 - 实体映射正确
@@ -101,8 +109,8 @@
 5. 添加API文档
 
 参考文档：
-- 分层架构设计：docs/technical-design/02-layered-architecture.md
-- 业务需求文档：docs/business-requirements.md
+- 分层架构设计：`../../docs/technical-design/02-layered-architecture.md`
+- 业务需求文档：`../../docs/business-requirements.md`
 
 请确保：
 - 输入验证完整
@@ -145,7 +153,7 @@
 5. 安全配置
 
 参考文档：
-- 部署与运维：docs/technical-design/08-deployment.md
+- 部署与运维：`../../docs/technical-design/08-deployment.md`
 
 请确保：
 - 容器配置优化
@@ -182,13 +190,13 @@
 请开发用户管理相关功能：
 
 业务需求：
-- 参考：docs/business-requirements.md 第4.5节
+- 参考：`../../docs/business-requirements.md` 第4.5节
 - 支持平台用户和租户用户的分层管理
 - 用户分配：平台用户→租户用户→组织/部门用户
 - 数据隔离：用户级数据隔离
 
 技术实现：
-- 参考：docs/technical-design/04-domain-models.md
+- 参考：`../../docs/technical-design/04-domain-models.md`
 - 用户聚合根：User
 - 相关事件：UserCreatedEvent、UserAssignedToTenantEvent等
 - 数据隔离：用户级数据隔离策略
@@ -205,13 +213,13 @@
 请开发租户管理相关功能：
 
 业务需求：
-- 参考：docs/business-requirements.md 第4.2节
+- 参考：`../../docs/business-requirements.md` 第4.2节
 - 支持企业、社群、团队、个人四种租户类型
 - 租户数据完全隔离
 - 租户资源配额管理
 
 技术实现：
-- 参考：docs/technical-design/09-multitenant.md
+- 参考：`../../docs/technical-design/09-multitenant.md`
 - 租户聚合根：Tenant
 - 相关事件：TenantCreatedEvent、TenantUpdatedEvent等
 - 数据隔离：租户级数据隔离策略
@@ -228,13 +236,13 @@
 请开发权限管理相关功能：
 
 业务需求：
-- 参考：docs/business-requirements.md 第4.6-4.7节
+- 参考：`../../docs/business-requirements.md` 第4.6-4.7节
 - 8种基础角色：平台管理员、租户管理员等
 - 基于角色的访问控制（RBAC）
 - 细粒度权限控制
 
 技术实现：
-- 参考：docs/technical-design/09-multitenant.md
+- 参考：`../../docs/technical-design/09-multitenant.md`
 - 角色聚合根：Role
 - 权限控制：实时权限验证
 - 数据隔离：多层级权限控制
@@ -251,13 +259,13 @@
 请开发组织架构管理相关功能：
 
 业务需求：
-- 参考：docs/business-requirements.md 第4.3-4.4节
+- 参考：`../../docs/business-requirements.md` 第4.3-4.4节
 - 组织：横向设置，组织之间没有从属关系
 - 部门：纵向设置，具有明确的上下级关系
 - 支持复杂的组织架构
 
 技术实现：
-- 参考：docs/technical-design/04-domain-models.md
+- 参考：`../../docs/technical-design/04-domain-models.md`
 - 组织聚合根：Organization
 - 部门聚合根：Department
 - 相关事件：OrganizationCreatedEvent、DepartmentCreatedEvent等
@@ -286,6 +294,6 @@
 - 遵循项目的架构规范和开发原则
 
 ### 文档参考
-- 业务需求文档：`docs/business-requirements.md`
-- 技术设计文档：`docs/technical-design/README.md`
-- 完整提示词系统：`docs/ai-development-prompts.md`
+- 业务需求文档：`../../docs/business-requirements.md`
+- 技术设计文档：`../../docs/technical-design/README.md`
+- 完整提示词系统：`../../docs/ai-development-prompts.md`
