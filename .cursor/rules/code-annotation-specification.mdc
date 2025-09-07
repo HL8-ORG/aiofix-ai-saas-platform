@@ -1,0 +1,3279 @@
+---
+description: 代码注释规则
+globs:
+alwaysApply: true
+---
+
+# SAAS平台代码注释规范（Code Annotation Specification）
+
+**遵循代码即文档的思想，应当保证代码与注释的一致性和规范性。**
+
+项目背景：
+
+- 这是一个现代化的SAAS平台项目，支持多租户架构
+- 采用DDD + Clean Architecture + CQRS + 事件溯源架构
+- 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis + nestjs-cls
+
+## **代码注释规则**
+
+- 本项目代码应当按照 TSDoc 规范添加注释。
+- 使用中文进行注释，确保团队理解的一致性。
+- 注释应当清晰、准确、完整，避免冗余和过时的信息。
+- 所有公共 API、类、方法、接口、枚举等都必须添加完整的 TSDoc 注释。
+  示例：**TSDoc 注释结构**
+  - 基本结构
+
+```typescript
+/**
+ * @description 功能描述
+ * @param {Type} paramName 参数描述
+ * @returns {Type} 返回值描述
+ * @throws {ErrorType} 异常描述
+ * @example 使用示例
+ */
+```
+
+- 详细结构
+
+````typescript
+/**
+ * @function functionName
+ * @description
+ * 详细的功能描述，包含：
+ * 1. 主要功能说明
+ * 2. 使用场景
+ * 3. 注意事项
+ *
+ * 原理与机制：
+ * 1. 实现原理说明
+ * 2. 技术选型理由
+ * 3. 性能考虑
+ *
+ * 功能与职责：
+ * 1. 核心职责
+ * 2. 边界条件
+ * 3. 依赖关系
+ *
+ * @param {Type} paramName 参数详细描述
+ * @param {Type} [optionalParam] 可选参数描述
+ * @returns {Type} 返回值详细描述
+ * @throws {ErrorType} 可能抛出的异常及条件
+ * @example
+ * ```typescript
+ * const result = functionName(param1, param2);
+ * console.log(result);
+ * ```
+ * @since 1.0.0
+ * @deprecated 如果已废弃，说明替代方案
+ */
+````
+
+````ts
+import { NestFactory } from '@nestjs/core';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { AppModule } from './app.module';
+
+/**
+ * @function bootstrap
+ * @description
+ * 启动NestJS应用的主函数。该函数负责创建基于Fastify平台的应用实例，
+ * 并监听指定端口启动高性能HTTP服务。
+ *
+ * 功能与职责：
+ * 1. 启动应用服务器
+ * 2. 配置全局中间件和管道
+ * 3. 初始化数据库连接
+ * 4. 启动事件监听器
+ *
+ * @returns {Promise<void>} 返回一个Promise，表示应用启动过程
+ * @throws {Error} 当端口被占用或配置错误时抛出异常
+ * @example
+ * ```typescript
+ * // 启动应用
+ * bootstrap().catch(error => {
+ *   console.error('Failed to start application:', error);
+ *   process.exit(1);
+ * });
+ * ```
+ * @since 1.0.0
+ */
+async function bootstrap() {
+  // 创建基于Fastify的Nest应用实例
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(),
+  );
+
+  // 启动HTTP服务，监听指定端口
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+}
+
+// 启动应用
+bootstrap();
+````
+
+特别说明：
+
+- **功能描述应体现架构设计的要求**：
+  - 领域实体应当描述身份标识、状态管理和生命周期
+  - 聚合根应当描述业务方法、事件发布和不变性约束
+  - 值对象应当描述不变性约束、相等性判断和业务概念封装
+  - 应用用例应当描述业务流程、协调逻辑和事务边界
+  - 领域事件应当描述事件含义、触发条件和影响范围
+  - 领域服务应当描述跨聚合的业务逻辑和无状态操作
+- **SAAS平台特殊要求**: 所有涉及数据隔离、权限控制、多租户的代码必须详细说明其隔离策略和访问控制机制。
+
+## **架构组件注释示例**
+
+### 1. 领域实体 (Domain Entity) 示例
+
+````typescript
+/**
+ * @class UserEntity
+ * @description
+ * 用户领域实体，负责维护用户的身份标识、状态管理和生命周期。
+ *
+ * 身份标识与状态管理：
+ * 1. 通过唯一ID标识用户身份
+ * 2. 管理用户的基本状态（激活、禁用、删除）
+ * 3. 维护用户的生命周期状态变更
+ *
+ * 业务规则与约束：
+ * 1. 用户ID一旦创建不可变更
+ * 2. 用户状态变更必须遵循预定义的状态机
+ * 3. 删除用户时采用软删除策略
+ *
+ * @property {string} id 用户唯一标识符，不可变更
+ * @property {string} email 用户邮箱地址，用于身份验证
+ * @property {UserStatus} status 用户当前状态
+ * @property {Date} createdAt 用户创建时间
+ * @property {Date} updatedAt 用户最后更新时间
+ * @property {Date} deletedAt 用户删除时间（软删除）
+ *
+ * @example
+ * ```typescript
+ * const user = new UserEntity('user-123', 'user@example.com');
+ * user.activate(); // 激活用户
+ * user.deactivate(); // 禁用用户
+ * ```
+ * @since 1.0.0
+ */
+export class UserEntity {
+  constructor(
+    public readonly id: string,
+    public readonly email: string,
+    private status: UserStatus = UserStatus.PENDING,
+  ) {}
+
+  /**
+   * @method activate
+   * @description 激活用户，将状态从PENDING或DISABLED变更为ACTIVE
+   * @returns {void}
+   * @throws {InvalidStateTransitionError} 当用户状态不允许激活时抛出
+   */
+  activate(): void {
+    // 实现状态变更逻辑
+  }
+}
+````
+
+### 2. 聚合根 (Aggregate Root) 示例
+
+````typescript
+/**
+ * @class UserAggregate
+ * @description
+ * 用户聚合根，负责管理用户相关的业务方法、事件发布和不变性约束。
+ *
+ * 业务方法与事件发布：
+ * 1. 提供用户创建、更新、删除等业务方法
+ * 2. 在状态变更时发布相应的领域事件
+ * 3. 确保业务操作的事务一致性
+ *
+ * 不变性约束：
+ * 1. 用户邮箱在租户内必须唯一
+ * 2. 用户不能同时属于多个租户
+ * 3. 用户删除前必须清理所有关联数据
+ *
+ * @property {UserEntity} user 用户实体
+ * @property {TenantId} tenantId 所属租户ID
+ * @property {DomainEvent[]} uncommittedEvents 未提交的领域事件
+ *
+ * @example
+ * ```typescript
+ * const userAggregate = new UserAggregate();
+ * await userAggregate.createUser('user@example.com', tenantId);
+ * // 自动发布 UserCreatedEvent
+ * ```
+ * @since 1.0.0
+ */
+export class UserAggregate {
+  private uncommittedEvents: DomainEvent[] = [];
+
+  constructor(
+    private user: UserEntity,
+    private tenantId: TenantId,
+  ) {}
+
+  /**
+   * @method createUser
+   * @description 创建新用户，发布用户创建事件
+   * @param {string} email 用户邮箱
+   * @param {TenantId} tenantId 租户ID
+   * @returns {Promise<void>}
+   * @throws {DuplicateEmailError} 当邮箱已存在时抛出
+   * @throws {InvalidTenantError} 当租户不存在时抛出
+   */
+  async createUser(email: string, tenantId: TenantId): Promise<void> {
+    // 业务逻辑实现
+    this.publishEvent(new UserCreatedEvent(this.user.id, email, tenantId));
+  }
+}
+````
+
+### 3. 值对象 (Value Object) 示例
+
+````typescript
+/**
+ * @class Email
+ * @description
+ * 邮箱值对象，封装邮箱地址的不变性约束、相等性判断和业务概念。
+ *
+ * 不变性约束：
+ * 1. 邮箱地址一旦创建不可变更
+ * 2. 邮箱格式必须符合RFC 5322标准
+ * 3. 邮箱地址不区分大小写
+ *
+ * 相等性判断：
+ * 1. 基于邮箱地址的标准化值进行相等性比较
+ * 2. 忽略大小写差异
+ * 3. 支持哈希码计算用于集合操作
+ *
+ * 业务概念封装：
+ * 1. 封装邮箱验证逻辑
+ * 2. 提供邮箱标准化方法
+ * 3. 隐藏邮箱格式细节
+ *
+ * @property {string} value 标准化的邮箱地址值
+ *
+ * @example
+ * ```typescript
+ * const email1 = new Email('User@Example.COM');
+ * const email2 = new Email('user@example.com');
+ * console.log(email1.equals(email2)); // true
+ * ```
+ * @since 1.0.0
+ */
+export class Email {
+  constructor(public readonly value: string) {
+    this.validateEmail(value);
+    this.value = this.normalizeEmail(value);
+  }
+
+  /**
+   * @method equals
+   * @description 比较两个邮箱对象是否相等，忽略大小写
+   * @param {Email} other 另一个邮箱对象
+   * @returns {boolean} 是否相等
+   */
+  equals(other: Email): boolean {
+    return this.value.toLowerCase() === other.value.toLowerCase();
+  }
+}
+````
+
+### 4. 应用用例 (Use Case) 示例
+
+````typescript
+/**
+ * @class CreateUserUseCase
+ * @description
+ * 创建用户应用用例，负责协调业务流程、协调逻辑和事务边界。
+ *
+ * 业务流程：
+ * 1. 验证用户输入数据
+ * 2. 检查邮箱唯一性
+ * 3. 创建用户聚合根
+ * 4. 保存到数据库
+ * 5. 发布领域事件
+ *
+ * 协调逻辑：
+ * 1. 协调多个领域服务
+ * 2. 处理跨聚合的业务规则
+ * 3. 管理事务边界
+ * 4. 处理异常情况
+ *
+ * 事务边界：
+ * 1. 整个用例在一个事务中执行
+ * 2. 失败时回滚所有操作
+ * 3. 成功后提交事务并发布事件
+ *
+ * @param {IUserRepository} userRepository 用户仓储接口
+ * @param {ITenantRepository} tenantRepository 租户仓储接口
+ * @param {IEventBus} eventBus 事件总线
+ *
+ * @example
+ * ```typescript
+ * const useCase = new CreateUserUseCase(userRepo, tenantRepo, eventBus);
+ * await useCase.execute({ email: 'user@example.com', tenantId: 'tenant-123' });
+ * ```
+ * @since 1.0.0
+ */
+export class CreateUserUseCase {
+  constructor(
+    private userRepository: IUserRepository,
+    private tenantRepository: ITenantRepository,
+    private eventBus: IEventBus,
+  ) {}
+
+  /**
+   * @method execute
+   * @description 执行创建用户用例，协调完整的业务流程
+   * @param {CreateUserCommand} command 创建用户命令
+   * @returns {Promise<UserDto>} 创建的用户信息
+   * @throws {ValidationError} 当输入数据无效时抛出
+   * @throws {DuplicateEmailError} 当邮箱已存在时抛出
+   * @throws {TenantNotFoundError} 当租户不存在时抛出
+   */
+  async execute(command: CreateUserCommand): Promise<UserDto> {
+    // 事务边界开始
+    return await this.userRepository.transaction(async () => {
+      // 协调逻辑实现
+    });
+  }
+}
+````
+
+### 5. 领域事件 (Domain Event) 示例
+
+````typescript
+/**
+ * @class UserCreatedEvent
+ * @description
+ * 用户创建领域事件，描述事件含义、触发条件和影响范围。
+ *
+ * 事件含义：
+ * 1. 表示用户聚合根已成功创建
+ * 2. 包含用户创建时的关键信息
+ * 3. 为其他聚合根提供用户创建通知
+ *
+ * 触发条件：
+ * 1. 用户聚合根成功创建后自动触发
+ * 2. 用户邮箱验证通过
+ * 3. 租户关联建立成功
+ *
+ * 影响范围：
+ * 1. 通知权限管理模块创建用户权限
+ * 2. 触发欢迎邮件发送流程
+ * 3. 更新用户统计信息
+ * 4. 记录用户创建审计日志
+ *
+ * @property {string} userId 创建的用户ID
+ * @property {string} email 用户邮箱地址
+ * @property {string} tenantId 所属租户ID
+ * @property {Date} occurredOn 事件发生时间
+ *
+ * @example
+ * ```typescript
+ * const event = new UserCreatedEvent('user-123', 'user@example.com', 'tenant-456');
+ * eventBus.publish(event);
+ * ```
+ * @since 1.0.0
+ */
+export class UserCreatedEvent implements IDomainEvent {
+  public readonly occurredOn: Date = new Date();
+
+  constructor(
+    public readonly userId: string,
+    public readonly email: string,
+    public readonly tenantId: string,
+  ) {}
+
+  /**
+   * @method getEventType
+   * @description 获取事件类型标识
+   * @returns {string} 事件类型
+   */
+  getEventType(): string {
+    return 'UserCreated';
+  }
+}
+````
+
+### 6. 领域服务 (Domain Service) 示例
+
+````typescript
+/**
+ * @class UserDomainService
+ * @description
+ * 用户领域服务，负责处理跨聚合的业务逻辑和无状态操作。
+ *
+ * 跨聚合业务逻辑：
+ * 1. 协调用户和租户之间的业务规则
+ * 2. 处理用户和组织架构的关联关系
+ * 3. 管理用户权限的复杂计算逻辑
+ *
+ * 无状态操作：
+ * 1. 不维护任何内部状态
+ * 2. 所有方法都是纯函数
+ * 3. 可以安全地在多个聚合根之间共享
+ * 4. 支持并发调用
+ *
+ * 业务规则封装：
+ * 1. 封装复杂的业务计算逻辑
+ * 2. 提供可重用的业务规则验证
+ * 3. 隔离跨聚合的复杂业务逻辑
+ *
+ * @example
+ * ```typescript
+ * const userService = new UserDomainService();
+ * const canAccess = userService.canUserAccessResource(userId, resourceId);
+ * ```
+ * @since 1.0.0
+ */
+export class UserDomainService {
+  /**
+   * @method canUserAccessResource
+   * @description 判断用户是否可以访问指定资源，跨聚合权限计算
+   * @param {string} userId 用户ID
+   * @param {string} resourceId 资源ID
+   * @param {string} tenantId 租户ID
+   * @returns {Promise<boolean>} 是否可以访问
+   *
+   * 业务逻辑：
+   * 1. 检查用户是否属于指定租户
+   * 2. 验证用户角色权限
+   * 3. 检查资源访问策略
+   * 4. 考虑组织架构权限继承
+   */
+  async canUserAccessResource(
+    userId: string,
+    resourceId: string,
+    tenantId: string,
+  ): Promise<boolean> {
+    // 跨聚合业务逻辑实现
+  }
+
+  /**
+   * @method calculateUserPermissions
+   * @description 计算用户权限列表，无状态权限计算
+   * @param {string} userId 用户ID
+   * @param {string} tenantId 租户ID
+   * @returns {Promise<Permission[]>} 权限列表
+   */
+  async calculateUserPermissions(
+    userId: string,
+    tenantId: string,
+  ): Promise<Permission[]> {
+    // 无状态权限计算逻辑
+  }
+}
+````
+
+### 7. CQRS 命令 (Command) 示例
+
+````typescript
+/**
+ * @class CreateUserCommand
+ * @description
+ * 创建用户命令，封装用户创建操作的输入参数和验证规则。
+ *
+ * 命令职责：
+ * 1. 封装用户创建所需的所有输入参数
+ * 2. 提供数据验证和格式检查
+ * 3. 确保命令的不可变性和幂等性
+ * 4. 支持命令的序列化和反序列化
+ *
+ * 数据隔离要求：
+ * 1. 命令必须包含租户ID以确保数据隔离
+ * 2. 验证用户邮箱在租户内的唯一性
+ * 3. 确保命令执行者具有相应权限
+ *
+ * @property {string} email 用户邮箱地址，必填且格式验证
+ * @property {string} password 用户密码，必填且强度验证
+ * @property {string} firstName 用户名字，必填
+ * @property {string} lastName 用户姓氏，必填
+ * @property {string} tenantId 所属租户ID，必填
+ * @property {string} organizationId 所属组织ID，可选
+ * @property {string} departmentId 所属部门ID，可选
+ * @property {string} requestedBy 请求创建的用户ID，用于权限验证
+ *
+ * @example
+ * ```typescript
+ * const command = new CreateUserCommand({
+ *   email: 'user@example.com',
+ *   password: 'SecurePass123!',
+ *   firstName: 'John',
+ *   lastName: 'Doe',
+ *   tenantId: 'tenant-123',
+ *   requestedBy: 'admin-456'
+ * });
+ * ```
+ * @since 1.0.0
+ */
+export class CreateUserCommand {
+  constructor(
+    public readonly email: string,
+    public readonly password: string,
+    public readonly firstName: string,
+    public readonly lastName: string,
+    public readonly tenantId: string,
+    public readonly organizationId?: string,
+    public readonly departmentId?: string,
+    public readonly requestedBy: string,
+  ) {
+    this.validate();
+  }
+
+  /**
+   * @method validate
+   * @description 验证命令参数的有效性
+   * @returns {void}
+   * @throws {ValidationError} 当参数无效时抛出
+   */
+  private validate(): void {
+    // 参数验证逻辑
+  }
+}
+````
+
+### 8. CQRS 查询 (Query) 示例
+
+````typescript
+/**
+ * @class GetUsersQuery
+ * @description
+ * 获取用户列表查询，封装用户查询操作的参数和过滤条件。
+ *
+ * 查询职责：
+ * 1. 封装用户查询所需的所有参数
+ * 2. 提供灵活的过滤和排序选项
+ * 3. 支持分页和性能优化
+ * 4. 确保查询结果的数据隔离
+ *
+ * 数据隔离要求：
+ * 1. 查询必须基于租户ID进行数据隔离
+ * 2. 根据查询者权限过滤可访问的数据
+ * 3. 支持组织级和部门级的数据过滤
+ * 4. 确保敏感信息的安全访问
+ *
+ * @property {string} tenantId 租户ID，必填，用于数据隔离
+ * @property {string} organizationId 组织ID，可选，用于组织级过滤
+ * @property {string} departmentId 部门ID，可选，用于部门级过滤
+ * @property {string} status 用户状态过滤，可选
+ * @property {string} searchTerm 搜索关键词，可选
+ * @property {number} page 页码，默认1
+ * @property {number} limit 每页数量，默认20，最大100
+ * @property {string} sortBy 排序字段，默认'createdAt'
+ * @property {'asc' | 'desc'} sortOrder 排序方向，默认'desc'
+ * @property {string} requestedBy 请求查询的用户ID，用于权限验证
+ *
+ * @example
+ * ```typescript
+ * const query = new GetUsersQuery({
+ *   tenantId: 'tenant-123',
+ *   organizationId: 'org-456',
+ *   status: 'ACTIVE',
+ *   searchTerm: 'john',
+ *   page: 1,
+ *   limit: 20,
+ *   requestedBy: 'user-789'
+ * });
+ * ```
+ * @since 1.0.0
+ */
+export class GetUsersQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly organizationId?: string,
+    public readonly departmentId?: string,
+    public readonly status?: string,
+    public readonly searchTerm?: string,
+    public readonly page: number = 1,
+    public readonly limit: number = 20,
+    public readonly sortBy: string = 'createdAt',
+    public readonly sortOrder: 'asc' | 'desc' = 'desc',
+    public readonly requestedBy: string,
+  ) {
+    this.validate();
+  }
+
+  /**
+   * @method validate
+   * @description 验证查询参数的有效性
+   * @returns {void}
+   * @throws {ValidationError} 当参数无效时抛出
+   */
+  private validate(): void {
+    // 参数验证逻辑
+  }
+}
+````
+
+### 9. CQRS 命令处理器 (Command Handler) 示例
+
+````typescript
+/**
+ * @class CreateUserCommandHandler
+ * @description
+ * 创建用户命令处理器，负责处理用户创建命令的业务逻辑和事务管理。
+ *
+ * 处理器职责：
+ * 1. 接收并验证创建用户命令
+ * 2. 协调领域服务和仓储操作
+ * 3. 管理事务边界和异常处理
+ * 4. 发布领域事件和集成事件
+ *
+ * 业务逻辑流程：
+ * 1. 验证命令参数和权限
+ * 2. 检查邮箱唯一性约束
+ * 3. 创建用户聚合根
+ * 4. 保存到写模型数据库
+ * 5. 发布用户创建事件
+ * 6. 更新读模型视图
+ *
+ * 事务管理：
+ * 1. 整个处理过程在一个事务中执行
+ * 2. 失败时自动回滚所有操作
+ * 3. 成功后提交事务并发布事件
+ * 4. 支持分布式事务协调
+ *
+ * @param {IUserRepository} userRepository 用户仓储接口
+ * @param {ITenantRepository} tenantRepository 租户仓储接口
+ * @param {IUserDomainService} userDomainService 用户领域服务
+ * @param {IEventBus} eventBus 事件总线
+ * @param {IUnitOfWork} unitOfWork 工作单元
+ *
+ * @example
+ * ```typescript
+ * const handler = new CreateUserCommandHandler(
+ *   userRepo, tenantRepo, userService, eventBus, unitOfWork
+ * );
+ * await handler.handle(createUserCommand);
+ * ```
+ * @since 1.0.0
+ */
+export class CreateUserCommandHandler {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly tenantRepository: ITenantRepository,
+    private readonly userDomainService: IUserDomainService,
+    private readonly eventBus: IEventBus,
+    private readonly unitOfWork: IUnitOfWork,
+  ) {}
+
+  /**
+   * @method handle
+   * @description 处理创建用户命令，执行完整的用户创建流程
+   * @param {CreateUserCommand} command 创建用户命令
+   * @returns {Promise<UserCreatedResult>} 创建结果
+   * @throws {ValidationError} 当命令参数无效时抛出
+   * @throws {DuplicateEmailError} 当邮箱已存在时抛出
+   * @throws {TenantNotFoundError} 当租户不存在时抛出
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   *
+   * 处理流程：
+   * 1. 验证命令和权限
+   * 2. 检查业务规则约束
+   * 3. 创建用户聚合根
+   * 4. 保存到数据库
+   * 5. 发布领域事件
+   * 6. 返回创建结果
+   */
+  async handle(command: CreateUserCommand): Promise<UserCreatedResult> {
+    return await this.unitOfWork.execute(async () => {
+      // 1. 验证命令和权限
+      await this.validateCommand(command);
+
+      // 2. 检查业务规则约束
+      await this.checkBusinessRules(command);
+
+      // 3. 创建用户聚合根
+      const userAggregate = await this.createUserAggregate(command);
+
+      // 4. 保存到数据库
+      await this.userRepository.save(userAggregate);
+
+      // 5. 发布领域事件
+      await this.publishEvents(userAggregate);
+
+      // 6. 返回创建结果
+      return new UserCreatedResult(userAggregate.getUser().id);
+    });
+  }
+
+  /**
+   * @method validateCommand
+   * @description 验证命令参数和权限
+   * @param {CreateUserCommand} command 创建用户命令
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async validateCommand(command: CreateUserCommand): Promise<void> {
+    // 验证逻辑实现
+  }
+}
+````
+
+### 10. CQRS 查询处理器 (Query Handler) 示例
+
+````typescript
+/**
+ * @class GetUsersQueryHandler
+ * @description
+ * 获取用户列表查询处理器，负责处理用户查询请求和优化读性能。
+ *
+ * 处理器职责：
+ * 1. 接收并验证用户查询请求
+ * 2. 从读模型数据库获取数据
+ * 3. 应用数据隔离和权限过滤
+ * 4. 优化查询性能和缓存策略
+ *
+ * 查询优化策略：
+ * 1. 使用专门的读模型数据库
+ * 2. 实现查询结果缓存机制
+ * 3. 支持分页和索引优化
+ * 4. 避免N+1查询问题
+ *
+ * 数据隔离实现：
+ * 1. 基于租户ID进行数据隔离
+ * 2. 根据用户权限过滤可访问数据
+ * 3. 支持组织级和部门级过滤
+ * 4. 确保敏感数据的安全访问
+ *
+ * @param {IUserReadRepository} userReadRepository 用户读模型仓储
+ * @param {ICacheService} cacheService 缓存服务
+ * @param {IPermissionService} permissionService 权限服务
+ * @param {ITenantContext} tenantContext 租户上下文
+ *
+ * @example
+ * ```typescript
+ * const handler = new GetUsersQueryHandler(
+ *   userReadRepo, cacheService, permissionService, tenantContext
+ * );
+ * const result = await handler.handle(getUsersQuery);
+ * ```
+ * @since 1.0.0
+ */
+export class GetUsersQueryHandler {
+  constructor(
+    private readonly userReadRepository: IUserReadRepository,
+    private readonly cacheService: ICacheService,
+    private readonly permissionService: IPermissionService,
+    private readonly tenantContext: ITenantContext,
+  ) {}
+
+  /**
+   * @method handle
+   * @description 处理获取用户列表查询，返回分页的用户数据
+   * @param {GetUsersQuery} query 获取用户列表查询
+   * @returns {Promise<GetUsersResult>} 查询结果
+   * @throws {ValidationError} 当查询参数无效时抛出
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   *
+   * 处理流程：
+   * 1. 验证查询参数和权限
+   * 2. 检查缓存中是否有结果
+   * 3. 从读模型数据库查询数据
+   * 4. 应用数据隔离和权限过滤
+   * 5. 缓存查询结果
+   * 6. 返回分页结果
+   */
+  async handle(query: GetUsersQuery): Promise<GetUsersResult> {
+    // 1. 验证查询参数和权限
+    await this.validateQuery(query);
+
+    // 2. 生成缓存键
+    const cacheKey = this.generateCacheKey(query);
+
+    // 3. 检查缓存
+    const cachedResult = await this.cacheService.get<GetUsersResult>(cacheKey);
+    if (cachedResult) {
+      return cachedResult;
+    }
+
+    // 4. 从读模型数据库查询
+    const result = await this.userReadRepository.findUsers(query);
+
+    // 5. 缓存查询结果
+    await this.cacheService.set(cacheKey, result, 300); // 5分钟缓存
+
+    // 6. 返回结果
+    return result;
+  }
+
+  /**
+   * @method validateQuery
+   * @description 验证查询参数和权限
+   * @param {GetUsersQuery} query 获取用户列表查询
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async validateQuery(query: GetUsersQuery): Promise<void> {
+    // 验证逻辑实现
+  }
+
+  /**
+   * @method generateCacheKey
+   * @description 生成查询缓存键
+   * @param {GetUsersQuery} query 获取用户列表查询
+   * @returns {string} 缓存键
+   * @private
+   */
+  private generateCacheKey(query: GetUsersQuery): string {
+    // 缓存键生成逻辑
+    return `users:${query.tenantId}:${JSON.stringify(query)}`;
+  }
+}
+````
+
+### 11. 事件存储 (Event Store) 示例
+
+````typescript
+/**
+ * @class EventStore
+ * @description
+ * 事件存储服务，负责管理领域事件的持久化、检索和重放功能。
+ *
+ * 事件存储职责：
+ * 1. 持久化领域事件到事件存储数据库
+ * 2. 支持事件的版本控制和并发控制
+ * 3. 提供事件查询和过滤功能
+ * 4. 支持事件重放和快照机制
+ *
+ * 事件溯源特性：
+ * 1. 所有状态变更都通过事件记录
+ * 2. 支持时间旅行和状态重建
+ * 3. 提供完整的审计日志
+ * 4. 支持事件版本管理和迁移
+ *
+ * 多租户支持：
+ * 1. 基于租户ID进行事件隔离
+ * 2. 支持租户级的事件查询
+ * 3. 确保跨租户数据安全
+ * 4. 支持租户级的事件归档
+ *
+ * @param {IEventRepository} eventRepository 事件仓储接口
+ * @param {ISnapshotRepository} snapshotRepository 快照仓储接口
+ * @param {ITenantContext} tenantContext 租户上下文
+ *
+ * @example
+ * ```typescript
+ * const eventStore = new EventStore(eventRepo, snapshotRepo, tenantContext);
+ * await eventStore.saveEvents(aggregateId, events);
+ * const events = await eventStore.getEvents(aggregateId, fromVersion);
+ * ```
+ * @since 1.0.0
+ */
+export class EventStore {
+  constructor(
+    private readonly eventRepository: IEventRepository,
+    private readonly snapshotRepository: ISnapshotRepository,
+    private readonly tenantContext: ITenantContext,
+  ) {}
+
+  /**
+   * @method saveEvents
+   * @description 保存聚合根的事件到事件存储
+   * @param {string} aggregateId 聚合根ID
+   * @param {IDomainEvent[]} events 领域事件列表
+   * @param {number} expectedVersion 期望的版本号，用于乐观并发控制
+   * @returns {Promise<void>}
+   * @throws {ConcurrencyError} 当版本冲突时抛出
+   * @throws {ValidationError} 当事件无效时抛出
+   *
+   * 保存流程：
+   * 1. 验证事件的有效性和完整性
+   * 2. 检查聚合根版本一致性
+   * 3. 应用租户级数据隔离
+   * 4. 持久化事件到存储
+   * 5. 更新聚合根版本号
+   */
+  async saveEvents(
+    aggregateId: string,
+    events: IDomainEvent[],
+    expectedVersion: number,
+  ): Promise<void> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+
+    // 1. 验证事件
+    this.validateEvents(events);
+
+    // 2. 检查版本一致性
+    await this.checkVersionConsistency(aggregateId, expectedVersion, tenantId);
+
+    // 3. 保存事件
+    await this.eventRepository.saveEvents(aggregateId, events, tenantId);
+  }
+
+  /**
+   * @method getEvents
+   * @description 获取聚合根的事件历史
+   * @param {string} aggregateId 聚合根ID
+   * @param {number} fromVersion 起始版本号
+   * @param {number} toVersion 结束版本号，可选
+   * @returns {Promise<IDomainEvent[]>} 事件列表
+   */
+  async getEvents(
+    aggregateId: string,
+    fromVersion: number = 0,
+    toVersion?: number,
+  ): Promise<IDomainEvent[]> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+    return await this.eventRepository.getEvents(
+      aggregateId,
+      fromVersion,
+      toVersion,
+      tenantId,
+    );
+  }
+
+  /**
+   * @method createSnapshot
+   * @description 为聚合根创建快照
+   * @param {string} aggregateId 聚合根ID
+   * @param {any} aggregateState 聚合根状态
+   * @param {number} version 版本号
+   * @returns {Promise<void>}
+   */
+  async createSnapshot(
+    aggregateId: string,
+    aggregateState: any,
+    version: number,
+  ): Promise<void> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+    await this.snapshotRepository.saveSnapshot(
+      aggregateId,
+      aggregateState,
+      version,
+      tenantId,
+    );
+  }
+}
+````
+
+### 12. 事件处理器 (Event Handler) 示例
+
+````typescript
+/**
+ * @class UserCreatedEventHandler
+ * @description
+ * 用户创建事件处理器，负责处理用户创建事件的后续业务逻辑。
+ *
+ * 事件处理职责：
+ * 1. 接收并处理用户创建领域事件
+ * 2. 更新读模型和视图
+ * 3. 触发相关的业务流程
+ * 4. 处理事件处理的异常和重试
+ *
+ * 读模型更新：
+ * 1. 更新用户列表视图
+ * 2. 更新用户统计信息
+ * 3. 更新组织架构视图
+ * 4. 更新权限管理视图
+ *
+ * 业务流程触发：
+ * 1. 发送欢迎邮件
+ * 2. 创建用户权限
+ * 3. 记录审计日志
+ * 4. 更新用户统计
+ *
+ * @param {IUserReadRepository} userReadRepository 用户读模型仓储
+ * @param {INotificationService} notificationService 通知服务
+ * @param {IPermissionService} permissionService 权限服务
+ * @param {IAuditService} auditService 审计服务
+ *
+ * @example
+ * ```typescript
+ * const handler = new UserCreatedEventHandler(
+ *   userReadRepo, notificationService, permissionService, auditService
+ * );
+ * await handler.handle(userCreatedEvent);
+ * ```
+ * @since 1.0.0
+ */
+export class UserCreatedEventHandler {
+  constructor(
+    private readonly userReadRepository: IUserReadRepository,
+    private readonly notificationService: INotificationService,
+    private readonly permissionService: IPermissionService,
+    private readonly auditService: IAuditService,
+  ) {}
+
+  /**
+   * @method handle
+   * @description 处理用户创建事件，执行后续业务逻辑
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {Promise<void>}
+   * @throws {EventProcessingError} 当事件处理失败时抛出
+   *
+   * 处理流程：
+   * 1. 验证事件的有效性
+   * 2. 更新读模型视图
+   * 3. 触发业务流程
+   * 4. 记录处理结果
+   */
+  async handle(event: UserCreatedEvent): Promise<void> {
+    try {
+      // 1. 验证事件
+      this.validateEvent(event);
+
+      // 2. 更新读模型
+      await this.updateReadModels(event);
+
+      // 3. 触发业务流程
+      await this.triggerBusinessProcesses(event);
+
+      // 4. 记录审计日志
+      await this.auditService.logEventProcessed(event);
+    } catch (error) {
+      // 记录处理失败
+      await this.auditService.logEventProcessingFailed(event, error);
+      throw new EventProcessingError(
+        `Failed to process UserCreatedEvent: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method updateReadModels
+   * @description 更新读模型视图
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async updateReadModels(event: UserCreatedEvent): Promise<void> {
+    // 更新用户列表视图
+    await this.userReadRepository.addUser({
+      id: event.userId,
+      email: event.email,
+      tenantId: event.tenantId,
+      createdAt: event.occurredOn,
+    });
+  }
+
+  /**
+   * @method triggerBusinessProcesses
+   * @description 触发相关的业务流程
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async triggerBusinessProcesses(
+    event: UserCreatedEvent,
+  ): Promise<void> {
+    // 并行执行多个业务流程
+    await Promise.all([
+      this.sendWelcomeEmail(event),
+      this.createUserPermissions(event),
+      this.updateUserStatistics(event),
+    ]);
+  }
+}
+````
+
+### 13. 聚合根重建器 (Aggregate Rebuilder) 示例
+
+````typescript
+/**
+ * @class UserAggregateRebuilder
+ * @description
+ * 用户聚合根重建器，负责从事件历史重建聚合根状态。
+ *
+ * 重建器职责：
+ * 1. 从事件存储加载事件历史
+ * 2. 应用事件到聚合根重建状态
+ * 3. 支持快照机制优化性能
+ * 4. 处理事件版本兼容性
+ *
+ * 性能优化：
+ * 1. 使用快照机制减少事件重放
+ * 2. 支持增量重建和全量重建
+ * 3. 实现事件缓存机制
+ * 4. 支持并行事件处理
+ *
+ * 版本兼容性：
+ * 1. 处理事件结构变更
+ * 2. 支持事件迁移和转换
+ * 3. 维护向后兼容性
+ * 4. 处理缺失事件的处理
+ *
+ * @param {IEventStore} eventStore 事件存储服务
+ * @param {ISnapshotService} snapshotService 快照服务
+ * @param {IEventMigrator} eventMigrator 事件迁移器
+ *
+ * @example
+ * ```typescript
+ * const rebuilder = new UserAggregateRebuilder(eventStore, snapshotService, eventMigrator);
+ * const userAggregate = await rebuilder.rebuildAggregate('user-123');
+ * ```
+ * @since 1.0.0
+ */
+export class UserAggregateRebuilder {
+  constructor(
+    private readonly eventStore: IEventStore,
+    private readonly snapshotService: ISnapshotService,
+    private readonly eventMigrator: IEventMigrator,
+  ) {}
+
+  /**
+   * @method rebuildAggregate
+   * @description 从事件历史重建用户聚合根
+   * @param {string} aggregateId 聚合根ID
+   * @param {number} toVersion 目标版本号，可选
+   * @returns {Promise<UserAggregate>} 重建的聚合根
+   * @throws {AggregateNotFoundError} 当聚合根不存在时抛出
+   * @throws {EventCorruptionError} 当事件数据损坏时抛出
+   *
+   * 重建流程：
+   * 1. 检查是否有可用的快照
+   * 2. 从快照或事件历史开始重建
+   * 3. 应用事件到聚合根
+   * 4. 验证重建结果的完整性
+   */
+  async rebuildAggregate(
+    aggregateId: string,
+    toVersion?: number,
+  ): Promise<UserAggregate> {
+    // 1. 检查快照
+    const snapshot = await this.snapshotService.getLatestSnapshot(aggregateId);
+
+    let aggregate: UserAggregate;
+    let fromVersion = 0;
+
+    if (snapshot && (!toVersion || snapshot.version < toVersion)) {
+      // 从快照开始重建
+      aggregate = this.createAggregateFromSnapshot(snapshot);
+      fromVersion = snapshot.version + 1;
+    } else {
+      // 从头开始重建
+      aggregate = new UserAggregate();
+    }
+
+    // 2. 获取事件历史
+    const events = await this.eventStore.getEvents(
+      aggregateId,
+      fromVersion,
+      toVersion,
+    );
+
+    // 3. 应用事件
+    for (const event of events) {
+      // 迁移事件到当前版本
+      const migratedEvent = await this.eventMigrator.migrateEvent(event);
+
+      // 应用事件到聚合根
+      aggregate.applyEvent(migratedEvent);
+    }
+
+    // 4. 验证重建结果
+    this.validateRebuiltAggregate(aggregate);
+
+    return aggregate;
+  }
+
+  /**
+   * @method createAggregateFromSnapshot
+   * @description 从快照创建聚合根
+   * @param {ISnapshot} snapshot 快照数据
+   * @returns {UserAggregate} 聚合根实例
+   * @private
+   */
+  private createAggregateFromSnapshot(snapshot: ISnapshot): UserAggregate {
+    // 从快照数据重建聚合根状态
+    return UserAggregate.fromSnapshot(snapshot.data);
+  }
+
+  /**
+   * @method validateRebuiltAggregate
+   * @description 验证重建的聚合根完整性
+   * @param {UserAggregate} aggregate 聚合根实例
+   * @returns {void}
+   * @throws {AggregateCorruptionError} 当聚合根数据损坏时抛出
+   * @private
+   */
+  private validateRebuiltAggregate(aggregate: UserAggregate): void {
+    // 验证聚合根的完整性
+    if (!aggregate.isValid()) {
+      throw new AggregateCorruptionError(
+        'Rebuilt aggregate is in invalid state',
+      );
+    }
+  }
+}
+````
+
+### 14. 事件投影 (Event Projection) 示例
+
+````typescript
+/**
+ * @class UserProjection
+ * @description
+ * 用户事件投影，负责将领域事件投影到读模型视图。
+ *
+ * 投影职责：
+ * 1. 监听和处理用户相关的领域事件
+ * 2. 维护用户相关的读模型视图
+ * 3. 支持投影的增量更新
+ * 4. 处理投影的异常和恢复
+ *
+ * 读模型维护：
+ * 1. 用户列表视图
+ * 2. 用户统计视图
+ * 3. 用户权限视图
+ * 4. 用户活动视图
+ *
+ * 投影特性：
+ * 1. 支持投影的幂等性
+ * 2. 处理重复事件
+ * 3. 支持投影的重新构建
+ * 4. 提供投影状态查询
+ *
+ * @param {IUserReadRepository} userReadRepository 用户读模型仓储
+ * @param {IUserStatisticsRepository} statisticsRepository 统计仓储
+ * @param {IUserPermissionRepository} permissionRepository 权限仓储
+ * @param {IProjectionStateRepository} projectionStateRepository 投影状态仓储
+ *
+ * @example
+ * ```typescript
+ * const projection = new UserProjection(
+ *   userReadRepo, statisticsRepo, permissionRepo, projectionStateRepo
+ * );
+ * await projection.handle(userCreatedEvent);
+ * ```
+ * @since 1.0.0
+ */
+export class UserProjection {
+  constructor(
+    private readonly userReadRepository: IUserReadRepository,
+    private readonly statisticsRepository: IUserStatisticsRepository,
+    private readonly permissionRepository: IUserPermissionRepository,
+    private readonly projectionStateRepository: IProjectionStateRepository,
+  ) {}
+
+  /**
+   * @method handle
+   * @description 处理用户相关事件，更新读模型视图
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<void>}
+   * @throws {ProjectionError} 当投影处理失败时抛出
+   *
+   * 处理流程：
+   * 1. 检查事件是否已处理
+   * 2. 根据事件类型更新相应视图
+   * 3. 记录投影处理状态
+   * 4. 处理投影异常
+   */
+  async handle(event: IDomainEvent): Promise<void> {
+    try {
+      // 1. 检查事件是否已处理（幂等性）
+      if (await this.isEventProcessed(event)) {
+        return;
+      }
+
+      // 2. 根据事件类型处理
+      switch (event.getEventType()) {
+        case 'UserCreated':
+          await this.handleUserCreated(event as UserCreatedEvent);
+          break;
+        case 'UserUpdated':
+          await this.handleUserUpdated(event as UserUpdatedEvent);
+          break;
+        case 'UserDeleted':
+          await this.handleUserDeleted(event as UserDeletedEvent);
+          break;
+        default:
+          // 忽略不相关的事件
+          break;
+      }
+
+      // 3. 记录事件处理状态
+      await this.recordEventProcessed(event);
+    } catch (error) {
+      // 记录投影处理失败
+      await this.recordProjectionError(event, error);
+      throw new ProjectionError(
+        `Failed to process event ${event.getEventType()}: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method handleUserCreated
+   * @description 处理用户创建事件
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async handleUserCreated(event: UserCreatedEvent): Promise<void> {
+    // 更新用户列表视图
+    await this.userReadRepository.addUser({
+      id: event.userId,
+      email: event.email,
+      tenantId: event.tenantId,
+      createdAt: event.occurredOn,
+      status: 'ACTIVE',
+    });
+
+    // 更新用户统计
+    await this.statisticsRepository.incrementUserCount(event.tenantId);
+
+    // 创建默认权限
+    await this.permissionRepository.createDefaultPermissions(
+      event.userId,
+      event.tenantId,
+    );
+  }
+
+  /**
+   * @method isEventProcessed
+   * @description 检查事件是否已处理
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<boolean>} 是否已处理
+   * @private
+   */
+  private async isEventProcessed(event: IDomainEvent): Promise<boolean> {
+    return await this.projectionStateRepository.isEventProcessed(
+      'UserProjection',
+      event.getEventId(),
+    );
+  }
+
+  /**
+   * @method recordEventProcessed
+   * @description 记录事件处理状态
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async recordEventProcessed(event: IDomainEvent): Promise<void> {
+    await this.projectionStateRepository.recordEventProcessed(
+      'UserProjection',
+      event.getEventId(),
+      event.occurredOn,
+    );
+  }
+}
+````
+
+### 15. 仓储实现 (Repository Implementation) 示例
+
+````typescript
+/**
+ * @class UserRepository
+ * @description
+ * 用户仓储实现，负责用户聚合根的数据持久化和检索操作。
+ *
+ * 仓储职责：
+ * 1. 实现用户聚合根的持久化存储
+ * 2. 提供基于ID和查询条件的检索功能
+ * 3. 管理数据访问的事务边界
+ * 4. 实现多租户数据隔离策略
+ *
+ * 数据隔离实现：
+ * 1. 基于租户ID进行数据隔离
+ * 2. 支持组织级和部门级的数据过滤
+ * 3. 确保跨租户数据安全访问
+ * 4. 实现软删除和审计日志
+ *
+ * 性能优化：
+ * 1. 使用数据库索引优化查询性能
+ * 2. 实现查询结果缓存机制
+ * 3. 支持分页和批量操作
+ * 4. 避免N+1查询问题
+ *
+ * @param {EntityManager} entityManager MikroORM实体管理器
+ * @param {ITenantContext} tenantContext 租户上下文
+ * @param {ICacheService} cacheService 缓存服务
+ *
+ * @example
+ * ```typescript
+ * const userRepo = new UserRepository(entityManager, tenantContext, cacheService);
+ * const user = await userRepo.findById('user-123');
+ * await userRepo.save(userAggregate);
+ * ```
+ * @since 1.0.0
+ */
+export class UserRepository implements IUserRepository {
+  constructor(
+    private readonly entityManager: EntityManager,
+    private readonly tenantContext: ITenantContext,
+    private readonly cacheService: ICacheService,
+  ) {}
+
+  /**
+   * @method findById
+   * @description 根据ID查找用户聚合根
+   * @param {string} id 用户ID
+   * @returns {Promise<UserAggregate | null>} 用户聚合根或null
+   * @throws {DataAccessError} 当数据访问失败时抛出
+   *
+   * 查询流程：
+   * 1. 检查缓存中是否有结果
+   * 2. 从数据库查询用户实体
+   * 3. 应用租户级数据隔离
+   * 4. 重建用户聚合根
+   * 5. 缓存查询结果
+   */
+  async findById(id: string): Promise<UserAggregate | null> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+    const cacheKey = `user:${tenantId}:${id}`;
+
+    // 1. 检查缓存
+    const cachedUser = await this.cacheService.get<UserAggregate>(cacheKey);
+    if (cachedUser) {
+      return cachedUser;
+    }
+
+    // 2. 从数据库查询
+    const userEntity = await this.entityManager.findOne(UserEntity, {
+      id,
+      tenantId,
+      deletedAt: null, // 软删除过滤
+    });
+
+    if (!userEntity) {
+      return null;
+    }
+
+    // 3. 重建聚合根
+    const userAggregate = this.rebuildAggregate(userEntity);
+
+    // 4. 缓存结果
+    await this.cacheService.set(cacheKey, userAggregate, 300);
+
+    return userAggregate;
+  }
+
+  /**
+   * @method save
+   * @description 保存用户聚合根到数据库
+   * @param {UserAggregate} userAggregate 用户聚合根
+   * @returns {Promise<void>}
+   * @throws {DataAccessError} 当数据保存失败时抛出
+   * @throws {ConcurrencyError} 当并发冲突时抛出
+   *
+   * 保存流程：
+   * 1. 验证聚合根的有效性
+   * 2. 检查并发版本冲突
+   * 3. 保存实体到数据库
+   * 4. 发布未提交的事件
+   * 5. 更新缓存
+   */
+  async save(userAggregate: UserAggregate): Promise<void> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+    const user = userAggregate.getUser();
+
+    // 1. 验证聚合根
+    if (!userAggregate.isValid()) {
+      throw new ValidationError('Invalid user aggregate');
+    }
+
+    // 2. 检查并发冲突
+    await this.checkConcurrencyConflict(user.id, userAggregate.getVersion());
+
+    // 3. 保存到数据库
+    const userEntity = this.mapAggregateToEntity(userAggregate, tenantId);
+    await this.entityManager.persistAndFlush(userEntity);
+
+    // 4. 发布事件
+    await this.publishUncommittedEvents(userAggregate);
+
+    // 5. 更新缓存
+    const cacheKey = `user:${tenantId}:${user.id}`;
+    await this.cacheService.set(cacheKey, userAggregate, 300);
+  }
+
+  /**
+   * @method transaction
+   * @description 在事务中执行操作
+   * @param {Function} callback 事务回调函数
+   * @returns {Promise<T>} 事务执行结果
+   * @template T 返回类型
+   */
+  async transaction<T>(callback: () => Promise<T>): Promise<T> {
+    return await this.entityManager.transactional(callback);
+  }
+}
+````
+
+### 16. 数据访问对象 (Data Access Object) 示例
+
+````typescript
+/**
+ * @class UserDao
+ * @description
+ * 用户数据访问对象，负责用户数据的底层数据库操作和查询优化。
+ *
+ * DAO职责：
+ * 1. 封装复杂的数据库查询逻辑
+ * 2. 优化查询性能和索引使用
+ * 3. 处理数据库特定的操作
+ * 4. 提供批量操作和事务支持
+ *
+ * 查询优化策略：
+ * 1. 使用原生SQL优化复杂查询
+ * 2. 实现查询结果分页
+ * 3. 使用数据库索引提升性能
+ * 4. 避免N+1查询问题
+ *
+ * 多租户支持：
+ * 1. 自动注入租户ID到查询条件
+ * 2. 支持租户级的数据统计
+ * 3. 实现租户级的数据归档
+ * 4. 确保跨租户数据隔离
+ *
+ * @param {EntityManager} entityManager MikroORM实体管理器
+ * @param {ITenantContext} tenantContext 租户上下文
+ *
+ * @example
+ * ```typescript
+ * const userDao = new UserDao(entityManager, tenantContext);
+ * const users = await userDao.findActiveUsersByOrganization('org-123');
+ * const stats = await userDao.getUserStatistics();
+ * ```
+ * @since 1.0.0
+ */
+export class UserDao {
+  constructor(
+    private readonly entityManager: EntityManager,
+    private readonly tenantContext: ITenantContext,
+  ) {}
+
+  /**
+   * @method findActiveUsersByOrganization
+   * @description 根据组织ID查找活跃用户，优化查询性能
+   * @param {string} organizationId 组织ID
+   * @param {number} limit 限制数量
+   * @param {number} offset 偏移量
+   * @returns {Promise<UserEntity[]>} 用户实体列表
+   *
+   * 查询优化：
+   * 1. 使用复合索引优化查询
+   * 2. 只查询必要的字段
+   * 3. 使用分页避免大数据量查询
+   * 4. 应用租户级数据隔离
+   */
+  async findActiveUsersByOrganization(
+    organizationId: string,
+    limit: number = 20,
+    offset: number = 0,
+  ): Promise<UserEntity[]> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+
+    return await this.entityManager.find(
+      UserEntity,
+      {
+        organizationId,
+        tenantId,
+        status: UserStatus.ACTIVE,
+        deletedAt: null,
+      },
+      {
+        limit,
+        offset,
+        orderBy: { createdAt: 'DESC' },
+        fields: ['id', 'email', 'firstName', 'lastName', 'createdAt'],
+      },
+    );
+  }
+
+  /**
+   * @method getUserStatistics
+   * @description 获取用户统计信息，使用原生SQL优化性能
+   * @returns {Promise<UserStatistics>} 用户统计信息
+   *
+   * 统计查询：
+   * 1. 使用原生SQL聚合查询
+   * 2. 一次性获取多个统计指标
+   * 3. 应用租户级数据过滤
+   * 4. 缓存统计结果
+   */
+  async getUserStatistics(): Promise<UserStatistics> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+
+    const result = await this.entityManager.execute(
+      `
+      SELECT 
+        COUNT(*) as totalUsers,
+        COUNT(CASE WHEN status = 'ACTIVE' THEN 1 END) as activeUsers,
+        COUNT(CASE WHEN status = 'PENDING' THEN 1 END) as pendingUsers,
+        COUNT(CASE WHEN status = 'DISABLED' THEN 1 END) as disabledUsers,
+        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as newUsersLast30Days
+      FROM users 
+      WHERE tenant_id = ? AND deleted_at IS NULL
+    `,
+      [tenantId],
+    );
+
+    return {
+      totalUsers: result[0].totalUsers,
+      activeUsers: result[0].activeUsers,
+      pendingUsers: result[0].pendingUsers,
+      disabledUsers: result[0].disabledUsers,
+      newUsersLast30Days: result[0].newUsersLast30Days,
+    };
+  }
+
+  /**
+   * @method bulkUpdateUserStatus
+   * @description 批量更新用户状态，优化批量操作性能
+   * @param {string[]} userIds 用户ID列表
+   * @param {UserStatus} status 新状态
+   * @returns {Promise<number>} 更新的记录数
+   *
+   * 批量操作优化：
+   * 1. 使用批量更新减少数据库往返
+   * 2. 在事务中执行确保一致性
+   * 3. 应用租户级数据隔离
+   * 4. 记录批量操作日志
+   */
+  async bulkUpdateUserStatus(
+    userIds: string[],
+    status: UserStatus,
+  ): Promise<number> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+
+    return await this.entityManager.transactional(async () => {
+      const result = await this.entityManager.nativeUpdate(
+        UserEntity,
+        {
+          id: { $in: userIds },
+          tenantId,
+          deletedAt: null,
+        },
+        {
+          status,
+          updatedAt: new Date(),
+        },
+      );
+
+      // 记录批量操作日志
+      await this.logBulkOperation(
+        'bulkUpdateUserStatus',
+        userIds.length,
+        tenantId,
+      );
+
+      return result;
+    });
+  }
+}
+````
+
+### 17. 数据库迁移 (Database Migration) 示例
+
+````typescript
+/**
+ * @class CreateUsersTableMigration
+ * @description
+ * 创建用户表的数据库迁移，负责用户相关表结构的创建和初始化。
+ *
+ * 迁移职责：
+ * 1. 创建用户相关的数据库表结构
+ * 2. 建立必要的索引和约束
+ * 3. 设置多租户数据隔离策略
+ * 4. 初始化基础数据和配置
+ *
+ * 表结构设计：
+ * 1. 支持多租户数据隔离
+ * 2. 实现软删除机制
+ * 3. 建立审计日志字段
+ * 4. 优化查询性能的索引
+ *
+ * 数据隔离策略：
+ * 1. 基于tenant_id的分区策略
+ * 2. 行级安全策略实现
+ * 3. 跨租户数据访问控制
+ * 4. 数据归档和清理策略
+ *
+ * @example
+ * ```typescript
+ * const migration = new CreateUsersTableMigration();
+ * await migration.up(); // 执行迁移
+ * await migration.down(); // 回滚迁移
+ * ```
+ * @since 1.0.0
+ */
+export class CreateUsersTableMigration {
+  /**
+   * @method up
+   * @description 执行数据库迁移，创建用户表结构
+   * @returns {Promise<void>}
+   * @throws {MigrationError} 当迁移失败时抛出
+   *
+   * 迁移流程：
+   * 1. 创建用户主表
+   * 2. 建立必要的索引
+   * 3. 设置外键约束
+   * 4. 创建触发器
+   * 5. 初始化基础数据
+   */
+  async up(): Promise<void> {
+    await this.createUsersTable();
+    await this.createIndexes();
+    await this.createConstraints();
+    await this.createTriggers();
+    await this.initializeData();
+  }
+
+  /**
+   * @method down
+   * @description 回滚数据库迁移，删除用户表结构
+   * @returns {Promise<void>}
+   * @throws {MigrationError} 当回滚失败时抛出
+   *
+   * 回滚流程：
+   * 1. 删除触发器
+   * 2. 删除约束
+   * 3. 删除索引
+   * 4. 删除表结构
+   */
+  async down(): Promise<void> {
+    await this.dropTriggers();
+    await this.dropConstraints();
+    await this.dropIndexes();
+    await this.dropUsersTable();
+  }
+
+  /**
+   * @method createUsersTable
+   * @description 创建用户主表
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async createUsersTable(): Promise<void> {
+    await this.execute(`
+      CREATE TABLE users (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        tenant_id UUID NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+        organization_id UUID,
+        department_id UUID,
+        created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+        deleted_at TIMESTAMP WITH TIME ZONE,
+        
+        -- 多租户数据隔离约束
+        CONSTRAINT fk_users_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id),
+        CONSTRAINT fk_users_organization FOREIGN KEY (organization_id) REFERENCES organizations(id),
+        CONSTRAINT fk_users_department FOREIGN KEY (department_id) REFERENCES departments(id),
+        
+        -- 业务约束
+        CONSTRAINT chk_user_status CHECK (status IN ('PENDING', 'ACTIVE', 'DISABLED')),
+        CONSTRAINT chk_user_email_format CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')
+      )
+    `);
+  }
+
+  /**
+   * @method createIndexes
+   * @description 创建性能优化索引
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async createIndexes(): Promise<void> {
+    // 租户级邮箱唯一性索引
+    await this.execute(`
+      CREATE UNIQUE INDEX idx_users_tenant_email 
+      ON users (tenant_id, email) 
+      WHERE deleted_at IS NULL
+    `);
+
+    // 组织查询优化索引
+    await this.execute(`
+      CREATE INDEX idx_users_organization_status 
+      ON users (organization_id, status, created_at) 
+      WHERE deleted_at IS NULL
+    `);
+
+    // 部门查询优化索引
+    await this.execute(`
+      CREATE INDEX idx_users_department_status 
+      ON users (department_id, status, created_at) 
+      WHERE deleted_at IS NULL
+    `);
+
+    // 软删除查询优化索引
+    await this.execute(`
+      CREATE INDEX idx_users_tenant_active 
+      ON users (tenant_id, status, deleted_at) 
+      WHERE deleted_at IS NULL
+    `);
+  }
+}
+````
+
+### 18. 缓存服务 (Cache Service) 示例
+
+````typescript
+/**
+ * @class RedisCacheService
+ * @description
+ * Redis缓存服务实现，负责提供高性能的数据缓存和会话管理功能。
+ *
+ * 缓存服务职责：
+ * 1. 提供键值对缓存存储
+ * 2. 实现缓存过期和淘汰策略
+ * 3. 支持分布式缓存同步
+ * 4. 提供缓存统计和监控
+ *
+ * 缓存策略：
+ * 1. 基于TTL的自动过期
+ * 2. LRU淘汰策略
+ * 3. 缓存预热和刷新
+ * 4. 缓存穿透和雪崩保护
+ *
+ * 多租户支持：
+ * 1. 基于租户ID的缓存键命名空间
+ * 2. 租户级缓存隔离
+ * 3. 租户级缓存统计
+ * 4. 支持租户级缓存清理
+ *
+ * @param {Redis} redis Redis客户端实例
+ * @param {ITenantContext} tenantContext 租户上下文
+ * @param {ICacheConfig} config 缓存配置
+ *
+ * @example
+ * ```typescript
+ * const cacheService = new RedisCacheService(redis, tenantContext, config);
+ * await cacheService.set('user:123', userData, 300);
+ * const userData = await cacheService.get('user:123');
+ * ```
+ * @since 1.0.0
+ */
+export class RedisCacheService implements ICacheService {
+  constructor(
+    private readonly redis: Redis,
+    private readonly tenantContext: ITenantContext,
+    private readonly config: ICacheConfig,
+  ) {}
+
+  /**
+   * @method get
+   * @description 从缓存中获取数据
+   * @param {string} key 缓存键
+   * @returns {Promise<T | null>} 缓存数据或null
+   * @template T 数据类型
+   * @throws {CacheError} 当缓存操作失败时抛出
+   *
+   * 获取流程：
+   * 1. 生成租户级缓存键
+   * 2. 从Redis获取数据
+   * 3. 反序列化数据
+   * 4. 更新缓存统计
+   */
+  async get<T>(key: string): Promise<T | null> {
+    try {
+      const tenantKey = this.generateTenantKey(key);
+      const cachedData = await this.redis.get(tenantKey);
+
+      if (!cachedData) {
+        await this.incrementCacheMiss();
+        return null;
+      }
+
+      await this.incrementCacheHit();
+      return JSON.parse(cachedData) as T;
+    } catch (error) {
+      throw new CacheError(`Failed to get cache key ${key}: ${error.message}`);
+    }
+  }
+
+  /**
+   * @method set
+   * @description 设置缓存数据
+   * @param {string} key 缓存键
+   * @param {T} value 缓存值
+   * @param {number} ttlSeconds TTL秒数
+   * @returns {Promise<void>}
+   * @template T 数据类型
+   * @throws {CacheError} 当缓存操作失败时抛出
+   *
+   * 设置流程：
+   * 1. 生成租户级缓存键
+   * 2. 序列化数据
+   * 3. 设置Redis缓存
+   * 4. 更新缓存统计
+   */
+  async set<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
+    try {
+      const tenantKey = this.generateTenantKey(key);
+      const serializedData = JSON.stringify(value);
+
+      await this.redis.setex(tenantKey, ttlSeconds, serializedData);
+      await this.incrementCacheSet();
+    } catch (error) {
+      throw new CacheError(`Failed to set cache key ${key}: ${error.message}`);
+    }
+  }
+
+  /**
+   * @method delete
+   * @description 删除缓存数据
+   * @param {string} key 缓存键
+   * @returns {Promise<boolean>} 是否删除成功
+   * @throws {CacheError} 当缓存操作失败时抛出
+   */
+  async delete(key: string): Promise<boolean> {
+    try {
+      const tenantKey = this.generateTenantKey(key);
+      const result = await this.redis.del(tenantKey);
+      await this.incrementCacheDelete();
+      return result > 0;
+    } catch (error) {
+      throw new CacheError(
+        `Failed to delete cache key ${key}: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method clearTenantCache
+   * @description 清理租户级缓存
+   * @returns {Promise<number>} 清理的键数量
+   * @throws {CacheError} 当缓存操作失败时抛出
+   */
+  async clearTenantCache(): Promise<number> {
+    try {
+      const tenantId = this.tenantContext.getCurrentTenantId();
+      const pattern = `tenant:${tenantId}:*`;
+
+      const keys = await this.redis.keys(pattern);
+      if (keys.length === 0) {
+        return 0;
+      }
+
+      const result = await this.redis.del(...keys);
+      await this.incrementCacheClear(keys.length);
+      return result;
+    } catch (error) {
+      throw new CacheError(`Failed to clear tenant cache: ${error.message}`);
+    }
+  }
+
+  /**
+   * @method generateTenantKey
+   * @description 生成租户级缓存键
+   * @param {string} key 原始缓存键
+   * @returns {string} 租户级缓存键
+   * @private
+   */
+  private generateTenantKey(key: string): string {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+    return `tenant:${tenantId}:${key}`;
+  }
+}
+````
+
+### 19. 接口层控制器 (Interface Layer Controller) 示例
+
+````typescript
+/**
+ * @class UserController
+ * @description
+ * 用户管理控制器，负责处理用户相关的HTTP请求和响应。
+ *
+ * 控制器职责：
+ * 1. 接收和验证HTTP请求
+ * 2. 调用应用服务执行业务逻辑
+ * 3. 转换数据格式和响应结构
+ * 4. 处理异常和错误响应
+ *
+ * 多租户支持：
+ * 1. 自动注入租户上下文
+ * 2. 应用数据隔离策略
+ * 3. 验证用户权限
+ * 4. 支持跨租户操作
+ *
+ * 请求验证：
+ * 1. 使用DTO进行数据验证
+ * 2. 应用业务规则验证
+ * 3. 处理验证错误
+ * 4. 提供详细的错误信息
+ *
+ * @param {UserApplicationService} userApplicationService 用户应用服务
+ * @param {DataIsolationService} dataIsolationService 数据隔离服务
+ * @param {PermissionService} permissionService 权限服务
+ *
+ * @example
+ * ```typescript
+ * const userController = new UserController(userAppService, dataIsolationService, permissionService);
+ * await userController.createUser(createUserDto);
+ * ```
+ * @since 1.0.0
+ */
+@Controller('api/users')
+@UseGuards(AuthGuard, PermissionGuard)
+export class UserController {
+  constructor(
+    private readonly userApplicationService: UserApplicationService,
+    private readonly dataIsolationService: DataIsolationService,
+    private readonly permissionService: PermissionService,
+  ) {}
+
+  /**
+   * @method createUser
+   * @description 创建新用户，支持多租户数据隔离
+   * @param {CreateUserDto} createUserDto 创建用户数据传输对象
+   * @param {Request} request HTTP请求对象
+   * @returns {Promise<UserResponseDto>} 创建的用户信息
+   * @throws {ValidationError} 当输入数据无效时抛出
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   * @throws {DuplicateEmailError} 当邮箱已存在时抛出
+   *
+   * 处理流程：
+   * 1. 验证请求数据和权限
+   * 2. 应用数据隔离策略
+   * 3. 调用应用服务创建用户
+   * 4. 返回标准化的响应格式
+   */
+  @Post()
+  @RequirePermissions('user:create')
+  @UsePipes(ValidationPipe)
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @Request() request: AuthenticatedRequest,
+  ): Promise<UserResponseDto> {
+    // 1. 验证权限
+    await this.validateCreateUserPermission(request.user);
+
+    // 2. 应用数据隔离
+    const isolationContext =
+      await this.dataIsolationService.getDataIsolationContext(request.user.id);
+
+    // 3. 调用应用服务
+    const userId = await this.userApplicationService.createUser(
+      createUserDto.email,
+      createUserDto.password,
+      createUserDto.profile,
+      isolationContext.platformId,
+      request.user.id,
+    );
+
+    // 4. 返回响应
+    return {
+      id: userId,
+      email: createUserDto.email,
+      profile: createUserDto.profile,
+      status: 'ACTIVE',
+      createdAt: new Date(),
+    };
+  }
+
+  /**
+   * @method getUsers
+   * @description 获取用户列表，支持多租户数据隔离和分页
+   * @param {GetUsersQueryDto} queryDto 查询参数
+   * @param {Request} request HTTP请求对象
+   * @returns {Promise<PaginatedResponse<UserResponseDto>>} 分页的用户列表
+   * @throws {ValidationError} 当查询参数无效时抛出
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   */
+  @Get()
+  @RequirePermissions('user:read')
+  @UsePipes(ValidationPipe)
+  async getUsers(
+    @Query() queryDto: GetUsersQueryDto,
+    @Request() request: AuthenticatedRequest,
+  ): Promise<PaginatedResponse<UserResponseDto>> {
+    // 1. 验证权限
+    await this.validateReadUsersPermission(request.user);
+
+    // 2. 构建查询条件
+    const filters: UserFilters = {
+      email: queryDto.email,
+      status: queryDto.status,
+      role: queryDto.role,
+    };
+
+    const pagination: PaginationOptions = {
+      page: queryDto.page || 1,
+      limit: queryDto.limit || 20,
+    };
+
+    // 3. 调用应用服务
+    const result = await this.userApplicationService.getUsers(
+      filters,
+      pagination,
+      request.user.id,
+    );
+
+    // 4. 返回响应
+    return {
+      data: result.data,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
+    };
+  }
+
+  /**
+   * @method assignUserToTenant
+   * @description 分配用户到租户，支持多租户管理
+   * @param {string} userId 用户ID
+   * @param {AssignUserToTenantDto} assignDto 分配参数
+   * @param {Request} request HTTP请求对象
+   * @returns {Promise<void>}
+   * @throws {UserNotFoundError} 当用户不存在时抛出
+   * @throws {TenantNotFoundError} 当租户不存在时抛出
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   */
+  @Post(':userId/assign-tenant')
+  @RequirePermissions('user:assign:tenant')
+  @UsePipes(ValidationPipe)
+  async assignUserToTenant(
+    @Param('userId') userId: string,
+    @Body() assignDto: AssignUserToTenantDto,
+    @Request() request: AuthenticatedRequest,
+  ): Promise<void> {
+    // 1. 验证权限
+    await this.validateAssignUserPermission(request.user, assignDto.tenantId);
+
+    // 2. 调用应用服务
+    await this.userApplicationService.assignUserToTenant(
+      userId,
+      assignDto.tenantId,
+      request.user.id,
+      assignDto.role,
+    );
+  }
+
+  /**
+   * @method validateCreateUserPermission
+   * @description 验证创建用户权限
+   * @param {User} user 当前用户
+   * @returns {Promise<void>}
+   * @throws {InsufficientPermissionError} 当权限不足时抛出
+   * @private
+   */
+  private async validateCreateUserPermission(user: User): Promise<void> {
+    const hasPermission = await this.permissionService.hasPermission(
+      user.id,
+      'user:create',
+    );
+
+    if (!hasPermission) {
+      throw new InsufficientPermissionError('user:create');
+    }
+  }
+}
+````
+
+### 20. 数据传输对象 (Data Transfer Object) 示例
+
+````typescript
+/**
+ * @class CreateUserDto
+ * @description
+ * 创建用户数据传输对象，封装用户创建请求的数据结构和验证规则。
+ *
+ * DTO职责：
+ * 1. 定义API请求的数据结构
+ * 2. 提供数据验证和转换
+ * 3. 确保数据格式的一致性
+ * 4. 支持API文档生成
+ *
+ * 验证规则：
+ * 1. 邮箱格式验证和唯一性检查
+ * 2. 密码强度验证
+ * 3. 用户资料完整性验证
+ * 4. 业务规则约束验证
+ *
+ * 多租户支持：
+ * 1. 支持租户级数据验证
+ * 2. 应用租户级业务规则
+ * 3. 确保数据隔离合规性
+ * 4. 支持跨租户数据共享
+ *
+ * @property {string} email 用户邮箱地址，必填且格式验证
+ * @property {string} password 用户密码，必填且强度验证
+ * @property {UserProfileDto} profile 用户资料信息，必填
+ * @property {string} [tenantId] 所属租户ID，可选
+ * @property {string} [organizationId] 所属组织ID，可选
+ * @property {string} [departmentId] 所属部门ID，可选
+ *
+ * @example
+ * ```typescript
+ * const createUserDto = new CreateUserDto();
+ * createUserDto.email = 'user@example.com';
+ * createUserDto.password = 'SecurePass123!';
+ * createUserDto.profile = { firstName: 'John', lastName: 'Doe' };
+ * ```
+ * @since 1.0.0
+ */
+export class CreateUserDto {
+  @IsEmail({}, { message: '邮箱格式不正确' })
+  @ApiProperty({
+    description: '用户邮箱地址',
+    example: 'user@example.com',
+    format: 'email',
+  })
+  email!: string;
+
+  @IsString()
+  @MinLength(8, { message: '密码长度不能少于8位' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+    message: '密码必须包含大小写字母、数字和特殊字符',
+  })
+  @ApiProperty({
+    description: '用户密码',
+    example: 'SecurePass123!',
+    minLength: 8,
+  })
+  password!: string;
+
+  @ValidateNested()
+  @Type(() => UserProfileDto)
+  @ApiProperty({
+    description: '用户资料信息',
+    type: UserProfileDto,
+  })
+  profile!: UserProfileDto;
+
+  @IsOptional()
+  @IsUUID(4, { message: '租户ID格式不正确' })
+  @ApiProperty({
+    description: '所属租户ID',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+    required: false,
+  })
+  tenantId?: string;
+
+  @IsOptional()
+  @IsUUID(4, { message: '组织ID格式不正确' })
+  @ApiProperty({
+    description: '所属组织ID',
+    example: '123e4567-e89b-12d3-a456-426614174001',
+    required: false,
+  })
+  organizationId?: string;
+
+  @IsOptional()
+  @IsUUID(4, { message: '部门ID格式不正确' })
+  @ApiProperty({
+    description: '所属部门ID',
+    example: '123e4567-e89b-12d3-a456-426614174002',
+    required: false,
+  })
+  departmentId?: string;
+}
+
+/**
+ * @class UserProfileDto
+ * @description
+ * 用户资料数据传输对象，封装用户个人资料信息。
+ *
+ * 资料信息包含：
+ * 1. 基本信息：姓名、电话、头像
+ * 2. 个人设置：语言、时区、主题
+ * 3. 通知偏好：邮件、短信、推送
+ * 4. 隐私设置：数据共享、可见性
+ *
+ * @property {string} firstName 用户名字，必填
+ * @property {string} lastName 用户姓氏，必填
+ * @property {string} [phoneNumber] 电话号码，可选
+ * @property {string} [avatar] 头像URL，可选
+ * @property {UserPreferencesDto} [preferences] 用户偏好设置，可选
+ */
+export class UserProfileDto {
+  @IsString()
+  @MinLength(1, { message: '名字不能为空' })
+  @MaxLength(50, { message: '名字长度不能超过50个字符' })
+  @ApiProperty({
+    description: '用户名字',
+    example: 'John',
+    minLength: 1,
+    maxLength: 50,
+  })
+  firstName!: string;
+
+  @IsString()
+  @MinLength(1, { message: '姓氏不能为空' })
+  @MaxLength(50, { message: '姓氏长度不能超过50个字符' })
+  @ApiProperty({
+    description: '用户姓氏',
+    example: 'Doe',
+    minLength: 1,
+    maxLength: 50,
+  })
+  lastName!: string;
+
+  @IsOptional()
+  @IsPhoneNumber('CN', { message: '电话号码格式不正确' })
+  @ApiProperty({
+    description: '电话号码',
+    example: '+86 138 0013 8000',
+    required: false,
+  })
+  phoneNumber?: string;
+
+  @IsOptional()
+  @IsUrl({}, { message: '头像URL格式不正确' })
+  @ApiProperty({
+    description: '头像URL',
+    example: 'https://example.com/avatar.jpg',
+    required: false,
+  })
+  avatar?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UserPreferencesDto)
+  @ApiProperty({
+    description: '用户偏好设置',
+    type: UserPreferencesDto,
+    required: false,
+  })
+  preferences?: UserPreferencesDto;
+}
+````
+
+### 21. 数据隔离服务 (Data Isolation Service) 示例
+
+````typescript
+/**
+ * @class DataIsolationService
+ * @description
+ * 数据隔离服务，负责实现多租户数据隔离策略和访问控制。
+ *
+ * 数据隔离职责：
+ * 1. 管理五层数据隔离架构
+ * 2. 实现数据访问权限控制
+ * 3. 提供数据隔离上下文
+ * 4. 支持跨层级数据共享
+ *
+ * 隔离层级：
+ * 1. 平台级：最高权限，可访问所有数据
+ * 2. 租户级：租户内数据隔离
+ * 3. 组织级：组织内数据隔离
+ * 4. 部门级：部门内数据隔离
+ * 5. 用户级：个人数据隔离
+ *
+ * 数据分类：
+ * 1. 可共享数据：支持跨层级访问
+ * 2. 受保护数据：严格访问控制
+ * 3. 敏感数据：加密存储和传输
+ * 4. 公开数据：无访问限制
+ *
+ * @param {UserService} userService 用户服务
+ * @param {PermissionService} permissionService 权限服务
+ * @param {TenantService} tenantService 租户服务
+ *
+ * @example
+ * ```typescript
+ * const isolationService = new DataIsolationService(userService, permissionService, tenantService);
+ * const context = await isolationService.getDataIsolationContext('user-123');
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class DataIsolationService {
+  constructor(
+    private readonly userService: UserService,
+    private readonly permissionService: PermissionService,
+    private readonly tenantService: TenantService,
+  ) {}
+
+  /**
+   * @method getDataIsolationContext
+   * @description 获取用户的数据隔离上下文
+   * @param {string} userId 用户ID
+   * @returns {Promise<DataIsolationContext>} 数据隔离上下文
+   * @throws {UserNotFoundError} 当用户不存在时抛出
+   *
+   * 上下文包含：
+   * 1. 用户身份信息
+   * 2. 所属层级信息
+   * 3. 权限列表
+   * 4. 数据访问范围
+   */
+  async getDataIsolationContext(userId: string): Promise<DataIsolationContext> {
+    // 1. 获取用户信息
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new UserNotFoundError(userId);
+    }
+
+    // 2. 获取用户权限
+    const permissions = await this.permissionService.getUserPermissions(userId);
+
+    // 3. 确定隔离级别
+    const isolationLevel = this.determineIsolationLevel(user);
+
+    // 4. 构建隔离上下文
+    return {
+      userId: user.id,
+      platformId: user.platformId,
+      tenantId: user.tenantId,
+      organizationId: user.organizationId,
+      departmentId: user.departmentId,
+      isolationLevel,
+      permissions,
+      dataAccessScope: this.calculateDataAccessScope(user, permissions),
+    };
+  }
+
+  /**
+   * @method applyDataIsolation
+   * @description 应用数据隔离过滤器到查询
+   * @param {SelectQueryBuilder<T>} query 查询构建器
+   * @param {DataIsolationContext} context 数据隔离上下文
+   * @returns {SelectQueryBuilder<T>} 应用隔离后的查询
+   * @template T 实体类型
+   *
+   * 隔离策略：
+   * 1. 根据隔离级别添加WHERE条件
+   * 2. 应用权限过滤
+   * 3. 处理数据共享规则
+   * 4. 确保数据安全访问
+   */
+  applyDataIsolation<T>(
+    query: SelectQueryBuilder<T>,
+    context: DataIsolationContext,
+  ): SelectQueryBuilder<T> {
+    switch (context.isolationLevel) {
+      case IsolationLevel.PLATFORM:
+        // 平台级：可访问所有数据
+        return this.applyPlatformLevelIsolation(query, context);
+
+      case IsolationLevel.TENANT:
+        // 租户级：只能访问本租户数据
+        return this.applyTenantLevelIsolation(query, context);
+
+      case IsolationLevel.ORGANIZATION:
+        // 组织级：只能访问本组织数据
+        return this.applyOrganizationLevelIsolation(query, context);
+
+      case IsolationLevel.DEPARTMENT:
+        // 部门级：只能访问本部门数据
+        return this.applyDepartmentLevelIsolation(query, context);
+
+      case IsolationLevel.USER:
+        // 用户级：只能访问个人数据
+        return this.applyUserLevelIsolation(query, context);
+
+      default:
+        throw new UnauthorizedException('Invalid isolation level');
+    }
+  }
+
+  /**
+   * @method checkDataAccess
+   * @description 检查数据访问权限
+   * @param {string} dataId 数据ID
+   * @param {DataIsolationContext} requesterContext 请求者上下文
+   * @param {DataAccessLevel} accessLevel 访问级别
+   * @returns {Promise<boolean>} 是否有访问权限
+   *
+   * 权限检查：
+   * 1. 验证数据所有权
+   * 2. 检查访问权限
+   * 3. 应用业务规则
+   * 4. 考虑数据共享策略
+   */
+  async checkDataAccess(
+    dataId: string,
+    requesterContext: DataIsolationContext,
+    accessLevel: DataAccessLevel,
+  ): Promise<boolean> {
+    // 1. 获取数据分类信息
+    const dataClassification = await this.getDataClassification(dataId);
+
+    // 2. 检查数据分类访问权限
+    if (dataClassification.classification === DataClassification.PROTECTED) {
+      return this.checkProtectedDataAccess(
+        dataClassification,
+        requesterContext,
+        accessLevel,
+      );
+    }
+
+    // 3. 检查可共享数据访问权限
+    if (dataClassification.classification === DataClassification.SHAREABLE) {
+      return this.checkShareableDataAccess(
+        dataClassification,
+        requesterContext,
+        accessLevel,
+      );
+    }
+
+    return false;
+  }
+
+  /**
+   * @method determineIsolationLevel
+   * @description 确定用户的隔离级别
+   * @param {User} user 用户对象
+   * @returns {IsolationLevel} 隔离级别
+   * @private
+   */
+  private determineIsolationLevel(user: User): IsolationLevel {
+    if (user.isPlatformAdmin) {
+      return IsolationLevel.PLATFORM;
+    }
+
+    if (user.tenantId && user.isTenantAdmin) {
+      return IsolationLevel.TENANT;
+    }
+
+    if (user.organizationId && user.isOrganizationAdmin) {
+      return IsolationLevel.ORGANIZATION;
+    }
+
+    if (user.departmentId && user.isDepartmentAdmin) {
+      return IsolationLevel.DEPARTMENT;
+    }
+
+    return IsolationLevel.USER;
+  }
+
+  /**
+   * @method applyTenantLevelIsolation
+   * @description 应用租户级数据隔离
+   * @param {SelectQueryBuilder<T>} query 查询构建器
+   * @param {DataIsolationContext} context 数据隔离上下文
+   * @returns {SelectQueryBuilder<T>} 应用隔离后的查询
+   * @template T 实体类型
+   * @private
+   */
+  private applyTenantLevelIsolation<T>(
+    query: SelectQueryBuilder<T>,
+    context: DataIsolationContext,
+  ): SelectQueryBuilder<T> {
+    return query.where('tenantId = :tenantId', {
+      tenantId: context.tenantId,
+    });
+  }
+}
+````
+
+### 22. 消息队列服务 (Message Queue Service) 示例
+
+````typescript
+/**
+ * @class MessageQueueService
+ * @description
+ * 消息队列服务，负责处理异步消息传递和事件分发。
+ *
+ * 消息队列职责：
+ * 1. 发布和消费领域事件
+ * 2. 处理异步任务队列
+ * 3. 实现消息路由和分发
+ * 4. 提供消息持久化和重试机制
+ *
+ * 消息类型：
+ * 1. 领域事件：业务状态变更通知
+ * 2. 集成事件：跨边界上下文通信
+ * 3. 命令消息：异步命令处理
+ * 4. 查询消息：异步查询处理
+ *
+ * 可靠性保证：
+ * 1. 消息持久化存储
+ * 2. 消息确认机制
+ * 3. 失败重试策略
+ * 4. 死信队列处理
+ *
+ * @param {RedisService} redisService Redis服务
+ * @param {Logger} logger 日志服务
+ * @param {IMessageSerializer} messageSerializer 消息序列化器
+ *
+ * @example
+ * ```typescript
+ * const messageQueue = new MessageQueueService(redisService, logger, messageSerializer);
+ * await messageQueue.publishEvent(userCreatedEvent);
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class MessageQueueService {
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly logger: Logger,
+    private readonly messageSerializer: IMessageSerializer,
+  ) {}
+
+  /**
+   * @method publishEvent
+   * @description 发布领域事件到消息队列
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<void>}
+   * @throws {MessagePublishError} 当消息发布失败时抛出
+   *
+   * 发布流程：
+   * 1. 序列化事件数据
+   * 2. 生成消息ID和元数据
+   * 3. 发送到消息队列
+   * 4. 记录发布日志
+   */
+  async publishEvent(event: IDomainEvent): Promise<void> {
+    try {
+      // 1. 序列化事件
+      const serializedEvent = this.messageSerializer.serialize(event);
+
+      // 2. 构建消息
+      const message: IMessage = {
+        id: uuid.v4(),
+        type: 'DOMAIN_EVENT',
+        eventType: event.eventType,
+        aggregateId: event.aggregateId,
+        data: serializedEvent,
+        metadata: {
+          occurredOn: event.occurredOn,
+          eventVersion: event.eventVersion,
+          tenantId: this.getTenantIdFromEvent(event),
+        },
+        timestamp: new Date(),
+      };
+
+      // 3. 发布到队列
+      await this.redisService.lpush('domain_events', JSON.stringify(message));
+
+      // 4. 记录日志
+      this.logger.log(
+        `Event published: ${event.eventType} for aggregate ${event.aggregateId}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to publish event: ${event.eventType}`, error);
+      throw new MessagePublishError(
+        `Failed to publish event: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method publishCommand
+   * @description 发布命令到消息队列
+   * @param {ICommand} command 命令对象
+   * @returns {Promise<void>}
+   * @throws {MessagePublishError} 当消息发布失败时抛出
+   */
+  async publishCommand(command: ICommand): Promise<void> {
+    try {
+      const serializedCommand = this.messageSerializer.serialize(command);
+
+      const message: IMessage = {
+        id: uuid.v4(),
+        type: 'COMMAND',
+        commandType: command.constructor.name,
+        data: serializedCommand,
+        metadata: {
+          requestedBy: command.requestedBy,
+          tenantId: command.tenantId,
+        },
+        timestamp: new Date(),
+      };
+
+      await this.redisService.lpush('commands', JSON.stringify(message));
+      this.logger.log(`Command published: ${command.constructor.name}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to publish command: ${command.constructor.name}`,
+        error,
+      );
+      throw new MessagePublishError(
+        `Failed to publish command: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method consumeEvents
+   * @description 消费领域事件
+   * @param {IEventHandler} eventHandler 事件处理器
+   * @returns {Promise<void>}
+   *
+   * 消费流程：
+   * 1. 从队列获取消息
+   * 2. 反序列化事件数据
+   * 3. 调用事件处理器
+   * 4. 处理消费结果
+   */
+  async consumeEvents(eventHandler: IEventHandler): Promise<void> {
+    while (true) {
+      try {
+        const messageData = await this.redisService.brpop('domain_events', 5);
+        if (!messageData) continue;
+
+        const message: IMessage = JSON.parse(messageData[1]);
+        const event = this.messageSerializer.deserialize(message.data);
+
+        // 处理事件
+        await eventHandler.handle(event);
+
+        this.logger.log(`Event consumed: ${event.eventType}`);
+      } catch (error) {
+        this.logger.error('Error consuming event', error);
+        // 继续处理下一个消息
+      }
+    }
+  }
+
+  /**
+   * @method getTenantIdFromEvent
+   * @description 从事件中提取租户ID
+   * @param {IDomainEvent} event 领域事件
+   * @returns {string | undefined} 租户ID
+   * @private
+   */
+  private getTenantIdFromEvent(event: IDomainEvent): string | undefined {
+    // 根据事件类型提取租户ID
+    if ('tenantId' in event) {
+      return (event as any).tenantId;
+    }
+    return undefined;
+  }
+}
+````
+
+### 23. 外部服务集成 (External Service Integration) 示例
+
+````typescript
+/**
+ * @class EmailService
+ * @description
+ * 邮件服务，负责处理邮件发送和模板管理。
+ *
+ * 邮件服务职责：
+ * 1. 发送各种类型的邮件通知
+ * 2. 管理邮件模板和内容
+ * 3. 处理邮件发送状态跟踪
+ * 4. 支持多租户邮件配置
+ *
+ * 邮件类型：
+ * 1. 欢迎邮件：新用户注册
+ * 2. 通知邮件：系统通知
+ * 3. 验证邮件：邮箱验证
+ * 4. 密码重置邮件：密码重置
+ *
+ * 多租户支持：
+ * 1. 租户级邮件配置
+ * 2. 租户级邮件模板
+ * 3. 租户级发送限制
+ * 4. 租户级邮件统计
+ *
+ * @param {NodemailerService} nodemailerService Nodemailer服务
+ * @param {TemplateService} templateService 模板服务
+ * @param {ConfigurationService} configService 配置服务
+ * @param {Logger} logger 日志服务
+ *
+ * @example
+ * ```typescript
+ * const emailService = new EmailService(nodemailerService, templateService, configService, logger);
+ * await emailService.sendWelcomeEmail('user@example.com', 'John');
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class EmailService {
+  constructor(
+    private readonly nodemailerService: NodemailerService,
+    private readonly templateService: TemplateService,
+    private readonly configService: ConfigurationService,
+    private readonly logger: Logger,
+  ) {}
+
+  /**
+   * @method sendWelcomeEmail
+   * @description 发送欢迎邮件给新用户
+   * @param {string} email 收件人邮箱
+   * @param {string} firstName 用户名字
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {Promise<void>}
+   * @throws {EmailSendError} 当邮件发送失败时抛出
+   *
+   * 发送流程：
+   * 1. 获取邮件模板
+   * 2. 渲染邮件内容
+   * 3. 配置邮件参数
+   * 4. 发送邮件
+   * 5. 记录发送日志
+   */
+  async sendWelcomeEmail(
+    email: string,
+    firstName: string,
+    tenantId?: string,
+  ): Promise<void> {
+    try {
+      // 1. 获取邮件配置
+      const emailConfig = await this.getEmailConfig(tenantId);
+
+      // 2. 获取邮件模板
+      const template = await this.templateService.getTemplate(
+        'welcome',
+        tenantId,
+      );
+
+      // 3. 渲染邮件内容
+      const html = template.render({
+        firstName,
+        loginUrl: emailConfig.loginUrl,
+        supportEmail: emailConfig.supportEmail,
+      });
+
+      // 4. 构建邮件选项
+      const mailOptions: SendMailOptions = {
+        from: emailConfig.fromAddress,
+        to: email,
+        subject: `欢迎使用${emailConfig.platformName}`,
+        html,
+        headers: {
+          'X-Tenant-ID': tenantId || 'platform',
+        },
+      };
+
+      // 5. 发送邮件
+      await this.nodemailerService.sendMail(mailOptions);
+
+      // 6. 记录发送日志
+      await this.logEmailSent('welcome', email, tenantId);
+
+      this.logger.log(`Welcome email sent to: ${email}`);
+    } catch (error) {
+      this.logger.error(`Failed to send welcome email to: ${email}`, error);
+      throw new EmailSendError(
+        `Failed to send welcome email: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method sendNotificationEmail
+   * @description 发送通知邮件
+   * @param {string} email 收件人邮箱
+   * @param {string} subject 邮件主题
+   * @param {string} templateName 模板名称
+   * @param {any} data 模板数据
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {Promise<void>}
+   * @throws {EmailSendError} 当邮件发送失败时抛出
+   */
+  async sendNotificationEmail(
+    email: string,
+    subject: string,
+    templateName: string,
+    data: any,
+    tenantId?: string,
+  ): Promise<void> {
+    try {
+      const emailConfig = await this.getEmailConfig(tenantId);
+      const template = await this.templateService.getTemplate(
+        templateName,
+        tenantId,
+      );
+      const html = template.render(data);
+
+      const mailOptions: SendMailOptions = {
+        from: emailConfig.fromAddress,
+        to: email,
+        subject,
+        html,
+        headers: {
+          'X-Tenant-ID': tenantId || 'platform',
+          'X-Template': templateName,
+        },
+      };
+
+      await this.nodemailerService.sendMail(mailOptions);
+      await this.logEmailSent('notification', email, tenantId);
+
+      this.logger.log(`Notification email sent to: ${email}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send notification email to: ${email}`,
+        error,
+      );
+      throw new EmailSendError(
+        `Failed to send notification email: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method getEmailConfig
+   * @description 获取邮件配置
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {Promise<EmailConfig>} 邮件配置
+   * @private
+   */
+  private async getEmailConfig(tenantId?: string): Promise<EmailConfig> {
+    if (tenantId) {
+      // 获取租户级配置
+      return await this.configService.getTenantEmailConfig(tenantId);
+    } else {
+      // 获取平台级配置
+      return await this.configService.getPlatformEmailConfig();
+    }
+  }
+
+  /**
+   * @method logEmailSent
+   * @description 记录邮件发送日志
+   * @param {string} emailType 邮件类型
+   * @param {string} recipient 收件人
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async logEmailSent(
+    emailType: string,
+    recipient: string,
+    tenantId?: string,
+  ): Promise<void> {
+    // 记录邮件发送统计
+    await this.configService.incrementEmailSentCount(emailType, tenantId);
+  }
+}
+````
+
+### 24. 配置管理服务 (Configuration Management Service) 示例
+
+````typescript
+/**
+ * @class ConfigurationService
+ * @description
+ * 配置管理服务，负责管理多层级配置和动态配置更新。
+ *
+ * 配置管理职责：
+ * 1. 管理平台级、租户级、组织级、部门级配置
+ * 2. 支持配置的动态更新和热重载
+ * 3. 提供配置版本控制和回滚
+ * 4. 实现配置的安全访问控制
+ *
+ * 配置层级：
+ * 1. 平台级：全局配置，影响整个平台
+ * 2. 租户级：租户配置，影响租户内所有用户
+ * 3. 组织级：组织配置，影响组织内用户
+ * 4. 部门级：部门配置，影响部门内用户
+ * 5. 用户级：个人配置，仅影响个人
+ *
+ * 配置类型：
+ * 1. 系统配置：系统运行参数
+ * 2. 业务配置：业务规则参数
+ * 3. 界面配置：用户界面设置
+ * 4. 安全配置：安全策略参数
+ *
+ * @param {IConfigurationRepository} configRepository 配置仓储
+ * @param {ICacheService} cacheService 缓存服务
+ * @param {IEventBus} eventBus 事件总线
+ * @param {Logger} logger 日志服务
+ *
+ * @example
+ * ```typescript
+ * const configService = new ConfigurationService(configRepo, cacheService, eventBus, logger);
+ * const value = await configService.get('maxUsers', 'tenant-123');
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class ConfigurationService {
+  constructor(
+    private readonly configRepository: IConfigurationRepository,
+    private readonly cacheService: ICacheService,
+    private readonly eventBus: IEventBus,
+    private readonly logger: Logger,
+  ) {}
+
+  /**
+   * @method get
+   * @description 获取配置值，支持多层级配置继承
+   * @param {string} key 配置键
+   * @param {string} [tenantId] 租户ID，可选
+   * @param {string} [organizationId] 组织ID，可选
+   * @param {string} [departmentId] 部门ID，可选
+   * @param {string} [userId] 用户ID，可选
+   * @param {T} [defaultValue] 默认值，可选
+   * @returns {Promise<T>} 配置值
+   * @template T 配置值类型
+   *
+   * 配置继承规则：
+   * 1. 用户级配置 > 部门级配置 > 组织级配置 > 租户级配置 > 平台级配置
+   * 2. 如果上级配置不存在，则使用下级配置
+   * 3. 如果所有层级都不存在，则使用默认值
+   */
+  async get<T>(
+    key: string,
+    tenantId?: string,
+    organizationId?: string,
+    departmentId?: string,
+    userId?: string,
+    defaultValue?: T,
+  ): Promise<T> {
+    // 1. 生成缓存键
+    const cacheKey = this.generateCacheKey(
+      key,
+      tenantId,
+      organizationId,
+      departmentId,
+      userId,
+    );
+
+    // 2. 尝试从缓存获取
+    const cachedValue = await this.cacheService.get<T>(cacheKey);
+    if (cachedValue !== null) {
+      return cachedValue;
+    }
+
+    // 3. 按优先级查找配置
+    let configValue: T | null = null;
+
+    // 用户级配置
+    if (userId && departmentId && organizationId && tenantId) {
+      configValue = await this.configRepository.findByKeyAndScope(
+        key,
+        ConfigurationScope.USER,
+        userId,
+        departmentId,
+        organizationId,
+        tenantId,
+      );
+    }
+
+    // 部门级配置
+    if (!configValue && departmentId && organizationId && tenantId) {
+      configValue = await this.configRepository.findByKeyAndScope(
+        key,
+        ConfigurationScope.DEPARTMENT,
+        departmentId,
+        organizationId,
+        tenantId,
+      );
+    }
+
+    // 组织级配置
+    if (!configValue && organizationId && tenantId) {
+      configValue = await this.configRepository.findByKeyAndScope(
+        key,
+        ConfigurationScope.ORGANIZATION,
+        organizationId,
+        tenantId,
+      );
+    }
+
+    // 租户级配置
+    if (!configValue && tenantId) {
+      configValue = await this.configRepository.findByKeyAndScope(
+        key,
+        ConfigurationScope.TENANT,
+        tenantId,
+      );
+    }
+
+    // 平台级配置
+    if (!configValue) {
+      configValue = await this.configRepository.findByKeyAndScope(
+        key,
+        ConfigurationScope.PLATFORM,
+      );
+    }
+
+    // 4. 使用默认值
+    const finalValue = configValue || defaultValue;
+
+    // 5. 缓存结果
+    if (finalValue !== null) {
+      await this.cacheService.set(cacheKey, finalValue, 300); // 5分钟缓存
+    }
+
+    return finalValue;
+  }
+
+  /**
+   * @method set
+   * @description 设置配置值
+   * @param {string} key 配置键
+   * @param {T} value 配置值
+   * @param {ConfigurationScope} scope 配置范围
+   * @param {string} [tenantId] 租户ID，可选
+   * @param {string} [organizationId] 组织ID，可选
+   * @param {string} [departmentId] 部门ID，可选
+   * @param {string} [userId] 用户ID，可选
+   * @param {string} [updatedBy] 更新者ID，可选
+   * @returns {Promise<void>}
+   * @template T 配置值类型
+   *
+   * 设置流程：
+   * 1. 验证配置权限
+   * 2. 验证配置值格式
+   * 3. 保存配置到数据库
+   * 4. 清除相关缓存
+   * 5. 发布配置变更事件
+   */
+  async set<T>(
+    key: string,
+    value: T,
+    scope: ConfigurationScope,
+    tenantId?: string,
+    organizationId?: string,
+    departmentId?: string,
+    userId?: string,
+    updatedBy?: string,
+  ): Promise<void> {
+    try {
+      // 1. 验证配置权限
+      await this.validateConfigurationPermission(
+        scope,
+        tenantId,
+        organizationId,
+        departmentId,
+        userId,
+        updatedBy,
+      );
+
+      // 2. 验证配置值
+      this.validateConfigurationValue(key, value);
+
+      // 3. 保存配置
+      const configuration = await this.configRepository.findByKeyAndScope(
+        key,
+        scope,
+        userId,
+        departmentId,
+        organizationId,
+        tenantId,
+      );
+
+      if (configuration) {
+        // 更新现有配置
+        configuration.value = value;
+        configuration.updatedAt = new Date();
+        configuration.updatedBy = updatedBy;
+        await this.configRepository.save(configuration);
+      } else {
+        // 创建新配置
+        const newConfiguration = new Configuration(
+          uuid.v4(),
+          key,
+          value,
+          scope,
+          tenantId,
+          organizationId,
+          departmentId,
+          userId,
+          updatedBy,
+        );
+        await this.configRepository.save(newConfiguration);
+      }
+
+      // 4. 清除缓存
+      await this.clearConfigurationCache(
+        key,
+        tenantId,
+        organizationId,
+        departmentId,
+        userId,
+      );
+
+      // 5. 发布配置变更事件
+      await this.eventBus.publish(
+        new ConfigurationChangedEvent(
+          key,
+          value,
+          scope,
+          tenantId,
+          organizationId,
+          departmentId,
+          userId,
+          updatedBy,
+        ),
+      );
+
+      this.logger.log(`Configuration updated: ${key} in scope ${scope}`);
+    } catch (error) {
+      this.logger.error(`Failed to set configuration: ${key}`, error);
+      throw new ConfigurationError(
+        `Failed to set configuration: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method generateCacheKey
+   * @description 生成配置缓存键
+   * @param {string} key 配置键
+   * @param {string} [tenantId] 租户ID，可选
+   * @param {string} [organizationId] 组织ID，可选
+   * @param {string} [departmentId] 部门ID，可选
+   * @param {string} [userId] 用户ID，可选
+   * @returns {string} 缓存键
+   * @private
+   */
+  private generateCacheKey(
+    key: string,
+    tenantId?: string,
+    organizationId?: string,
+    departmentId?: string,
+    userId?: string,
+  ): string {
+    const parts = ['config', key];
+    if (tenantId) parts.push('tenant', tenantId);
+    if (organizationId) parts.push('org', organizationId);
+    if (departmentId) parts.push('dept', departmentId);
+    if (userId) parts.push('user', userId);
+    return parts.join(':');
+  }
+
+  /**
+   * @method clearConfigurationCache
+   * @description 清除配置缓存
+   * @param {string} key 配置键
+   * @param {string} [tenantId] 租户ID，可选
+   * @param {string} [organizationId] 组织ID，可选
+   * @param {string} [departmentId] 部门ID，可选
+   * @param {string} [userId] 用户ID，可选
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async clearConfigurationCache(
+    key: string,
+    tenantId?: string,
+    organizationId?: string,
+    departmentId?: string,
+    userId?: string,
+  ): Promise<void> {
+    // 清除所有相关层级的缓存
+    const cacheKeys = [
+      this.generateCacheKey(key), // 平台级
+    ];
+
+    if (tenantId) {
+      cacheKeys.push(this.generateCacheKey(key, tenantId)); // 租户级
+    }
+
+    if (organizationId) {
+      cacheKeys.push(this.generateCacheKey(key, tenantId, organizationId)); // 组织级
+    }
+
+    if (departmentId) {
+      cacheKeys.push(
+        this.generateCacheKey(key, tenantId, organizationId, departmentId),
+      ); // 部门级
+    }
+
+    if (userId) {
+      cacheKeys.push(
+        this.generateCacheKey(
+          key,
+          tenantId,
+          organizationId,
+          departmentId,
+          userId,
+        ),
+      ); // 用户级
+    }
+
+    // 批量清除缓存
+    await Promise.all(
+      cacheKeys.map(cacheKey => this.cacheService.delete(cacheKey)),
+    );
+  }
+}
+````

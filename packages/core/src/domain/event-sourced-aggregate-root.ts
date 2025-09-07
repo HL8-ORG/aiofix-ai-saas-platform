@@ -4,20 +4,49 @@ import {
 } from './interfaces/domain-event.interface';
 
 /**
- * 事件溯源聚合根基类
- *
- * 所有使用事件溯源的聚合根都应该继承此基类。
- * 基类提供了事件管理、版本控制、快照等核心功能。
- *
- * 事件溯源的核心思想：
- * 1. 聚合的状态变更通过事件记录
- * 2. 聚合的当前状态通过重放事件历史重建
- * 3. 事件是不可变的，只能追加，不能修改
- * 4. 通过版本控制确保并发安全
- *
- * @abstract
  * @class EventSourcedAggregateRoot
- * @author AI开发团队
+ * @description
+ * 事件溯源聚合根基类，负责管理用户相关的业务方法、事件发布和不变性约束。
+ *
+ * 业务方法与事件发布：
+ * 1. 提供聚合根的事件管理和版本控制
+ * 2. 在状态变更时记录相应的领域事件
+ * 3. 确保业务操作的事件一致性
+ *
+ * 不变性约束：
+ * 1. 事件一旦创建不可修改
+ * 2. 聚合状态只能通过事件变更
+ * 3. 版本控制确保并发安全
+ *
+ * 事件溯源特性：
+ * 1. 支持从历史事件重建聚合状态
+ * 2. 提供快照机制优化性能
+ * 3. 支持时间旅行和审计功能
+ * 4. 通过版本控制防止并发冲突
+ *
+ * @property {string} id 聚合根的唯一标识符，子类必须实现
+ * @property {IDomainEvent[]} uncommittedEvents 未提交的事件列表
+ * @property {number} version 聚合根的当前版本号
+ *
+ * @example
+ * ```typescript
+ * class UserAggregate extends EventSourcedAggregateRoot {
+ *   public readonly id: string;
+ *
+ *   protected handleEvent(event: IDomainEvent, isFromHistory: boolean): void {
+ *     // 处理事件逻辑
+ *   }
+ *
+ *   protected toSnapshot(): any {
+ *     // 返回快照数据
+ *   }
+ *
+ *   protected fromSnapshot(data: any): void {
+ *     // 从快照恢复状态
+ *   }
+ * }
+ * ```
+ * @abstract
  * @since 1.0.0
  */
 export abstract class EventSourcedAggregateRoot {
@@ -126,7 +155,7 @@ export abstract class EventSourcedAggregateRoot {
     events: IDomainEvent[],
     fromVersion: number = 0,
   ): void {
-    if (!events || events.length === 0) {
+    if (events.length === 0) {
       return;
     }
 
@@ -172,7 +201,7 @@ export abstract class EventSourcedAggregateRoot {
    * @public
    */
   public restoreFromSnapshot(snapshot: IAggregateSnapshot): void {
-    if (!snapshot || snapshot.aggregateId !== this.id) {
+    if (snapshot.aggregateId !== this.id) {
       throw new Error('无效的快照数据');
     }
 
@@ -185,24 +214,24 @@ export abstract class EventSourcedAggregateRoot {
    *
    * 子类必须实现此方法，定义如何将聚合状态序列化为快照数据。
    *
-   * @returns {any} 快照数据
+   * @returns {Record<string, unknown>} 快照数据
    *
    * @protected
    * @abstract
    */
-  protected abstract toSnapshot(): any;
+  protected abstract toSnapshot(): Record<string, unknown>;
 
   /**
    * 从快照数据恢复聚合状态
    *
    * 子类必须实现此方法，定义如何从快照数据恢复聚合状态。
    *
-   * @param {any} data - 快照数据
+   * @param {Record<string, unknown>} data - 快照数据
    *
    * @protected
    * @abstract
    */
-  protected abstract fromSnapshot(data: any): void;
+  protected abstract fromSnapshot(data: Record<string, unknown>): void;
 
   /**
    * 验证事件的有效性
@@ -212,19 +241,15 @@ export abstract class EventSourcedAggregateRoot {
    * @private
    */
   private validateEvent(event: IDomainEvent): void {
-    if (!event) {
-      throw new Error('事件不能为空');
-    }
-
-    if (!event.aggregateId || event.aggregateId !== this.id) {
+    if (event.aggregateId !== this.id) {
       throw new Error('事件的聚合根ID与当前聚合根不匹配');
     }
 
-    if (!event.eventId || event.eventId.trim().length === 0) {
+    if (event.eventId.trim().length === 0) {
       throw new Error('事件ID不能为空');
     }
 
-    if (!event.eventType || event.eventType.trim().length === 0) {
+    if (event.eventType.trim().length === 0) {
       throw new Error('事件类型不能为空');
     }
 

@@ -1,21 +1,64 @@
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * 查询基类
+ * @class Query
+ * @description
+ * 查询基类，封装用户查询操作的参数和过滤条件。
  *
- * 所有查询都应该继承此基类，提供统一的查询结构和行为。
- * 查询是CQRS模式中读操作的载体，用于获取数据。
+ * 查询职责：
+ * 1. 封装数据查询所需的所有参数
+ * 2. 提供灵活的过滤和排序选项
+ * 3. 支持分页和性能优化
+ * 4. 确保查询结果的数据隔离
  *
- * 查询的特点：
+ * 数据隔离要求：
+ * 1. 查询必须基于租户ID进行数据隔离
+ * 2. 根据查询者权限过滤可访问的数据
+ * 3. 支持组织级和部门级的数据过滤
+ * 4. 确保敏感信息的安全访问
+ *
+ * CQRS特性：
  * 1. 表示数据检索的请求
  * 2. 是不可变的，一旦创建就不能修改
  * 3. 包含查询所需的所有参数
  * 4. 具有唯一标识符和时间戳
  * 5. 不产生副作用，只返回数据
  *
+ * @property {string} queryId 查询的唯一标识符
+ * @property {Date} timestamp 查询创建的时间戳
+ * @property {string} queryType 查询的类型名称
+ *
+ * @example
+ * ```typescript
+ * class GetUsersQuery extends Query {
+ *   constructor(
+ *     public readonly tenantId: string,
+ *     public readonly organizationId?: string,
+ *     public readonly page: number = 1,
+ *     public readonly limit: number = 20
+ *   ) {
+ *     super();
+ *     this.validate();
+ *   }
+ *
+ *   private validate(): void {
+ *     if (!this.tenantId) {
+ *       throw new Error('Tenant ID is required');
+ *     }
+ *   }
+ *
+ *   toJSON(): any {
+ *     return {
+ *       ...this.getBaseQueryData(),
+ *       tenantId: this.tenantId,
+ *       organizationId: this.organizationId,
+ *       page: this.page,
+ *       limit: this.limit
+ *     };
+ *   }
+ * }
+ * ```
  * @abstract
- * @class Query
- * @author AI开发团队
  * @since 1.0.0
  */
 export abstract class Query {
@@ -61,7 +104,7 @@ export abstract class Query {
       throw new Error('查询ID不能为空');
     }
 
-    if (!this.timestamp || isNaN(this.timestamp.getTime())) {
+    if (isNaN(this.timestamp.getTime())) {
       throw new Error('查询时间戳无效');
     }
 
@@ -89,7 +132,7 @@ export abstract class Query {
    * 子类应该重写此方法，提供具体的查询数据序列化。
    * 基类提供默认实现，包含查询的基本属性。
    *
-   * @returns {any} 查询的JSON表示
+   * @returns {Record<string, unknown>} 查询的JSON表示
    */
-  abstract toJSON(): any;
+  abstract toJSON(): Record<string, unknown>;
 }

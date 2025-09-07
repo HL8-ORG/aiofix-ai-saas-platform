@@ -2,15 +2,54 @@ import { v4 as uuidv4 } from 'uuid';
 import { IDomainEvent } from './interfaces/domain-event.interface';
 
 /**
- * 领域事件基类
- *
- * 所有领域事件都应该继承此基类，提供统一的事件结构和行为。
- * 基类实现了IDomainEvent接口，确保所有事件都有一致的属性。
- *
- * @abstract
  * @class DomainEvent
+ * @description
+ * 领域事件基类，描述事件含义、触发条件和影响范围。
+ *
+ * 事件含义：
+ * 1. 表示业务状态变更的重要时刻
+ * 2. 包含事件发生时的关键信息
+ * 3. 为其他聚合根提供状态变更通知
+ *
+ * 触发条件：
+ * 1. 聚合根状态发生变更时自动触发
+ * 2. 业务规则验证通过
+ * 3. 事件数据完整性检查通过
+ *
+ * 影响范围：
+ * 1. 通知其他聚合根状态变更
+ * 2. 触发后续业务流程
+ * 3. 更新读模型视图
+ * 4. 记录业务审计日志
+ *
+ * @property {string} eventId 事件的唯一标识符
+ * @property {string} aggregateId 聚合根的唯一标识符
+ * @property {Date} occurredOn 事件发生的时间戳
+ * @property {string} eventType 事件的类型名称
+ * @property {number} eventVersion 事件的版本号
+ *
+ * @example
+ * ```typescript
+ * class UserCreatedEvent extends DomainEvent {
+ *   constructor(
+ *     aggregateId: string,
+ *     public readonly email: string,
+ *     public readonly tenantId: string
+ *   ) {
+ *     super(aggregateId);
+ *   }
+ *
+ *   toJSON(): any {
+ *     return {
+ *       ...this.getBaseEventData(),
+ *       email: this.email,
+ *       tenantId: this.tenantId
+ *     };
+ *   }
+ * }
+ * ```
+ * @abstract
  * @implements {IDomainEvent}
- * @author AI开发团队
  * @since 1.0.0
  */
 export abstract class DomainEvent implements IDomainEvent {
@@ -74,9 +113,9 @@ export abstract class DomainEvent implements IDomainEvent {
    * 子类应该重写此方法，提供具体的事件数据序列化。
    * 基类提供默认实现，包含事件的基本属性。
    *
-   * @returns {any} 事件的JSON表示
+   * @returns {Record<string, unknown>} 事件的JSON表示
    */
-  abstract toJSON(): any;
+  abstract toJSON(): Record<string, unknown>;
 
   /**
    * 获取事件的基本信息
@@ -110,7 +149,7 @@ export abstract class DomainEvent implements IDomainEvent {
       throw new Error('聚合根ID不能为空');
     }
 
-    if (!this.occurredOn || isNaN(this.occurredOn.getTime())) {
+    if (isNaN(this.occurredOn.getTime())) {
       throw new Error('事件发生时间无效');
     }
 

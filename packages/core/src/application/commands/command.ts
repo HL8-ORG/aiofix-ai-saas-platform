@@ -1,20 +1,60 @@
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * 命令基类
+ * @class Command
+ * @description
+ * 命令基类，封装用户创建操作的输入参数和验证规则。
  *
- * 所有命令都应该继承此基类，提供统一的命令结构和行为。
- * 命令是CQRS模式中写操作的载体，用于触发业务操作。
+ * 命令职责：
+ * 1. 封装业务操作所需的所有输入参数
+ * 2. 提供数据验证和格式检查
+ * 3. 确保命令的不可变性和幂等性
+ * 4. 支持命令的序列化和反序列化
  *
- * 命令的特点：
+ * 数据隔离要求：
+ * 1. 命令必须包含租户ID以确保数据隔离
+ * 2. 验证用户权限和业务规则
+ * 3. 确保命令执行者具有相应权限
+ *
+ * CQRS特性：
  * 1. 表示用户的意图或业务操作
  * 2. 是不可变的，一旦创建就不能修改
  * 3. 包含执行操作所需的所有数据
  * 4. 具有唯一标识符和时间戳
  *
+ * @property {string} commandId 命令的唯一标识符
+ * @property {Date} timestamp 命令创建的时间戳
+ * @property {string} commandType 命令的类型名称
+ *
+ * @example
+ * ```typescript
+ * class CreateUserCommand extends Command {
+ *   constructor(
+ *     public readonly email: string,
+ *     public readonly password: string,
+ *     public readonly tenantId: string
+ *   ) {
+ *     super();
+ *     this.validate();
+ *   }
+ *
+ *   private validate(): void {
+ *     if (!this.email?.includes('@')) {
+ *       throw new Error('Invalid email format');
+ *     }
+ *   }
+ *
+ *   toJSON(): any {
+ *     return {
+ *       ...this.getBaseCommandData(),
+ *       email: this.email,
+ *       password: this.password,
+ *       tenantId: this.tenantId
+ *     };
+ *   }
+ * }
+ * ```
  * @abstract
- * @class Command
- * @author AI开发团队
  * @since 1.0.0
  */
 export abstract class Command {
@@ -60,7 +100,7 @@ export abstract class Command {
       throw new Error('命令ID不能为空');
     }
 
-    if (!this.timestamp || isNaN(this.timestamp.getTime())) {
+    if (isNaN(this.timestamp.getTime())) {
       throw new Error('命令时间戳无效');
     }
 
@@ -88,7 +128,7 @@ export abstract class Command {
    * 子类应该重写此方法，提供具体的命令数据序列化。
    * 基类提供默认实现，包含命令的基本属性。
    *
-   * @returns {any} 命令的JSON表示
+   * @returns {Record<string, unknown>} 命令的JSON表示
    */
-  abstract toJSON(): any;
+  abstract toJSON(): Record<string, unknown>;
 }

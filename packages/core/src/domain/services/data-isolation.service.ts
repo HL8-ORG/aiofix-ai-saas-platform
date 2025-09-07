@@ -55,10 +55,6 @@ export class DataIsolationService implements IDataIsolationService {
     // 这里需要根据实际的用户服务实现来获取用户信息
     const user = await this.getUserInfo(userId);
 
-    if (!user) {
-      throw new Error(`用户 ${userId} 不存在`);
-    }
-
     // 确定用户的隔离级别
     const isolationLevel = this.determineIsolationLevel(user);
 
@@ -69,11 +65,11 @@ export class DataIsolationService implements IDataIsolationService {
     const roles = await this.getUserRoles(userId);
 
     return {
-      platformId: user.platformId,
-      tenantId: user.tenantId,
-      organizationId: user.organizationId,
-      departmentId: user.departmentId,
-      userId: user.id,
+      platformId: user.platformId as string,
+      tenantId: user.tenantId as string,
+      organizationId: user.organizationId as string,
+      departmentId: user.departmentId as string,
+      userId: user.id as string,
       isolationLevel,
       permissions,
       roles,
@@ -119,15 +115,14 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 应用数据隔离过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {DataIsolationContext} context - 用户上下文
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    */
-  applyDataIsolation(query: any, context: DataIsolationContext): any {
-    if (!query || !context) {
-      return query;
-    }
-
+  applyDataIsolation(
+    query: Record<string, unknown>,
+    context: DataIsolationContext,
+  ): Record<string, unknown> {
     // 根据用户的隔离级别应用相应的过滤器
     switch (context.isolationLevel) {
       case ISOLATION_LEVELS.PLATFORM:
@@ -151,7 +146,7 @@ export class DataIsolationService implements IDataIsolationService {
         return this.applyUserFilter(query, context.userId);
 
       default:
-        throw new Error(`不支持的隔离级别: ${context.isolationLevel}`);
+        throw new Error(`不支持的隔离级别: ${String(context.isolationLevel)}`);
     }
   }
 
@@ -271,11 +266,13 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 确定用户的隔离级别
    *
-   * @param {any} user - 用户信息
+   * @param {Record<string, unknown>} user - 用户信息
    * @returns {IsolationLevel} 隔离级别
    * @private
    */
-  private determineIsolationLevel(user: any): IsolationLevel {
+  private determineIsolationLevel(
+    user: Record<string, unknown>,
+  ): IsolationLevel {
     if (user.isPlatformAdmin) {
       return ISOLATION_LEVELS.PLATFORM;
     }
@@ -344,7 +341,7 @@ export class DataIsolationService implements IDataIsolationService {
       classification.accessPermissions[
         permission as keyof typeof classification.accessPermissions
       ];
-    if (!requiredPermissions || requiredPermissions.length === 0) {
+    if (requiredPermissions.length === 0) {
       return true; // 如果没有特定权限要求，则允许访问
     }
 
@@ -355,12 +352,15 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 应用租户过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {string} tenantId - 租户ID
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    * @private
    */
-  private applyTenantFilter(query: any, tenantId?: string): any {
+  private applyTenantFilter(
+    query: Record<string, unknown>,
+    tenantId?: string,
+  ): Record<string, unknown> {
     if (!tenantId) {
       throw new Error('租户ID不能为空');
     }
@@ -368,7 +368,7 @@ export class DataIsolationService implements IDataIsolationService {
     // TODO: 根据实际的查询构建器实现来应用过滤器
     // 这里需要根据使用的ORM或查询构建器来调整
     if (query.where) {
-      query.where.tenantId = tenantId;
+      (query.where as Record<string, unknown>).tenantId = tenantId;
     } else {
       query.where = { tenantId };
     }
@@ -379,19 +379,22 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 应用组织过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {string} organizationId - 组织ID
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    * @private
    */
-  private applyOrganizationFilter(query: any, organizationId?: string): any {
+  private applyOrganizationFilter(
+    query: Record<string, unknown>,
+    organizationId?: string,
+  ): Record<string, unknown> {
     if (!organizationId) {
       throw new Error('组织ID不能为空');
     }
 
     // TODO: 根据实际的查询构建器实现来应用过滤器
     if (query.where) {
-      query.where.organizationId = organizationId;
+      (query.where as Record<string, unknown>).organizationId = organizationId;
     } else {
       query.where = { organizationId };
     }
@@ -402,19 +405,22 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 应用部门过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {string} departmentId - 部门ID
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    * @private
    */
-  private applyDepartmentFilter(query: any, departmentId?: string): any {
+  private applyDepartmentFilter(
+    query: Record<string, unknown>,
+    departmentId?: string,
+  ): Record<string, unknown> {
     if (!departmentId) {
       throw new Error('部门ID不能为空');
     }
 
     // TODO: 根据实际的查询构建器实现来应用过滤器
     if (query.where) {
-      query.where.departmentId = departmentId;
+      (query.where as Record<string, unknown>).departmentId = departmentId;
     } else {
       query.where = { departmentId };
     }
@@ -425,19 +431,22 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 应用用户过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {string} userId - 用户ID
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    * @private
    */
-  private applyUserFilter(query: any, userId: string): any {
+  private applyUserFilter(
+    query: Record<string, unknown>,
+    userId: string,
+  ): Record<string, unknown> {
     if (!userId) {
       throw new Error('用户ID不能为空');
     }
 
     // TODO: 根据实际的查询构建器实现来应用过滤器
     if (query.where) {
-      query.where.userId = userId;
+      (query.where as Record<string, unknown>).userId = userId;
     } else {
       query.where = { userId };
     }
@@ -505,11 +514,11 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 获取用户信息
    *
-   * @param {string} userId - 用户ID
-   * @returns {Promise<any>} 用户信息
+   * @param {string} _userId - 用户ID
+   * @returns {Promise<Record<string, unknown>>} 用户信息
    * @private
    */
-  private async getUserInfo(userId: string): Promise<any> {
+  private async getUserInfo(_userId: string): Promise<Record<string, unknown>> {
     // TODO: 实现用户信息获取逻辑
     throw new Error('getUserInfo 方法需要实现');
   }
@@ -517,11 +526,11 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 获取用户权限
    *
-   * @param {string} userId - 用户ID
+   * @param {string} _userId - 用户ID
    * @returns {Promise<string[]>} 权限列表
    * @private
    */
-  private async getUserPermissions(userId: string): Promise<string[]> {
+  private async getUserPermissions(_userId: string): Promise<string[]> {
     // TODO: 实现用户权限获取逻辑
     throw new Error('getUserPermissions 方法需要实现');
   }
@@ -529,11 +538,11 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 获取用户角色
    *
-   * @param {string} userId - 用户ID
+   * @param {string} _userId - 用户ID
    * @returns {Promise<string[]>} 角色列表
    * @private
    */
-  private async getUserRoles(userId: string): Promise<string[]> {
+  private async getUserRoles(_userId: string): Promise<string[]> {
     // TODO: 实现用户角色获取逻辑
     throw new Error('getUserRoles 方法需要实现');
   }
@@ -541,12 +550,12 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 获取数据分类信息
    *
-   * @param {string} dataId - 数据ID
+   * @param {string} _dataId - 数据ID
    * @returns {Promise<DataClassification | null>} 数据分类信息
    * @private
    */
   private async fetchDataClassification(
-    dataId: string,
+    _dataId: string,
   ): Promise<DataClassification | null> {
     // TODO: 实现数据分类信息获取逻辑
     throw new Error('fetchDataClassification 方法需要实现');
@@ -555,14 +564,14 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 保存数据分类信息
    *
-   * @param {string} dataId - 数据ID
-   * @param {Partial<DataClassification>} classification - 分类信息
+   * @param {string} _dataId - 数据ID
+   * @param {Partial<DataClassification>} _classification - 分类信息
    * @returns {Promise<void>}
    * @private
    */
   private async saveDataClassification(
-    dataId: string,
-    classification: Partial<DataClassification>,
+    _dataId: string,
+    _classification: Partial<DataClassification>,
   ): Promise<void> {
     // TODO: 实现数据分类信息保存逻辑
     throw new Error('saveDataClassification 方法需要实现');
@@ -571,12 +580,12 @@ export class DataIsolationService implements IDataIsolationService {
   /**
    * 获取隔离策略
    *
-   * @param {IsolationLevel} level - 隔离级别
+   * @param {IsolationLevel} _level - 隔离级别
    * @returns {Promise<DataIsolationPolicy | null>} 隔离策略
    * @private
    */
   private async fetchIsolationPolicy(
-    level: IsolationLevel,
+    _level: IsolationLevel,
   ): Promise<DataIsolationPolicy | null> {
     // TODO: 实现隔离策略获取逻辑
     throw new Error('fetchIsolationPolicy 方法需要实现');

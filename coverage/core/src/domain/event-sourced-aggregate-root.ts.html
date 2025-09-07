@@ -320,7 +320,36 @@
 <a name='L255'></a><a href='#L255'>255</a>
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
-<a name='L258'></a><a href='#L258'>258</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -342,7 +371,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -583,20 +641,49 @@
 } from './interfaces/domain-event.interface';
 &nbsp;
 /**
- * 事件溯源聚合根基类
- *
- * 所有使用事件溯源的聚合根都应该继承此基类。
- * 基类提供了事件管理、版本控制、快照等核心功能。
- *
- * 事件溯源的核心思想：
- * 1. 聚合的状态变更通过事件记录
- * 2. 聚合的当前状态通过重放事件历史重建
- * 3. 事件是不可变的，只能追加，不能修改
- * 4. 通过版本控制确保并发安全
- *
- * @abstract
  * @class EventSourcedAggregateRoot
- * @author AI开发团队
+ * @description
+ * 事件溯源聚合根基类，负责管理用户相关的业务方法、事件发布和不变性约束。
+ *
+ * 业务方法与事件发布：
+ * 1. 提供聚合根的事件管理和版本控制
+ * 2. 在状态变更时记录相应的领域事件
+ * 3. 确保业务操作的事件一致性
+ *
+ * 不变性约束：
+ * 1. 事件一旦创建不可修改
+ * 2. 聚合状态只能通过事件变更
+ * 3. 版本控制确保并发安全
+ *
+ * 事件溯源特性：
+ * 1. 支持从历史事件重建聚合状态
+ * 2. 提供快照机制优化性能
+ * 3. 支持时间旅行和审计功能
+ * 4. 通过版本控制防止并发冲突
+ *
+ * @property {string} id 聚合根的唯一标识符，子类必须实现
+ * @property {IDomainEvent[]} uncommittedEvents 未提交的事件列表
+ * @property {number} version 聚合根的当前版本号
+ *
+ * @example
+ * ```typescript
+ * class UserAggregate extends EventSourcedAggregateRoot {
+ *   public readonly id: string;
+ *
+ *   protected handleEvent(event: IDomainEvent, isFromHistory: boolean): void {
+ *     // 处理事件逻辑
+ *   }
+ *
+ *   protected toSnapshot(): any {
+ *     // 返回快照数据
+ *   }
+ *
+ *   protected fromSnapshot(data: any): void {
+ *     // 从快照恢复状态
+ *   }
+ * }
+ * ```
+ * @abstract
  * @since 1.0.0
  */
 export abstract class EventSourcedAggregateRoot {
@@ -841,7 +928,7 @@ export abstract class EventSourcedAggregateRoot {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-06T19:30:41.198Z
+                at 2025-09-07T11:11:23.717Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

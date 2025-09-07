@@ -1,0 +1,1581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="446" failures="33" errors="0" time="6.839">
+  <testsuite name="DatabaseModule" errors="0" failures="2" skipped="0" timestamp="2025-09-07T11:11:16" time="1.667" tests="3">
+    <testcase classname="DatabaseModule" name="should be defined" time="0.009">
+    </testcase>
+    <testcase classname="DatabaseModule" name="should have database config provider" time="0.002">
+      <failure>Error: Nest could not find DATABASE_CONFIG element (this provider does not exist in the current context)
+    at InstanceLinksHost.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-links-host.js:15:19)
+    at TestingModule.find (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/abstract-instance-resolver.js:8:60)
+    at TestingModule.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/nest-application-context.js:77:20)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/database/src/database.module.spec.ts:41:27)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseModule" name="should have database name provider" time="0.002">
+      <failure>Error: Nest could not find DATABASE_NAME element (this provider does not exist in the current context)
+    at InstanceLinksHost.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-links-host.js:15:19)
+    at TestingModule.find (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/abstract-instance-resolver.js:8:60)
+    at TestingModule.get (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/nest-application-context.js:77:20)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/database/src/database.module.spec.ts:47:25)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="MemoryCacheService" errors="0" failures="10" skipped="0" timestamp="2025-09-07T11:11:18" time="0.862" tests="24">
+    <testcase classname="MemoryCacheService › basic operations" name="should be defined" time="0.006">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should set and get cache value" time="0.003">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should return null for non-existent key" time="0.002">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should delete cache value" time="0.001">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should return false when deleting non-existent key" time="0.001">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should check if key exists" time="0.007">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should clear all cache" time="0.002">
+    </testcase>
+    <testcase classname="MemoryCacheService › basic operations" name="should clear cache by namespace" time="0.002">
+      <failure>Error: expect(received).toBeNull()
+
+Received: &quot;value2&quot;
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:132:39)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › TTL and expiration" name="should respect TTL setting" time="0.156">
+      <failure>Error: expect(received).toBeNull()
+
+Received: {&quot;data&quot;: &quot;test-value&quot;}
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:151:38)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › TTL and expiration" name="should handle zero TTL (no expiration)" time="0.103">
+    </testcase>
+    <testcase classname="MemoryCacheService › TTL and expiration" name="should clean up expired entries automatically" time="0.103">
+      <failure>Error: expect(received).toBeGreaterThan(expected)
+
+Expected: &gt; 0
+Received:   0
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:179:36)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › cache strategies" name="should use LRU strategy for eviction" time="0.003">
+      <failure>Error: expect(received).toBeNull()
+
+Received: &quot;value3&quot;
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:218:42)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › cache strategies" name="should use LFU strategy for eviction" time="0.008">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: &quot;value1&quot;
+Received: &quot;value3&quot;
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:269:42)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › cache strategies" name="should use FIFO strategy for eviction" time="0.005">
+      <failure>Error: expect(received).toBeNull()
+
+Received: &quot;value3&quot;
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:313:43)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › statistics" name="should track cache statistics" time="0.002">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: 2
+Received: 1
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:338:34)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › statistics" name="should reset statistics" time="0.002">
+    </testcase>
+    <testcase classname="MemoryCacheService › health check" name="should return healthy status" time="0.004">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:374:30)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › health check" name="should handle health check errors" time="0.004">
+    </testcase>
+    <testcase classname="MemoryCacheService › complex data types" name="should handle complex objects" time="0.003">
+    </testcase>
+    <testcase classname="MemoryCacheService › complex data types" name="should handle arrays" time="0.003">
+    </testcase>
+    <testcase classname="MemoryCacheService › complex data types" name="should handle primitive values" time="0.001">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;test string&quot;
+Received: true
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:467:44)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › concurrent access" name="should handle concurrent set operations" time="0.005">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;value-0&quot;
+Received: &quot;value-9&quot;
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/cache/src/services/memory-cache.service.spec.ts:488:40)</failure>
+    </testcase>
+    <testcase classname="MemoryCacheService › concurrent access" name="should handle concurrent get operations" time="0.005">
+    </testcase>
+    <testcase classname="MemoryCacheService › module lifecycle" name="should clean up resources on destroy" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="UserId" errors="0" failures="3" skipped="0" timestamp="2025-09-07T11:11:19" time="0.431" tests="17">
+    <testcase classname="UserId › constructor" name="should create UserId with valid UUID" time="0.001">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should create UserId with generated UUID when no value provided" time="0.001">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for invalid UUID format" time="0.006">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for empty string" time="0.001">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for null value" time="0.001">
+      <failure>Error: expect(received).toThrow(expected)
+
+Expected constructor: InvalidUserIdError
+
+Received function did not throw
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:67:10)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for undefined value" time="0">
+      <failure>Error: expect(received).toThrow(expected)
+
+Expected constructor: InvalidUserIdError
+
+Received function did not throw
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:74:10)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+    <testcase classname="UserId › equals" name="should return true for same UserId instances" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false for different UserId instances" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false when comparing with non-UserId object" time="0">
+    </testcase>
+    <testcase classname="UserId › toString" name="should return UUID string representation" time="0.001">
+    </testcase>
+    <testcase classname="UserId › fromString" name="should create UserId from valid UUID string" time="0">
+    </testcase>
+    <testcase classname="UserId › fromString" name="should throw InvalidUserIdError for invalid UUID string" time="0.001">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return true for valid UUID" time="0.001">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for invalid UUID" time="0">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for empty string" time="0">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for null value" time="0">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: false
+Received: true
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:194:22)
+    at Promise.finally.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1556:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1496:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1006:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:946:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:839:13)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:829:11)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:757:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/jestAdapterInit.js:1917:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@30.1.3/node_modules/jest-circus/build/runner.js:101:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:275:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@30.1.3/node_modules/jest-runner/build/index.js:343:7)</failure>
+    </testcase>
+    <testcase classname="InvalidUserIdError" name="should create error with correct name and message" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="LoggingModule" errors="0" failures="18" skipped="0" timestamp="2025-09-07T11:11:19" time="0.217" tests="18">
+    <testcase classname="LoggingModule › Module Initialization" name="should be defined" time="0.001">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › Module Initialization" name="should have PinoLoggerService" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › Module Initialization" name="should have PinoLoggerConfigService" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › Module Initialization" name="should have PinoLoggerFactory" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should log different levels" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should log with metadata" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should log errors with stack trace" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should log performance metrics" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should create child logger" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should get and set log level" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerService" name="should get stats" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerConfigService" name="should get default config" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerConfigService" name="should update config" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerConfigService" name="should detect environment" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerFactory" name="should create logger" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › PinoLoggerFactory" name="should create child logger" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › Logging Middleware and Interceptor" name="should have middleware defined" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+    <testcase classname="LoggingModule › Logging Middleware and Interceptor" name="should have interceptor defined" time="0">
+      <failure>Error: Nest can&apos;t resolve dependencies of the PinoLoggerService (?, PinoLoggerConfigService, PinoLoggerFactory, ClsService). Please make sure that the argument EventEmitter at index [0] is available in the RootTestModule context.
+
+Potential solutions:
+- Is RootTestModule a valid NestJS module?
+- If EventEmitter is a provider, is it part of the current RootTestModule?
+- If EventEmitter is exported from a separate @Module, is that module imported within RootTestModule?
+  @Module({
+    imports: [ /* the Module containing EventEmitter */ ]
+  })
+
+    at TestingInjector.lookupComponentInParentModules (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:286:19)
+    at TestingInjector.resolveComponentWrapper (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-injector.js:19:45)
+    at resolveParam (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:141:38)
+    at async Promise.all (index 0)
+    at TestingInjector.resolveConstructorParams (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:169:27)
+    at TestingInjector.loadInstance (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:75:13)
+    at TestingInjector.loadProvider (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/injector.js:103:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 5)
+    at TestingInstanceLoader.createInstancesOfProviders (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:55:9)
+    at /home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:40:13
+    at async Promise.all (index 1)
+    at TestingInstanceLoader.createInstances (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:39:9)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+core@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0.14._bad85ac0f714a81162304b30d6edbbbf/node_modules/@nestjs/core/injector/instance-loader.js:22:13)
+    at TestingInstanceLoader.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-instance-loader.js:9:9)
+    at TestingModuleBuilder.createInstancesOfDependencies (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:118:9)
+    at TestingModuleBuilder.compile (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/@nestjs+testing@11.1.6_@nestjs+common@11.1.6_class-transformer@0.5.1_class-validator@0._ff6a79f0d3e76ddb2b73722d992783a6/node_modules/@nestjs/testing/testing-module.builder.js:74:9)
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/logging/src/logging.module.spec.ts:30:14)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="RedisCacheService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:20" time="0.423" tests="24">
+    <testcase classname="RedisCacheService › onModuleInit" name="should connect to Redis successfully" time="0.021">
+    </testcase>
+    <testcase classname="RedisCacheService › onModuleInit" name="should handle connection error" time="0.019">
+    </testcase>
+    <testcase classname="RedisCacheService › onModuleDestroy" name="should disconnect from Redis" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › get" name="should get cache value successfully" time="0.012">
+    </testcase>
+    <testcase classname="RedisCacheService › get" name="should return null for non-existent key" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › get" name="should return null for expired cache" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › get" name="should handle Redis error" time="0.003">
+    </testcase>
+    <testcase classname="RedisCacheService › set" name="should set cache value successfully" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › set" name="should set cache value without TTL" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › set" name="should handle Redis error" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › delete" name="should delete cache value successfully" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › delete" name="should return false for non-existent key" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › delete" name="should handle Redis error" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › exists" name="should return true for existing key" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › exists" name="should return false for non-existing key" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › exists" name="should handle Redis error" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › clear" name="should clear all cache" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › clear" name="should clear cache by namespace" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › clear" name="should handle Redis error" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › getStats" name="should return cache statistics" time="0.003">
+    </testcase>
+    <testcase classname="RedisCacheService › getStats" name="should handle Redis error" time="0.003">
+    </testcase>
+    <testcase classname="RedisCacheService › getHealth" name="should return healthy status" time="0.002">
+    </testcase>
+    <testcase classname="RedisCacheService › getHealth" name="should return unhealthy status on error" time="0.001">
+    </testcase>
+    <testcase classname="RedisCacheService › resetStats" name="should reset cache statistics" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="CacheInvalidationService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:20" time="0.392" tests="26">
+    <testcase classname="CacheInvalidationService › basic operations" name="should be defined" time="0.003">
+    </testcase>
+    <testcase classname="CacheInvalidationService › basic operations" name="should set cache service" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule management" name="should add invalidation rule" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule management" name="should remove invalidation rule" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule management" name="should update invalidation rule" time="0.003">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule management" name="should get invalidation rule" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule management" name="should get all rules with enabled filter" time="0.001">
+    </testcase>
+    <testcase classname="CacheInvalidationService › cache invalidation" name="should invalidate exact keys" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › cache invalidation" name="should invalidate by namespace" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › cache invalidation" name="should invalidate batch" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › cache invalidation" name="should handle invalidate with non-existent keys" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › cache invalidation" name="should handle invalidation errors gracefully" time="0.01">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule-based invalidation" name="should invalidate by rule" time="0.003">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule-based invalidation" name="should handle disabled rule" time="0.003">
+    </testcase>
+    <testcase classname="CacheInvalidationService › rule-based invalidation" name="should handle non-existent rule" time="0.041">
+    </testcase>
+    <testcase classname="CacheInvalidationService › statistics" name="should get invalidation stats" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › statistics" name="should update stats after invalidation" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › statistics" name="should reset stats" time="0.003">
+    </testcase>
+    <testcase classname="CacheInvalidationService › error handling" name="should handle cache service not set" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › error handling" name="should handle unsupported strategy" time="0.005">
+    </testcase>
+    <testcase classname="CacheInvalidationService › event emission" name="should emit rule events" time="0.019">
+    </testcase>
+    <testcase classname="CacheInvalidationService › event emission" name="should emit invalidation events" time="0.001">
+    </testcase>
+    <testcase classname="CacheInvalidationService › different strategies" name="should handle prefix invalidation" time="0.001">
+    </testcase>
+    <testcase classname="CacheInvalidationService › different strategies" name="should handle tag invalidation" time="0.002">
+    </testcase>
+    <testcase classname="CacheInvalidationService › different strategies" name="should handle wildcard invalidation" time="0.004">
+    </testcase>
+    <testcase classname="CacheInvalidationService › different strategies" name="should handle regex invalidation" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="PinoLoggingMiddleware" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:21" time="0.3" tests="12">
+    <testcase classname="PinoLoggingMiddleware" name="should be defined" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › request logging" name="should log request information" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › request logging" name="should generate unique request ID" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › request logging" name="should extract tenant ID from different sources" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › request logging" name="should extract user ID from different sources" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › response logging" name="should log successful response" time="0.053">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › response logging" name="should log error response as warning" time="0.052">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › response logging" name="should capture response size" time="0.051">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › security features" name="should sanitize sensitive headers" time="0.004">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › security features" name="should sanitize sensitive body fields" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › client IP detection" name="should detect IP from X-Forwarded-For header" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingMiddleware › client IP detection" name="should fallback to connection remote address" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="CacheManagerService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:21" time="0.301" tests="17">
+    <testcase classname="CacheManagerService › basic operations" name="should be defined" time="0.004">
+    </testcase>
+    <testcase classname="CacheManagerService › basic operations" name="should add cache layer" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › basic operations" name="should remove cache layer" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › basic operations" name="should enable/disable cache layer" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should get value from cache" time="0.004">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should return null for non-existent key" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should set value in all layers" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should delete value from all layers" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should check if key exists" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › cache operations" name="should clear all layers" time="0.003">
+    </testcase>
+    <testcase classname="CacheManagerService › statistics" name="should get cache stats" time="0.002">
+    </testcase>
+    <testcase classname="CacheManagerService › statistics" name="should reset cache stats" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › health check" name="should get cache health" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › layer management" name="should handle read-only layers" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › layer management" name="should handle disabled layers" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › error handling" name="should handle layer errors gracefully" time="0.001">
+    </testcase>
+    <testcase classname="CacheManagerService › event emission" name="should emit cache events" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="ConfigService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:21" time="0.231" tests="5">
+    <testcase classname="ConfigService" name="should be defined" time="0.004">
+    </testcase>
+    <testcase classname="ConfigService" name="should return app config" time="0.003">
+    </testcase>
+    <testcase classname="ConfigService" name="should return database config" time="0.006">
+    </testcase>
+    <testcase classname="ConfigService" name="should return redis config" time="0.002">
+    </testcase>
+    <testcase classname="ConfigService" name="should return jwt config" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="PinoLoggerConfigService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:21" time="0.201" tests="35">
+    <testcase classname="PinoLoggerConfigService › 初始化" name="应该使用默认配置初始化" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 初始化" name="应该使用自定义配置初始化" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 初始化" name="应该从环境变量读取配置" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置管理" name="应该获取当前配置" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置管理" name="应该更新配置" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置管理" name="应该部分更新配置" time="0.004">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置管理" name="应该重置为默认配置" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志级别管理" name="应该获取当前日志级别" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志级别管理" name="应该设置日志级别" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志级别管理" name="应该支持所有有效的日志级别" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志格式管理" name="应该获取当前日志格式" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志格式管理" name="应该设置日志格式" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 日志格式管理" name="应该支持所有有效的日志格式" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境检测" name="应该正确检测生产环境" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境检测" name="应该正确检测开发环境" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境检测" name="应该正确检测测试环境" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 美化格式判断" name="开发环境应该使用美化格式" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 美化格式判断" name="生产环境不应该使用美化格式" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 美化格式判断" name="JSON格式不应该使用美化格式" time="0.008">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证" name="应该验证有效的日志级别" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证" name="应该验证有效的日志格式" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证" name="应该验证文件轮转配置" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证" name="应该验证远程日志配置" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝无效的日志级别" time="0.016">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝无效的日志格式" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝无效的文件大小格式" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝缺少URL的远程日志配置" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝负数的超时时间" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置验证错误" name="应该拒绝负数的重试次数" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境变量配置" name="应该从环境变量读取日志级别" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境变量配置" name="应该从环境变量读取日志格式" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境变量配置" name="应该从环境变量读取日志文件路径" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 环境变量配置" name="应该从环境变量读取远程日志配置" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置合并" name="应该正确合并默认配置和自定义配置" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerConfigService › 配置合并" name="应该正确处理环境变量和自定义配置的优先级" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="PostgreSQLAdapter" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.158" tests="19">
+    <testcase classname="PostgreSQLAdapter › 初始化" name="应该正确初始化适配器" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 初始化" name="应该初始化统计信息" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该能够连接到数据库" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该能够断开数据库连接" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接管理" name="应该处理连接错误" time="0.02">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该能够执行查询" time="0.004">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该能够执行命令" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该处理查询错误" time="0.004">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 查询执行" name="应该更新统计信息" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事务管理" name="应该能够执行事务" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事务管理" name="应该在事务失败时回滚" time="0.001">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 健康检查" name="应该返回健康状态" time="0.001">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 健康检查" name="应该处理连接池错误" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 统计信息" name="应该返回统计信息" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 统计信息" name="应该能够重置统计信息" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接测试" name="应该能够ping数据库" time="0.003">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 连接测试" name="应该在ping失败时返回false" time="0.002">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事件通知" name="应该在查询执行时发出事件" time="0.001">
+    </testcase>
+    <testcase classname="PostgreSQLAdapter › 事件通知" name="应该在连接状态变化时发出事件" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="CacheKeyFactory" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.154" tests="34">
+    <testcase classname="CacheKeyFactory › create" name="should create basic cache key" time="0.003">
+    </testcase>
+    <testcase classname="CacheKeyFactory › create" name="should create cache key with options" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › create" name="should sanitize key name" time="0">
+    </testcase>
+    <testcase classname="CacheKeyFactory › create" name="should throw error for empty key" time="0.03">
+    </testcase>
+    <testcase classname="CacheKeyFactory › create" name="should throw error for null key" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createNamespace" name="should create namespace cache key" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createNamespace" name="should sanitize namespace" time="0.004">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createTenant" name="should create tenant cache key" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createTenant" name="should sanitize tenant ID" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createUser" name="should create user cache key" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createUser" name="should sanitize user ID" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createTagged" name="should create tagged cache key" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createTagged" name="should sanitize and deduplicate tags" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createTagged" name="should handle empty tags array" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › toString" name="should convert basic cache key to string" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › toString" name="should convert complex cache key to string" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › toString" name="should handle cache key without version" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › toString" name="should handle cache key with only namespace" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › parse" name="should parse basic cache key string" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › parse" name="should parse complex cache key string" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › parse" name="should parse cache key without version" time="0">
+    </testcase>
+    <testcase classname="CacheKeyFactory › parse" name="should parse cache key with only namespace" time="0.004">
+    </testcase>
+    <testcase classname="CacheKeyFactory › createPattern" name="should create pattern for wildcard matching" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › matchPattern" name="should match exact pattern" time="0.004">
+    </testcase>
+    <testcase classname="CacheKeyFactory › matchPattern" name="should match wildcard pattern" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › matchPattern" name="should not match different pattern" time="0.002">
+    </testcase>
+    <testcase classname="CacheKeyFactory › extract methods" name="should extract namespace" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › extract methods" name="should extract tenant ID" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › extract methods" name="should extract user ID" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › extract methods" name="should extract tags" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › edge cases" name="should handle cache key with special characters in key" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › edge cases" name="should handle cache key with multiple spaces" time="0.001">
+    </testcase>
+    <testcase classname="CacheKeyFactory › edge cases" name="should handle empty tags array" time="0">
+    </testcase>
+    <testcase classname="CacheKeyFactory › edge cases" name="should handle undefined tags" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="PinoLoggerService" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.121" tests="18">
+    <testcase classname="PinoLoggerService" name="should be defined" time="0.004">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log debug messages" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log info messages" time="0.005">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log warn messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log error messages" time="0.012">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log fatal messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › basic logging" name="should log trace messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › specialized logging" name="should log performance messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › specialized logging" name="should log business messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › specialized logging" name="should log security messages" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › configuration" name="should get and set log level" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › configuration" name="should get and update config" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › child logger" name="should create child logger" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › statistics" name="should track log statistics" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerService › statistics" name="should reset statistics" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerService › event emission" name="should emit log events" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggerService › lifecycle methods" name="should flush and close logger" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggerService › lifecycle methods" name="should handle module destruction" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="PinoLoggingInterceptor" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.108" tests="12">
+    <testcase classname="PinoLoggingInterceptor" name="should be defined" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › successful method execution" name="should log method start and success" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › successful method execution" name="should generate unique method ID for each call" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › method execution with error" name="should log method start and error" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › parameter extraction" name="should filter out HTTP request and response objects" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › parameter extraction" name="should handle empty parameters" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › parameter sanitization" name="should sanitize sensitive parameters" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › parameter sanitization" name="should sanitize nested sensitive parameters" time="0.001">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › parameter sanitization" name="should sanitize array parameters" time="0.005">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › result sanitization" name="should sanitize sensitive result fields" time="0.003">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › context extraction" name="should extract context from request" time="0.002">
+    </testcase>
+    <testcase classname="PinoLoggingInterceptor › context extraction" name="should handle missing context" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="DatabaseConfig" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.097" tests="11">
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该验证数字字段" time="0.003">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabasePoolConfig" name="应该接受有效配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › MikroOrmConfig" name="应该创建默认配置" time="0">
+    </testcase>
+    <testcase classname="DatabaseConfig › MikroOrmConfig" name="应该验证可选字段" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseLoggingConfig" name="应该创建默认配置" time="0">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseLoggingConfig" name="应该验证配置字段" time="0">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该创建默认配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该验证必需字段" time="0">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该接受有效配置" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseConfig › DatabaseConfig" name="应该验证嵌套对象" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Status" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.085" tests="33">
+    <testcase classname="Status › enum values" name="should have correct enum values" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow same status transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow PENDING to ACTIVE transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow PENDING to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to DISABLED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to LOCKED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to SUSPENDED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow DISABLED to ACTIVE transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow DISABLED to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow LOCKED to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow LOCKED to DISABLED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow SUSPENDED to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow SUSPENDED to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow DELETED to any other status" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow PENDING to DISABLED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow DISABLED to LOCKED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return allowed transitions for PENDING" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return allowed transitions for ACTIVE" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return empty array for DELETED" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › validateTransition" name="should not throw for allowed transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › validateTransition" name="should throw InvalidStatusTransitionError for disallowed transition" time="0.018">
+    </testcase>
+    <testcase classname="StatusUtils › canLogin" name="should return true for ACTIVE status" time="0.001">
+    </testcase>
+    <testcase classname="StatusUtils › canLogin" name="should return false for non-ACTIVE status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDisabled" name="should return true for disabled statuses" time="0.001">
+    </testcase>
+    <testcase classname="StatusUtils › isDisabled" name="should return false for active statuses" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › needsActivation" name="should return true for PENDING status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › needsActivation" name="should return false for non-PENDING status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDeleted" name="should return true for DELETED status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDeleted" name="should return false for non-DELETED status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › getDisplayName" name="should return correct display names" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › getDescription" name="should return correct descriptions" time="0">
+    </testcase>
+    <testcase classname="InvalidStatusTransitionError" name="should create error with correct name and message" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Email" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:22" time="0.088" tests="34">
+    <testcase classname="Email › constructor" name="should create Email with valid email address" time="0">
+    </testcase>
+    <testcase classname="Email › constructor" name="should normalize email to lowercase" time="0">
+    </testcase>
+    <testcase classname="Email › constructor" name="should trim whitespace from email" time="0">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for invalid email format" time="0.009">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for empty string" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email without @ symbol" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email that is too long" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email with local part too long" time="0">
+    </testcase>
+    <testcase classname="Email › equals" name="should return true for same Email instances" time="0.001">
+    </testcase>
+    <testcase classname="Email › equals" name="should return true for emails with different case" time="0">
+    </testcase>
+    <testcase classname="Email › equals" name="should return false for different Email instances" time="0">
+    </testcase>
+    <testcase classname="Email › equals" name="should return false when comparing with non-Email object" time="0">
+    </testcase>
+    <testcase classname="Email › getLocalPart" name="should return local part of email" time="0">
+    </testcase>
+    <testcase classname="Email › getLocalPart" name="should return local part for complex email" time="0.001">
+    </testcase>
+    <testcase classname="Email › getDomain" name="should return domain part of email" time="0">
+    </testcase>
+    <testcase classname="Email › getDomain" name="should return domain for complex email" time="0">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return true for matching domain" time="0.001">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return true for matching domain with different case" time="0">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return false for non-matching domain" time="0">
+    </testcase>
+    <testcase classname="Email › isGmail" name="should return true for Gmail address" time="0.001">
+    </testcase>
+    <testcase classname="Email › isGmail" name="should return false for non-Gmail address" time="0">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return true for Outlook address" time="0.001">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return true for Hotmail address" time="0">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return false for non-Outlook address" time="0">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return true for corporate email" time="0">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return false for Gmail address" time="0">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return false for Outlook address" time="0">
+    </testcase>
+    <testcase classname="Email › toString" name="should return email string representation" time="0">
+    </testcase>
+    <testcase classname="Email › fromString" name="should create Email from valid string" time="0">
+    </testcase>
+    <testcase classname="Email › fromString" name="should throw InvalidEmailError for invalid string" time="0.001">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return true for valid email" time="0">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return false for invalid email" time="0.001">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return false for empty string" time="0">
+    </testcase>
+    <testcase classname="InvalidEmailError" name="should create error with correct name and message" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="DefaultConfiguration" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.071" tests="35">
+    <testcase classname="DefaultConfiguration › 应用基础配置" name="应该包含所有必需的应用配置项" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 应用基础配置" name="应该支持环境变量覆盖" time="0.002">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 数据库配置" name="应该包含PostgreSQL配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 数据库配置" name="应该包含MongoDB配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 数据库配置" name="应该包含连接池配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 数据库配置" name="应该包含MikroORM配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 数据库配置" name="应该包含日志配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含连接配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含连接池配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含缓存配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含分布式锁配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含集群配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含哨兵配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › Redis配置" name="应该包含健康检查配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含密钥配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含访问令牌配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含刷新令牌配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含多租户配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含安全配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › JWT配置" name="应该包含缓存配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含SMTP配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含发送配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含模板配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含邮件类型配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含验证配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 邮件配置" name="应该包含队列配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含日志级别配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含格式配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含输出配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含过滤配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含监控配置" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 日志配置" name="应该包含保留配置" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 配置完整性" name="应该包含所有必需的配置模块" time="0">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 配置完整性" name="应该包含有效的默认值" time="0.001">
+    </testcase>
+    <testcase classname="DefaultConfiguration › 配置完整性" name="应该符合安全最佳实践" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="EnvironmentHelper" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.064" tests="20">
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该返回true当特性未设置时" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该返回true当特性设置为非false值时" time="0.001">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该返回false当特性设置为false时" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该返回false当特性设置为False时" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该返回false当特性设置为FALSE时" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理空字符串" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理undefined值" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理null值" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理数字值" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理布尔值字符串" time="0.001">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理特殊字符" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理多个特性" time="0.001">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理不存在的特性" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › isFeatureEnabled" name="应该处理空特性键" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理常见的特性标志" time="0.001">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理数据库相关特性" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理Redis相关特性" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理JWT相关特性" time="0">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理邮件相关特性" time="0.001">
+    </testcase>
+    <testcase classname="EnvironmentHelper › 实际使用场景" name="应该正确处理日志相关特性" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="User Aggregate" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.071" tests="12">
+    <testcase classname="User Aggregate › create" name="should create user with valid data" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › create" name="should throw error for invalid email" time="0.013">
+    </testcase>
+    <testcase classname="User Aggregate › create" name="should throw error for weak password" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › create" name="should throw error for empty name" time="0">
+    </testcase>
+    <testcase classname="User Aggregate › updateProfile" name="should update user profile successfully" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › updateProfile" name="should update partial profile" time="0">
+    </testcase>
+    <testcase classname="User Aggregate › updateProfile" name="should throw error for empty name" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › updateProfile" name="should throw error for invalid phone" time="0">
+    </testcase>
+    <testcase classname="User Aggregate › event sourcing" name="should restore from history events" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › event sourcing" name="should create and restore snapshot" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › version control" name="should increment version on each event" time="0.001">
+    </testcase>
+    <testcase classname="User Aggregate › version control" name="should maintain version consistency" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="UserId" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.067" tests="11">
+    <testcase classname="UserId › constructor" name="should create UserId with valid UUID" time="0">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for empty string" time="0.006">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for invalid UUID format" time="0.001">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for null or undefined" time="0.001">
+    </testcase>
+    <testcase classname="UserId › generate" name="should generate valid UUID" time="0">
+    </testcase>
+    <testcase classname="UserId › generate" name="should generate different UUIDs" time="0">
+    </testcase>
+    <testcase classname="UserId › fromString" name="should create UserId from valid string" time="0">
+    </testcase>
+    <testcase classname="UserId › toString" name="should return string representation" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return true for same UserId" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false for different UserIds" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false for null or undefined" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Database Interfaces" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.047" tests="14">
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该定义正确的连接状态类型" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该包含所有必需的属性" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConnection" name="应该支持可选的错误属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该支持所有数据库类型" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该包含所有必需的配置属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseConfig" name="应该支持可选的配置属性" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseHealth" name="应该包含所有健康检查属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseHealth" name="应该支持可选的错误属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › DatabaseStats" name="应该包含所有统计属性" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › QueryOptions" name="应该支持所有查询选项" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › TransactionOptions" name="应该支持所有事务选项" time="0">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseAdapter" name="应该定义所有必需的适配器方法" time="0.001">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseManager" name="应该定义所有必需的管理器方法" time="0.007">
+    </testcase>
+    <testcase classname="Database Interfaces › IDatabaseFactory" name="应该定义所有必需的工厂方法" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="ConfigLoader" errors="0" failures="0" skipped="0" timestamp="2025-09-07T11:11:23" time="0.05" tests="12">
+    <testcase classname="ConfigLoader › getConfig" name="应该返回默认配置" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › getConfig" name="应该返回只读配置对象" time="0.006">
+    </testcase>
+    <testcase classname="ConfigLoader › getConfig" name="应该返回配置的深拷贝" time="0.002">
+    </testcase>
+    <testcase classname="ConfigLoader › defineConfig" name="应该成功合并有效配置" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › defineConfig" name="应该深度合并嵌套配置" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › defineConfig" name="应该覆盖数组配置" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › defineConfig" name="应该抛出错误当配置无效时" time="0.002">
+    </testcase>
+    <testcase classname="ConfigLoader › defineConfig" name="应该支持多次配置合并" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › resetConfig" name="应该重置配置到默认值" time="0">
+    </testcase>
+    <testcase classname="ConfigLoader › resetConfig" name="应该清空所有自定义配置" time="0.001">
+    </testcase>
+    <testcase classname="ConfigLoader › 配置合并逻辑" name="应该正确处理复杂嵌套对象" time="0">
+    </testcase>
+    <testcase classname="ConfigLoader › 配置合并逻辑" name="应该正确处理空值和undefined" time="0">
+    </testcase>
+  </testsuite>
+</testsuites>

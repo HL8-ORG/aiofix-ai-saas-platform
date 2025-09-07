@@ -43,9 +43,9 @@ export interface IDomainEvent {
    * 将事件转换为JSON格式
    * 用于事件的持久化和传输
    *
-   * @returns {any} 事件的JSON表示
+   * @returns {Record<string, unknown>} 事件的JSON表示
    */
-  toJSON(): any;
+  toJSON(): Record<string, unknown>;
 }
 
 /**
@@ -74,7 +74,7 @@ export interface IAggregateSnapshot {
    * 快照数据
    * 包含聚合在指定版本时的完整状态
    */
-  readonly data: any;
+  readonly data: Record<string, unknown>;
 
   /**
    * 快照创建时间

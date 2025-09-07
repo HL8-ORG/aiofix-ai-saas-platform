@@ -191,7 +191,7 @@ export interface DataAccessPermission {
     /**
      * 其他条件
      */
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -245,7 +245,7 @@ export interface DataIsolationPolicy {
     conditions: {
       field: string;
       operator: 'eq' | 'ne' | 'in' | 'nin' | 'contains';
-      value: any;
+      value: unknown;
       classification: 'shareable' | 'protected';
     }[];
   };
@@ -324,11 +324,14 @@ export interface IDataIsolationService {
   /**
    * 应用数据隔离过滤器
    *
-   * @param {any} query - 查询对象
+   * @param {Record<string, unknown>} query - 查询对象
    * @param {DataIsolationContext} context - 用户上下文
-   * @returns {any} 过滤后的查询对象
+   * @returns {Record<string, unknown>} 过滤后的查询对象
    */
-  applyDataIsolation(query: any, context: DataIsolationContext): any;
+  applyDataIsolation(
+    query: Record<string, unknown>,
+    context: DataIsolationContext,
+  ): Record<string, unknown>;
 
   /**
    * 获取数据分类信息

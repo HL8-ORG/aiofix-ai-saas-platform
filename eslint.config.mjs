@@ -7,10 +7,96 @@ import tseslint from 'typescript-eslint';
 export default [
   {
     ignores: [
+      // ESLint配置文件
       'eslint.config.mjs',
+      '**/eslint.config.mjs',
+
+      // 脚本文件
       'scripts/**/*.js',
+
+      // Jest配置文件
       'jest*.config.js',
       'jest*.setup.js',
+
+      // Dependencies
+      'node_modules/',
+      '.pnpm-store/',
+
+      // Build outputs
+      'dist/',
+      'build/',
+      '.next/',
+      'out/',
+
+      // Generated files
+      '*.min.js',
+      '*.min.css',
+
+      // Lock files
+      'pnpm-lock.yaml',
+      'package-lock.json',
+      'yarn.lock',
+
+      // Environment files
+      '.env',
+      '.env.local',
+      '.env.*.local',
+      '.env.test',
+
+      // IDE files
+      '.vscode/',
+      '.idea/',
+
+      // OS generated files
+      '.DS_Store',
+      'Thumbs.db',
+
+      // Coverage reports
+      'coverage/',
+
+      // Logs
+      '*.log',
+      'logs/',
+
+      // Runtime data
+      'pids/',
+      '*.pid',
+      '*.seed',
+      '*.pid.lock',
+
+      // Optional npm cache directory
+      '.npm',
+
+      // Optional REPL history
+      '.node_repl_history',
+
+      // Output of 'npm pack'
+      '*.tgz',
+
+      // Yarn Integrity file
+      '.yarn-integrity',
+
+      // parcel-bundler cache
+      '.cache',
+      '.parcel-cache',
+
+      // nuxt.js build output
+      '.nuxt',
+
+      // vuepress build output
+      '.vuepress/dist',
+
+      // Serverless directories
+      '.serverless',
+
+      // FuseBox cache
+      '.fusebox/',
+
+      // DynamoDB Local files
+      '.dynamodb/',
+
+      // TernJS port file
+      '.tern-port',
     ],
   },
   eslint.configs.recommended,
@@ -96,6 +182,7 @@ export default [
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/unbound-method': 'off', // 测试文件中允许未绑定的方法引用
+      '@typescript-eslint/no-unused-vars': 'off', // 测试文件中允许未使用的变量
 
       // 保持重要的代码质量规则
       'no-console': 'warn', // 测试中允许 console，但给出警告
@@ -104,6 +191,7 @@ export default [
       'no-eval': 'error', // 禁止 eval 语句
       'no-implied-eval': 'error', // 禁止隐式 eval
       'no-new-func': 'error', // 禁止 new Function
+      'no-unused-vars': 'off', // 测试文件中允许未使用的变量
 
       // 安全相关规则（这些规则需要安装相应的插件）
       // 'no-hardcoded-credentials': 'error', // 禁止硬编码凭据
@@ -112,7 +200,6 @@ export default [
       // 代码风格规则（保持一致性）
       'prefer-const': 'warn',
       'no-var': 'error',
-      'no-unused-vars': 'warn',
     },
   },
 ];

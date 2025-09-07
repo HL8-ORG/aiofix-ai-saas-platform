@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="84" failures="5" errors="0" time="1.049">
+  <testsuite name="UserId" errors="0" failures="5" skipped="0" timestamp="2025-09-07T06:53:51" time="0.488" tests="17">
+    <testcase classname="UserId › constructor" name="should create UserId with valid UUID" time="0.002">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should create UserId with generated UUID when no value provided" time="0.001">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for invalid UUID format" time="0.015">
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for empty string" time="0">
+      <failure>Error: expect(received).toThrow(expected)
+
+Expected constructor: InvalidUserIdError
+
+Received function did not throw
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:69:10)
+    at Promise.then.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for null value" time="0">
+      <failure>Error: expect(received).toThrow(expected)
+
+Expected constructor: InvalidUserIdError
+
+Received function did not throw
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:76:10)
+    at Promise.then.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="UserId › constructor" name="should throw InvalidUserIdError for undefined value" time="0">
+      <failure>Error: expect(received).toThrow(expected)
+
+Expected constructor: InvalidUserIdError
+
+Received function did not throw
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:83:10)
+    at Promise.then.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="UserId › equals" name="should return true for same UserId instances" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false for different UserId instances" time="0">
+    </testcase>
+    <testcase classname="UserId › equals" name="should return false when comparing with non-UserId object" time="0">
+    </testcase>
+    <testcase classname="UserId › toString" name="should return UUID string representation" time="0">
+    </testcase>
+    <testcase classname="UserId › fromString" name="should create UserId from valid UUID string" time="0.001">
+    </testcase>
+    <testcase classname="UserId › fromString" name="should throw InvalidUserIdError for invalid UUID string" time="0">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return true for valid UUID" time="0.001">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for invalid UUID" time="0">
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for empty string" time="0.001">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: false
+Received: true
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:195:22)
+    at Promise.then.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="UserId › isValid" name="should return false for null value" time="0">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: false
+Received: true
+    at Object.&lt;anonymous&gt; (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/shared/src/identifiers/user-id.vo.spec.ts:203:22)
+    at Promise.then.completed (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:316:40)
+    at _runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:121:9)
+    at run (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-circus@29.7.0/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/node_modules/.pnpm/jest-runner@29.7.0/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="InvalidUserIdError" name="should create error with correct name and message" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="Status" errors="0" failures="0" skipped="0" timestamp="2025-09-07T06:53:52" time="0.149" tests="33">
+    <testcase classname="Status › enum values" name="should have correct enum values" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow same status transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow PENDING to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow PENDING to DELETED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to DISABLED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to LOCKED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to SUSPENDED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow ACTIVE to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow DISABLED to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow DISABLED to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow LOCKED to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow LOCKED to DISABLED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow SUSPENDED to ACTIVE transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should allow SUSPENDED to DELETED transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow DELETED to any other status" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow PENDING to DISABLED transition" time="0.002">
+    </testcase>
+    <testcase classname="StatusTransition › isTransitionAllowed" name="should not allow DISABLED to LOCKED transition" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return allowed transitions for PENDING" time="0.001">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return allowed transitions for ACTIVE" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › getAllowedTransitions" name="should return empty array for DELETED" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › validateTransition" name="should not throw for allowed transition" time="0">
+    </testcase>
+    <testcase classname="StatusTransition › validateTransition" name="should throw InvalidStatusTransitionError for disallowed transition" time="0.019">
+    </testcase>
+    <testcase classname="StatusUtils › canLogin" name="should return true for ACTIVE status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › canLogin" name="should return false for non-ACTIVE status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDisabled" name="should return true for disabled statuses" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDisabled" name="should return false for active statuses" time="0.003">
+    </testcase>
+    <testcase classname="StatusUtils › needsActivation" name="should return true for PENDING status" time="0.001">
+    </testcase>
+    <testcase classname="StatusUtils › needsActivation" name="should return false for non-PENDING status" time="0.001">
+    </testcase>
+    <testcase classname="StatusUtils › isDeleted" name="should return true for DELETED status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › isDeleted" name="should return false for non-DELETED status" time="0">
+    </testcase>
+    <testcase classname="StatusUtils › getDisplayName" name="should return correct display names" time="0.001">
+    </testcase>
+    <testcase classname="StatusUtils › getDescription" name="should return correct descriptions" time="0">
+    </testcase>
+    <testcase classname="InvalidStatusTransitionError" name="should create error with correct name and message" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="Email" errors="0" failures="0" skipped="0" timestamp="2025-09-07T06:53:52" time="0.123" tests="34">
+    <testcase classname="Email › constructor" name="should create Email with valid email address" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should normalize email to lowercase" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should trim whitespace from email" time="0">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for invalid email format" time="0.016">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for empty string" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email without @ symbol" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email that is too long" time="0.001">
+    </testcase>
+    <testcase classname="Email › constructor" name="should throw InvalidEmailError for email with local part too long" time="0.001">
+    </testcase>
+    <testcase classname="Email › equals" name="should return true for same Email instances" time="0.001">
+    </testcase>
+    <testcase classname="Email › equals" name="should return true for emails with different case" time="0">
+    </testcase>
+    <testcase classname="Email › equals" name="should return false for different Email instances" time="0.001">
+    </testcase>
+    <testcase classname="Email › equals" name="should return false when comparing with non-Email object" time="0">
+    </testcase>
+    <testcase classname="Email › getLocalPart" name="should return local part of email" time="0">
+    </testcase>
+    <testcase classname="Email › getLocalPart" name="should return local part for complex email" time="0">
+    </testcase>
+    <testcase classname="Email › getDomain" name="should return domain part of email" time="0.001">
+    </testcase>
+    <testcase classname="Email › getDomain" name="should return domain for complex email" time="0">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return true for matching domain" time="0">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return true for matching domain with different case" time="0.001">
+    </testcase>
+    <testcase classname="Email › isFromDomain" name="should return false for non-matching domain" time="0">
+    </testcase>
+    <testcase classname="Email › isGmail" name="should return true for Gmail address" time="0">
+    </testcase>
+    <testcase classname="Email › isGmail" name="should return false for non-Gmail address" time="0.001">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return true for Outlook address" time="0">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return true for Hotmail address" time="0.003">
+    </testcase>
+    <testcase classname="Email › isOutlook" name="should return false for non-Outlook address" time="0.001">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return true for corporate email" time="0">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return false for Gmail address" time="0.001">
+    </testcase>
+    <testcase classname="Email › isCorporate" name="should return false for Outlook address" time="0.001">
+    </testcase>
+    <testcase classname="Email › toString" name="should return email string representation" time="0">
+    </testcase>
+    <testcase classname="Email › fromString" name="should create Email from valid string" time="0">
+    </testcase>
+    <testcase classname="Email › fromString" name="should throw InvalidEmailError for invalid string" time="0.003">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return true for valid email" time="0">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return false for invalid email" time="0.001">
+    </testcase>
+    <testcase classname="Email › isValid" name="should return false for empty string" time="0">
+    </testcase>
+    <testcase classname="InvalidEmailError" name="should create error with correct name and message" time="0.001">
+    </testcase>
+  </testsuite>
+</testsuites>

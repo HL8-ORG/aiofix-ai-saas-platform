@@ -8,6 +8,15 @@
       "@aiofix/config": ["packages/config/src"],
       "@aiofix/core": ["packages/core/src"],
       "@aiofix/common": ["packages/common/src"],
+      "@aiofix/shared": ["packages/shared/src"],
+      "@aiofix/user": ["packages/user/src"],
+      "@aiofix/tenant": ["packages/tenant/src"],
+      "@aiofix/organization": ["packages/organization/src"],
+      "@aiofix/department": ["packages/department/src"],
+      "@aiofix/role": ["packages/role/src"],
+      "@aiofix/permission": ["packages/permission/src"],
+      "@aiofix/auth": ["packages/auth/src"],
+      "@aiofix/platform": ["packages/platform/src"],
       "@aiofix/*": ["packages/*/src"]
     },
     "noEmit": true
