@@ -1,4 +1,4 @@
-import { TenantId } from '../value-objects/tenant-id.vo';
+import { TenantId } from '@aiofix/shared';
 import {
   TenantSettings,
   TenantType,

@@ -1,5 +1,4 @@
-// 租户值对象导出
-export { TenantId } from './tenant-id.vo';
+// 租户值对象导出 - TenantId现在来自@aiofix/shared
 export { TenantSettings, TenantType, TenantStatus } from './tenant-settings.vo';
 export { TenantQuota, QuotaType } from './tenant-quota.vo';
 export { TenantConfiguration } from './tenant-configuration.vo';

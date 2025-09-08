@@ -26,6 +26,12 @@
  */
 export enum RoleStatus {
   /**
+   * 待激活状态
+   * 角色已创建但尚未激活，不能使用
+   */
+  PENDING = 'PENDING',
+
+  /**
    * 激活状态
    * 角色可以正常使用，用户可以分配到此角色
    */
@@ -36,6 +42,12 @@ export enum RoleStatus {
    * 角色暂时不可用，新用户不能分配到此角色
    */
   INACTIVE = 'INACTIVE',
+
+  /**
+   * 禁用状态
+   * 角色被禁用，不能使用
+   */
+  DISABLED = 'DISABLED',
 
   /**
    * 暂停状态
@@ -62,6 +74,16 @@ export enum RoleStatus {
  */
 export class RoleStatusHelper {
   /**
+   * @method isPending
+   * @description 检查角色是否为待激活状态
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否为待激活状态
+   */
+  static isPending(status: RoleStatus): boolean {
+    return status === RoleStatus.PENDING;
+  }
+
+  /**
    * @method isActive
    * @description 检查角色是否为激活状态
    * @param {RoleStatus} status 角色状态
@@ -79,6 +101,16 @@ export class RoleStatusHelper {
    */
   static isInactive(status: RoleStatus): boolean {
     return status === RoleStatus.INACTIVE;
+  }
+
+  /**
+   * @method isDisabled
+   * @description 检查角色是否为禁用状态
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否为禁用状态
+   */
+  static isDisabled(status: RoleStatus): boolean {
+    return status === RoleStatus.DISABLED;
   }
 
   /**
@@ -159,8 +191,10 @@ export class RoleStatusHelper {
    */
   static getDisplayName(status: RoleStatus): string {
     const displayNames: Record<RoleStatus, string> = {
+      [RoleStatus.PENDING]: '待激活',
       [RoleStatus.ACTIVE]: '激活',
       [RoleStatus.INACTIVE]: '非激活',
+      [RoleStatus.DISABLED]: '禁用',
       [RoleStatus.SUSPENDED]: '暂停',
       [RoleStatus.DELETED]: '已删除',
       [RoleStatus.EXPIRED]: '已过期',
@@ -184,5 +218,45 @@ export class RoleStatusHelper {
    */
   static getActiveStatuses(): RoleStatus[] {
     return [RoleStatus.ACTIVE, RoleStatus.INACTIVE, RoleStatus.SUSPENDED];
+  }
+
+  /**
+   * @method isValid
+   * @description 检查状态是否有效
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否有效
+   */
+  static isValid(status: RoleStatus): boolean {
+    return Object.values(RoleStatus).includes(status);
+  }
+
+  /**
+   * @method canBeActivated
+   * @description 检查状态是否可以激活
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否可以激活
+   */
+  static canBeActivated(status: RoleStatus): boolean {
+    return status === RoleStatus.PENDING || status === RoleStatus.INACTIVE;
+  }
+
+  /**
+   * @method canBeDeactivated
+   * @description 检查状态是否可以停用
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否可以停用
+   */
+  static canBeDeactivated(status: RoleStatus): boolean {
+    return status === RoleStatus.ACTIVE;
+  }
+
+  /**
+   * @method canBeSuspended
+   * @description 检查状态是否可以暂停
+   * @param {RoleStatus} status 角色状态
+   * @returns {boolean} 是否可以暂停
+   */
+  static canBeSuspended(status: RoleStatus): boolean {
+    return status === RoleStatus.ACTIVE;
   }
 }

@@ -23,12 +23,16 @@
  * @since 1.0.0
  */
 export enum DepartmentStatus {
+  /** 待激活状态 */
+  PENDING = 'PENDING',
   /** 活跃状态 */
   ACTIVE = 'ACTIVE',
   /** 非活跃状态 */
   INACTIVE = 'INACTIVE',
   /** 暂停状态 */
   SUSPENDED = 'SUSPENDED',
+  /** 禁用状态 */
+  DISABLED = 'DISABLED',
   /** 删除状态 */
   DELETED = 'DELETED',
 }
@@ -56,6 +60,17 @@ export class DepartmentStatusHelper {
   }
 
   /**
+   * @method isPending
+   * @description 判断部门是否为待激活状态
+   * @param {DepartmentStatus} status 部门状态
+   * @returns {boolean} 是否为待激活状态
+   * @static
+   */
+  static isPending(status: DepartmentStatus): boolean {
+    return status === DepartmentStatus.PENDING;
+  }
+
+  /**
    * @method isInactive
    * @description 判断部门是否为非活跃状态
    * @param {DepartmentStatus} status 部门状态
@@ -75,6 +90,17 @@ export class DepartmentStatusHelper {
    */
   static isSuspended(status: DepartmentStatus): boolean {
     return status === DepartmentStatus.SUSPENDED;
+  }
+
+  /**
+   * @method isDisabled
+   * @description 判断部门是否为禁用状态
+   * @param {DepartmentStatus} status 部门状态
+   * @returns {boolean} 是否为禁用状态
+   * @static
+   */
+  static isDisabled(status: DepartmentStatus): boolean {
+    return status === DepartmentStatus.DISABLED;
   }
 
   /**
@@ -108,8 +134,10 @@ export class DepartmentStatusHelper {
    */
   static canBeActivated(status: DepartmentStatus): boolean {
     return (
+      status === DepartmentStatus.PENDING ||
       status === DepartmentStatus.INACTIVE ||
-      status === DepartmentStatus.SUSPENDED
+      status === DepartmentStatus.SUSPENDED ||
+      status === DepartmentStatus.DISABLED
     );
   }
 
@@ -138,6 +166,21 @@ export class DepartmentStatusHelper {
   }
 
   /**
+   * @method canBeDeactivated
+   * @description 判断部门是否可以禁用
+   * @param {DepartmentStatus} status 部门状态
+   * @returns {boolean} 是否可以禁用
+   * @static
+   */
+  static canBeDeactivated(status: DepartmentStatus): boolean {
+    return (
+      status === DepartmentStatus.ACTIVE ||
+      status === DepartmentStatus.INACTIVE ||
+      status === DepartmentStatus.SUSPENDED
+    );
+  }
+
+  /**
    * @method getDisplayName
    * @description 获取状态显示名称
    * @param {DepartmentStatus} status 部门状态
@@ -146,9 +189,11 @@ export class DepartmentStatusHelper {
    */
   static getDisplayName(status: DepartmentStatus): string {
     const displayNames: Record<DepartmentStatus, string> = {
+      [DepartmentStatus.PENDING]: '待激活',
       [DepartmentStatus.ACTIVE]: '活跃',
       [DepartmentStatus.INACTIVE]: '非活跃',
       [DepartmentStatus.SUSPENDED]: '已暂停',
+      [DepartmentStatus.DISABLED]: '已禁用',
       [DepartmentStatus.DELETED]: '已删除',
     };
     return displayNames[status] || '未知状态';
@@ -163,9 +208,11 @@ export class DepartmentStatusHelper {
    */
   static getDescription(status: DepartmentStatus): string {
     const descriptions: Record<DepartmentStatus, string> = {
+      [DepartmentStatus.PENDING]: '部门已创建但尚未激活，等待管理员激活',
       [DepartmentStatus.ACTIVE]: '部门正常运行，所有功能可用',
       [DepartmentStatus.INACTIVE]: '部门暂停使用，功能受限',
       [DepartmentStatus.SUSPENDED]: '部门被管理员暂停，需要恢复',
+      [DepartmentStatus.DISABLED]: '部门被禁用，所有功能不可用',
       [DepartmentStatus.DELETED]: '部门已删除，不可恢复',
     };
     return descriptions[status] || '未知状态';
@@ -189,9 +236,11 @@ export class DepartmentStatusHelper {
    */
   static getOperationalStatuses(): DepartmentStatus[] {
     return [
+      DepartmentStatus.PENDING,
       DepartmentStatus.ACTIVE,
       DepartmentStatus.INACTIVE,
       DepartmentStatus.SUSPENDED,
+      DepartmentStatus.DISABLED,
     ];
   }
 

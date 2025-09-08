@@ -1,8 +1,14 @@
 import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { UserEntity } from '../entities';
 import {
-  UserId,
-  Email,
+  UserCreatedEvent,
+  UserProfileUpdatedEvent,
+  UserStatusChangedEvent,
+  UserPasswordUpdatedEvent,
+  UserPreferencesUpdatedEvent,
+} from '../events';
+import { UserId, Email } from '@aiofix/shared';
+import {
   Password,
   UserProfile,
   UserPreferences,
@@ -57,18 +63,23 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 1. 调用父类构造函数，初始化事件溯源基础设施
    * 2. 创建UserEntity实例，封装用户的核心业务逻辑
    * 3. 默认用户状态为PENDING，需要激活后才能正常使用
+   * 4. 发布用户创建事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 初始化用户聚合根的所有属性
    * 2. 设置事件溯源支持
    * 3. 确保聚合根的业务不变性约束
+   * 4. 发布用户创建事件
    *
    * @param {UserId} id 用户唯一标识符
    * @param {Email} email 用户邮箱地址
    * @param {Password} password 用户密码对象
    * @param {UserProfile} profile 用户档案信息
    * @param {UserPreferences} preferences 用户偏好设置
+   * @param {string} tenantId 租户ID，用于多租户数据隔离
+   * @param {string} platformId 平台ID，用于平台级数据隔离
    * @param {UserStatus} [status=UserStatus.PENDING] 用户状态，默认为待激活状态
+   * @param {string} [createdBy='system'] 创建者ID，用于审计追踪
    * @since 1.0.0
    */
   public constructor(
@@ -77,7 +88,10 @@ export class UserAggregate extends EventSourcedAggregateRoot {
     password: Password,
     profile: UserProfile,
     preferences: UserPreferences,
+    tenantId: string,
+    platformId: string,
     status: UserStatus = UserStatus.PENDING,
+    createdBy: string = 'system',
   ) {
     super();
     this._user = new UserEntity(
@@ -86,7 +100,23 @@ export class UserAggregate extends EventSourcedAggregateRoot {
       password,
       profile,
       preferences,
+      tenantId,
+      platformId,
       status,
+      createdBy,
+    );
+
+    // 发布用户创建事件
+    this.addDomainEvent(
+      new UserCreatedEvent(
+        id,
+        email,
+        profile,
+        status,
+        tenantId,
+        platformId,
+        createdBy,
+      ),
     );
   }
 
@@ -177,7 +207,7 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * @since 1.0.0
    */
   public get updatedAt(): Date {
-    return this._user.updatedAt;
+    return this._user.getUpdatedAt();
   }
 
   /**
@@ -188,21 +218,34 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的updateProfile方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserProfileUpdatedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserProfileUpdatedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户档案更新操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布档案更新事件
    *
    * @param {UserProfile} newProfile 新的用户档案信息
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
    * @throws {Error} 当用户状态不允许档案更新时抛出异常
    * @since 1.0.0
    */
-  public updateProfile(newProfile: UserProfile): void {
-    this._user.updateProfile(newProfile);
-    // TODO: 发布用户档案更新事件
-    // this.addDomainEvent(new UserProfileUpdatedEvent(...));
+  public updateProfile(
+    newProfile: UserProfile,
+    updatedBy: string = 'system',
+  ): void {
+    const oldProfile = this._user.profile;
+    this._user.updateProfile(newProfile, updatedBy);
+
+    // 发布用户档案更新事件
+    this.addDomainEvent(
+      new UserProfileUpdatedEvent(
+        this._user.id,
+        oldProfile,
+        newProfile,
+        updatedBy,
+      ),
+    );
   }
 
   /**
@@ -213,20 +256,33 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的updatePreferences方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserPreferencesUpdatedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserPreferencesUpdatedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户偏好更新操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布偏好更新事件
    *
    * @param {UserPreferences} newPreferences 新的用户偏好设置
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
    * @since 1.0.0
    */
-  public updatePreferences(newPreferences: UserPreferences): void {
-    this._user.updatePreferences(newPreferences);
-    // TODO: 发布用户偏好更新事件
-    // this.addDomainEvent(new UserPreferencesUpdatedEvent(...));
+  public updatePreferences(
+    newPreferences: UserPreferences,
+    updatedBy: string = 'system',
+  ): void {
+    const oldPreferences = this._user.preferences;
+    this._user.updatePreferences(newPreferences, updatedBy);
+
+    // 发布用户偏好更新事件
+    this.addDomainEvent(
+      new UserPreferencesUpdatedEvent(
+        this._user.id,
+        oldPreferences,
+        newPreferences,
+        updatedBy,
+      ),
+    );
   }
 
   /**
@@ -237,21 +293,37 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的updatePassword方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserPasswordUpdatedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserPasswordUpdatedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户密码更新操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布密码更新事件
    *
    * @param {Password} newPassword 新的密码对象，已包含哈希值
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
+   * @param {string} [reason] 密码更新原因，可选
+   * @param {boolean} [forceLogout] 是否强制登出，可选
    * @throws {Error} 当用户状态不允许密码更新时抛出异常
    * @since 1.0.0
    */
-  public updatePassword(newPassword: Password): void {
-    this._user.updatePassword(newPassword);
-    // TODO: 发布密码更新事件
-    // this.addDomainEvent(new UserPasswordUpdatedEvent(...));
+  public updatePassword(
+    newPassword: Password,
+    updatedBy: string = 'system',
+    reason?: string,
+    forceLogout?: boolean,
+  ): void {
+    this._user.updatePassword(newPassword, updatedBy);
+
+    // 发布用户密码更新事件
+    this.addDomainEvent(
+      new UserPasswordUpdatedEvent(
+        this._user.id,
+        updatedBy,
+        reason,
+        forceLogout,
+      ),
+    );
   }
 
   /**
@@ -262,20 +334,32 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的activate方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserActivatedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserStatusChangedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户激活操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布状态变更事件
    *
+   * @param {string} [activatedBy='system'] 激活者ID，用于审计追踪
+   * @param {string} [reason] 激活原因，可选
    * @throws {Error} 当用户状态不允许激活时抛出异常
    * @since 1.0.0
    */
-  public activate(): void {
-    this._user.activate();
-    // TODO: 发布用户激活事件
-    // this.addDomainEvent(new UserActivatedEvent(...));
+  public activate(activatedBy: string = 'system', reason?: string): void {
+    const oldStatus = this._user.status;
+    this._user.activate(activatedBy);
+
+    // 发布用户状态变更事件
+    this.addDomainEvent(
+      new UserStatusChangedEvent(
+        this._user.id,
+        oldStatus,
+        this._user.status,
+        activatedBy,
+        reason,
+      ),
+    );
   }
 
   /**
@@ -286,20 +370,32 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的suspend方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserSuspendedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserStatusChangedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户暂停操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布状态变更事件
    *
+   * @param {string} [suspendedBy='system'] 暂停者ID，用于审计追踪
+   * @param {string} [reason] 暂停原因，可选
    * @throws {Error} 当用户状态不允许暂停时抛出异常
    * @since 1.0.0
    */
-  public suspend(): void {
-    this._user.suspend();
-    // TODO: 发布用户暂停事件
-    // this.addDomainEvent(new UserSuspendedEvent(...));
+  public suspend(suspendedBy: string = 'system', reason?: string): void {
+    const oldStatus = this._user.status;
+    this._user.suspend(suspendedBy);
+
+    // 发布用户状态变更事件
+    this.addDomainEvent(
+      new UserStatusChangedEvent(
+        this._user.id,
+        oldStatus,
+        this._user.status,
+        suspendedBy,
+        reason,
+      ),
+    );
   }
 
   /**
@@ -310,20 +406,32 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的restore方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserRestoredEvent领域事件，实现事件驱动架构
+   * 3. 发布UserStatusChangedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户恢复操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布状态变更事件
    *
+   * @param {string} [restoredBy='system'] 恢复者ID，用于审计追踪
+   * @param {string} [reason] 恢复原因，可选
    * @throws {Error} 当用户状态不允许恢复时抛出异常
    * @since 1.0.0
    */
-  public restore(): void {
-    this._user.restore();
-    // TODO: 发布用户恢复事件
-    // this.addDomainEvent(new UserRestoredEvent(...));
+  public restore(restoredBy: string = 'system', reason?: string): void {
+    const oldStatus = this._user.status;
+    this._user.restore(restoredBy);
+
+    // 发布用户状态变更事件
+    this.addDomainEvent(
+      new UserStatusChangedEvent(
+        this._user.id,
+        oldStatus,
+        this._user.status,
+        restoredBy,
+        reason,
+      ),
+    );
   }
 
   /**
@@ -334,20 +442,32 @@ export class UserAggregate extends EventSourcedAggregateRoot {
    * 原理与机制：
    * 1. 委托给UserEntity的delete方法执行具体的业务逻辑
    * 2. 通过聚合根统一管理业务操作，确保一致性边界
-   * 3. 未来将发布UserDeletedEvent领域事件，实现事件驱动架构
+   * 3. 发布UserStatusChangedEvent领域事件，实现事件驱动架构
    *
    * 功能与职责：
    * 1. 协调用户删除操作
    * 2. 维护聚合的一致性边界
-   * 3. 为事件发布预留接口
+   * 3. 发布状态变更事件
    *
+   * @param {string} [deletedBy='system'] 删除者ID，用于审计追踪
+   * @param {string} [reason] 删除原因，可选
    * @throws {Error} 当用户已被删除时抛出异常
    * @since 1.0.0
    */
-  public delete(): void {
-    this._user.delete();
-    // TODO: 发布用户删除事件
-    // this.addDomainEvent(new UserDeletedEvent(...));
+  public delete(deletedBy: string = 'system', reason?: string): void {
+    const oldStatus = this._user.status;
+    this._user.delete(deletedBy);
+
+    // 发布用户状态变更事件
+    this.addDomainEvent(
+      new UserStatusChangedEvent(
+        this._user.id,
+        oldStatus,
+        this._user.status,
+        deletedBy,
+        reason,
+      ),
+    );
   }
 
   /**
@@ -579,7 +699,7 @@ export class UserAggregate extends EventSourcedAggregateRoot {
       preferences: this._user.preferences,
       status: this._user.status,
       createdAt: this._user.createdAt,
-      updatedAt: this._user.updatedAt,
+      updatedAt: this._user.getUpdatedAt(),
     };
   }
 }

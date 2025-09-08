@@ -23,12 +23,16 @@
  * @since 1.0.0
  */
 export enum OrganizationStatus {
+  /** 待激活状态 */
+  PENDING = 'PENDING',
   /** 活跃状态 */
   ACTIVE = 'ACTIVE',
   /** 非活跃状态 */
   INACTIVE = 'INACTIVE',
   /** 暂停状态 */
   SUSPENDED = 'SUSPENDED',
+  /** 禁用状态 */
+  DISABLED = 'DISABLED',
   /** 删除状态 */
   DELETED = 'DELETED',
 }
@@ -56,6 +60,17 @@ export class OrganizationStatusHelper {
   }
 
   /**
+   * @method isPending
+   * @description 判断组织是否为待激活状态
+   * @param {OrganizationStatus} status 组织状态
+   * @returns {boolean} 是否为待激活状态
+   * @static
+   */
+  static isPending(status: OrganizationStatus): boolean {
+    return status === OrganizationStatus.PENDING;
+  }
+
+  /**
    * @method isInactive
    * @description 判断组织是否为非活跃状态
    * @param {OrganizationStatus} status 组织状态
@@ -75,6 +90,17 @@ export class OrganizationStatusHelper {
    */
   static isSuspended(status: OrganizationStatus): boolean {
     return status === OrganizationStatus.SUSPENDED;
+  }
+
+  /**
+   * @method isDisabled
+   * @description 判断组织是否为禁用状态
+   * @param {OrganizationStatus} status 组织状态
+   * @returns {boolean} 是否为禁用状态
+   * @static
+   */
+  static isDisabled(status: OrganizationStatus): boolean {
+    return status === OrganizationStatus.DISABLED;
   }
 
   /**
@@ -108,8 +134,10 @@ export class OrganizationStatusHelper {
    */
   static canBeActivated(status: OrganizationStatus): boolean {
     return (
+      status === OrganizationStatus.PENDING ||
       status === OrganizationStatus.INACTIVE ||
-      status === OrganizationStatus.SUSPENDED
+      status === OrganizationStatus.SUSPENDED ||
+      status === OrganizationStatus.DISABLED
     );
   }
 
@@ -125,6 +153,17 @@ export class OrganizationStatusHelper {
       status === OrganizationStatus.ACTIVE ||
       status === OrganizationStatus.INACTIVE
     );
+  }
+
+  /**
+   * @method canBeDeactivated
+   * @description 判断组织是否可以禁用
+   * @param {OrganizationStatus} status 组织状态
+   * @returns {boolean} 是否可以禁用
+   * @static
+   */
+  static canBeDeactivated(status: OrganizationStatus): boolean {
+    return status === OrganizationStatus.ACTIVE;
   }
 
   /**
@@ -147,9 +186,11 @@ export class OrganizationStatusHelper {
    */
   static getDisplayName(status: OrganizationStatus): string {
     const displayNames: Record<OrganizationStatus, string> = {
+      [OrganizationStatus.PENDING]: '待激活',
       [OrganizationStatus.ACTIVE]: '活跃',
       [OrganizationStatus.INACTIVE]: '非活跃',
       [OrganizationStatus.SUSPENDED]: '已暂停',
+      [OrganizationStatus.DISABLED]: '已禁用',
       [OrganizationStatus.DELETED]: '已删除',
     };
     return displayNames[status] || '未知状态';
@@ -164,9 +205,11 @@ export class OrganizationStatusHelper {
    */
   static getDescription(status: OrganizationStatus): string {
     const descriptions: Record<OrganizationStatus, string> = {
+      [OrganizationStatus.PENDING]: '组织已创建，等待激活',
       [OrganizationStatus.ACTIVE]: '组织正常运行，所有功能可用',
       [OrganizationStatus.INACTIVE]: '组织暂停使用，功能受限',
       [OrganizationStatus.SUSPENDED]: '组织被管理员暂停，需要恢复',
+      [OrganizationStatus.DISABLED]: '组织被禁用，无法使用',
       [OrganizationStatus.DELETED]: '组织已删除，不可恢复',
     };
     return descriptions[status] || '未知状态';
@@ -190,9 +233,11 @@ export class OrganizationStatusHelper {
    */
   static getOperationalStatuses(): OrganizationStatus[] {
     return [
+      OrganizationStatus.PENDING,
       OrganizationStatus.ACTIVE,
       OrganizationStatus.INACTIVE,
       OrganizationStatus.SUSPENDED,
+      OrganizationStatus.DISABLED,
     ];
   }
 

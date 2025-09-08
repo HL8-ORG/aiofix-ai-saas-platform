@@ -1,6 +1,6 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
+import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
 import { TenantEntity } from '../entities/tenant.entity';
-import { TenantId } from '../value-objects/tenant-id.vo';
+import { TenantId } from '@aiofix/shared';
 import {
   TenantSettings,
   TenantStatus,
@@ -112,6 +112,7 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       tenantSettings,
       quota,
       configuration,
+      'platform-1', // platformId
       createdBy,
     );
 
@@ -162,8 +163,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       newSettings,
       this.tenant!.quota,
       this.tenant!.configuration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -206,8 +207,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       this.tenant!.settings,
       newQuota,
       this.tenant!.configuration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -250,8 +251,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       this.tenant!.settings,
       this.tenant!.quota,
       newConfiguration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -299,8 +300,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       activatedSettings,
       this.tenant!.quota,
       this.tenant!.configuration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -342,8 +343,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       deactivatedSettings,
       this.tenant!.quota,
       this.tenant!.configuration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -385,8 +386,8 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
       suspendedSettings,
       this.tenant!.quota,
       this.tenant!.configuration,
+      this.tenant!.platformId,
       this.tenant!.createdBy,
-      this.tenant!.createdAt,
     );
 
     this.tenant = updatedTenant;
@@ -540,11 +541,11 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
   /**
    * @method addUncommittedEvent
    * @description 添加未提交的事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private addUncommittedEvent(event: IDomainEvent): void {
+  private addUncommittedEvent(event: DomainEvent): void {
     // 使用基类的方法来添加事件
     this.applyEvent(event, false);
   }
@@ -552,11 +553,11 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
   /**
    * @method applyEvent
    * @description 应用领域事件（用于事件重放）
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @param {boolean} isFromHistory 是否来自历史事件
    * @returns {void}
    */
-  applyEvent(event: IDomainEvent, isFromHistory: boolean = false): void {
+  applyEvent(event: DomainEvent, isFromHistory: boolean = false): void {
     // 这里应该根据事件类型来更新聚合根状态
     // 在实际实现中，应该根据事件类型来重建聚合根状态
 
@@ -589,11 +590,11 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
   /**
    * @method handleEvent
    * @description 处理领域事件（EventSourcedAggregateRoot要求的方法）
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @param {boolean} isFromHistory 是否来自历史事件
    * @returns {void}
    */
-  handleEvent(event: IDomainEvent, isFromHistory: boolean = false): void {
+  handleEvent(event: DomainEvent, isFromHistory: boolean = false): void {
     this.applyEvent(event, isFromHistory);
   }
 
@@ -605,7 +606,6 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
   toSnapshot(): Record<string, unknown> {
     return {
       tenant: this.tenant?.toSnapshot(),
-      version: this.version,
     };
   }
 
@@ -626,20 +626,12 @@ export class TenantAggregate extends EventSourcedAggregateRoot {
 }
 
 // 需要创建其他状态变更事件类
-class TenantActivatedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantActivated';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+class TenantActivatedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly activatedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
+    super(tenantId.toString(), 1);
   }
 
   public toJSON(): Record<string, unknown> {
@@ -648,27 +640,19 @@ class TenantActivatedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      tenantId: this.tenantId.value,
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
       activatedBy: this.activatedBy,
     };
   }
 }
 
-class TenantDeactivatedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantDeactivated';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+class TenantDeactivatedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly deactivatedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
+    super(tenantId.toString(), 1);
   }
 
   public toJSON(): Record<string, unknown> {
@@ -677,27 +661,19 @@ class TenantDeactivatedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      tenantId: this.tenantId.value,
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
       deactivatedBy: this.deactivatedBy,
     };
   }
 }
 
-class TenantSuspendedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantSuspended';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+class TenantSuspendedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly suspendedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
+    super(tenantId.toString(), 1);
   }
 
   public toJSON(): Record<string, unknown> {
@@ -706,27 +682,19 @@ class TenantSuspendedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      tenantId: this.tenantId.value,
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
       suspendedBy: this.suspendedBy,
     };
   }
 }
 
-class TenantDeletedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantDeleted';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+class TenantDeletedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly deletedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
+    super(tenantId.toString(), 1);
   }
 
   public toJSON(): Record<string, unknown> {
@@ -735,8 +703,8 @@ class TenantDeletedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      tenantId: this.tenantId.value,
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
       deletedBy: this.deletedBy,
     };
   }

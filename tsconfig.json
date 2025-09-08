@@ -1,22 +1,42 @@
 {
   "extends": "./tsconfig.build.json",
-
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      // 核心包
+      "@aiofix/core": ["packages/core/src"],
+      "@aiofix/shared": ["packages/shared/src"],
+      "@aiofix/common": ["packages/common/src"],
+
+      // 基础设施包
       "@aiofix/logging": ["packages/logging/src"],
       "@aiofix/config": ["packages/config/src"],
-      "@aiofix/core": ["packages/core/src"],
-      "@aiofix/common": ["packages/common/src"],
-      "@aiofix/shared": ["packages/shared/src"],
+      "@aiofix/database": ["packages/database/src"],
+      "@aiofix/cache": ["packages/cache/src"],
+      "@aiofix/platform": ["packages/platform/src"],
+
+      // 业务包
+      "@aiofix/auth": ["packages/auth/src"],
       "@aiofix/user": ["packages/user/src"],
       "@aiofix/tenant": ["packages/tenant/src"],
       "@aiofix/organization": ["packages/organization/src"],
       "@aiofix/department": ["packages/department/src"],
       "@aiofix/role": ["packages/role/src"],
       "@aiofix/permission": ["packages/permission/src"],
-      "@aiofix/auth": ["packages/auth/src"],
-      "@aiofix/platform": ["packages/platform/src"],
+
+      // 通知子模块
+      "@aiofix/notif-analytics": ["packages/notification/analytics/src"],
+      "@aiofix/notif-email": ["packages/notification/email/src"],
+      "@aiofix/notif-in-app": ["packages/notification/in-app/src"],
+      "@aiofix/notif-orchestration": [
+        "packages/notification/orchestration/src"
+      ],
+      "@aiofix/notif-preferences": ["packages/notification/preferences/src"],
+      "@aiofix/notif-push": ["packages/notification/push/src"],
+      "@aiofix/notif-sms": ["packages/notification/sms/src"],
+      "@aiofix/notif-template": ["packages/notification/template/src"],
+
+      // 通用映射（放在最后）
       "@aiofix/*": ["packages/*/src"]
     },
     "noEmit": true

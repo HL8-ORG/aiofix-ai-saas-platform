@@ -1,6 +1,6 @@
+import { BaseEntity } from '@aiofix/core';
+import { UserId, Email } from '@aiofix/shared';
 import {
-  UserId,
-  Email,
   Password,
   UserProfile,
   UserPreferences,
@@ -28,14 +28,20 @@ import {
  * 2. 确保领域概念的完整性和类型安全
  * 3. 实现用户实体的相等性比较，基于用户ID进行身份识别
  *
+ * 审计追踪与多租户支持：
+ * 1. 继承BaseEntity，提供完整的审计追踪功能
+ * 2. 支持创建者、更新者、版本控制等审计信息
+ * 3. 实现多租户数据隔离，支持租户级数据访问控制
+ * 4. 提供软删除和恢复功能，确保数据安全
+ *
  * @property {UserId} _id 用户唯一标识符，创建后不可更改
  * @property {Email} _email 用户邮箱地址，必须唯一且有效
  * @property {Password} _password 用户密码对象，包含哈希值
  * @property {UserProfile} _profile 用户档案信息，包含姓名、头像等
  * @property {UserPreferences} _preferences 用户偏好设置，如语言、时区等
  * @property {UserStatus} _status 用户当前状态
- * @property {Date} _createdAt 用户创建时间
- * @property {Date} _updatedAt 用户最后更新时间
+ * @property {string} _tenantId 租户ID，用于多租户数据隔离
+ * @property {string} _platformId 平台ID，用于平台级数据隔离
  *
  * @example
  * ```typescript
@@ -44,21 +50,25 @@ import {
  *   new Email('user@example.com'),
  *   new Password('hashedPassword'),
  *   new UserProfile('John', 'Doe'),
- *   new UserPreferences('zh-CN', 'Asia/Shanghai')
+ *   new UserPreferences('zh-CN', 'Asia/Shanghai'),
+ *   'tenant-456',
+ *   'platform-789',
+ *   'admin-001'
  * );
  * user.activate(); // 激活用户
  * ```
+ * @extends BaseEntity
  * @since 1.0.0
  */
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   private readonly _id: UserId;
   private readonly _email: Email;
   private _password: Password;
   private _profile: UserProfile;
   private _preferences: UserPreferences;
   private _status: UserStatus;
-  private readonly _createdAt: Date;
-  private _updatedAt: Date;
+  private readonly _tenantId: string;
+  private readonly _platformId: string;
 
   /**
    * @constructor
@@ -67,20 +77,25 @@ export class UserEntity {
    *
    * 原理与机制：
    * 1. 通过构造函数注入所有必要的值对象，确保实体的完整性
-   * 2. 自动设置创建时间和更新时间，用于审计和版本控制
+   * 2. 调用父类BaseEntity构造函数，初始化审计追踪功能
    * 3. 默认用户状态为PENDING，需要激活后才能正常使用
+   * 4. 支持多租户数据隔离，设置租户ID和平台ID
    *
    * 功能与职责：
    * 1. 初始化用户实体的所有属性
-   * 2. 设置实体的创建和更新时间戳
+   * 2. 设置多租户数据隔离信息
    * 3. 确保实体的业务不变性约束
+   * 4. 提供完整的审计追踪支持
    *
    * @param {UserId} id 用户唯一标识符，创建后不可更改
    * @param {Email} email 用户邮箱地址，必须唯一且有效
    * @param {Password} password 用户密码对象，包含哈希值
    * @param {UserProfile} profile 用户档案信息，包含姓名、头像等
    * @param {UserPreferences} preferences 用户偏好设置，如语言、时区等
+   * @param {string} tenantId 租户ID，用于多租户数据隔离
+   * @param {string} platformId 平台ID，用于平台级数据隔离
    * @param {UserStatus} [status=UserStatus.PENDING] 用户状态，默认为待激活状态
+   * @param {string} [createdBy='system'] 创建者ID，用于审计追踪
    * @throws {Error} 当参数验证失败时抛出异常
    * @since 1.0.0
    */
@@ -90,16 +105,20 @@ export class UserEntity {
     password: Password,
     profile: UserProfile,
     preferences: UserPreferences,
+    tenantId: string,
+    platformId: string,
     status: UserStatus = UserStatus.PENDING,
+    createdBy: string = 'system',
   ) {
+    super(createdBy);
     this._id = id;
     this._email = email;
     this._password = password;
     this._profile = profile;
     this._preferences = preferences;
     this._status = status;
-    this._createdAt = new Date();
-    this._updatedAt = new Date();
+    this._tenantId = tenantId;
+    this._platformId = platformId;
   }
 
   /**
@@ -163,23 +182,23 @@ export class UserEntity {
   }
 
   /**
-   * @getter createdAt
-   * @description 获取用户创建时间
-   * @returns {Date} 用户创建时间戳，用于审计和版本控制
+   * @getter tenantId
+   * @description 获取租户ID
+   * @returns {string} 租户ID，用于多租户数据隔离
    * @since 1.0.0
    */
-  public get createdAt(): Date {
-    return this._createdAt;
+  public get tenantId(): string {
+    return this._tenantId;
   }
 
   /**
-   * @getter updatedAt
-   * @description 获取用户最后更新时间
-   * @returns {Date} 用户最后更新时间戳，用于审计和版本控制
+   * @getter platformId
+   * @description 获取平台ID
+   * @returns {string} 平台ID，用于平台级数据隔离
    * @since 1.0.0
    */
-  public get updatedAt(): Date {
-    return this._updatedAt;
+  public get platformId(): string {
+    return this._platformId;
   }
 
   /**
@@ -190,24 +209,28 @@ export class UserEntity {
    * 原理与机制：
    * 1. 通过状态检查确保只有有效状态的用户才能更新档案
    * 2. 直接替换整个UserProfile值对象，确保数据一致性
-   * 3. 自动更新实体的修改时间戳，用于审计和版本控制
+   * 3. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 验证用户状态是否允许档案更新操作
    * 2. 更新用户档案信息
-   * 3. 记录操作时间戳
+   * 3. 记录操作审计信息
    *
    * @param {UserProfile} newProfile 新的用户档案信息
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
    * @throws {Error} 当用户状态为SUSPENDED时抛出异常
    * @since 1.0.0
    */
-  public updateProfile(newProfile: UserProfile): void {
+  public updateProfile(
+    newProfile: UserProfile,
+    updatedBy: string = 'system',
+  ): void {
     if (this._status === UserStatus.SUSPENDED) {
       throw new Error('已暂停的用户无法更新档案');
     }
 
     this._profile = newProfile;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(updatedBy);
   }
 
   /**
@@ -218,18 +241,22 @@ export class UserEntity {
    * 原理与机制：
    * 1. 偏好设置更新不受用户状态限制，任何状态的用户都可以更新
    * 2. 直接替换整个UserPreferences值对象，确保数据一致性
-   * 3. 自动更新实体的修改时间戳，用于审计和版本控制
+   * 3. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 更新用户偏好设置信息
-   * 2. 记录操作时间戳
+   * 2. 记录操作审计信息
    *
    * @param {UserPreferences} newPreferences 新的用户偏好设置
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
    * @since 1.0.0
    */
-  public updatePreferences(newPreferences: UserPreferences): void {
+  public updatePreferences(
+    newPreferences: UserPreferences,
+    updatedBy: string = 'system',
+  ): void {
     this._preferences = newPreferences;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(updatedBy);
   }
 
   /**
@@ -240,24 +267,28 @@ export class UserEntity {
    * 原理与机制：
    * 1. 通过状态检查确保只有有效状态的用户才能更新密码
    * 2. 直接替换Password值对象，新密码已包含哈希处理
-   * 3. 自动更新实体的修改时间戳，用于审计和版本控制
+   * 3. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 验证用户状态是否允许密码更新操作
    * 2. 更新用户密码信息
-   * 3. 记录操作时间戳
+   * 3. 记录操作审计信息
    *
    * @param {Password} newPassword 新的密码对象，已包含哈希值
+   * @param {string} [updatedBy='system'] 更新者ID，用于审计追踪
    * @throws {Error} 当用户状态为SUSPENDED时抛出异常
    * @since 1.0.0
    */
-  public updatePassword(newPassword: Password): void {
+  public updatePassword(
+    newPassword: Password,
+    updatedBy: string = 'system',
+  ): void {
     if (this._status === UserStatus.SUSPENDED) {
       throw new Error('已暂停的用户无法更新密码');
     }
 
     this._password = newPassword;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(updatedBy);
   }
 
   /**
@@ -269,22 +300,24 @@ export class UserEntity {
    * 1. 遵循状态机模式，确保状态转换的合法性
    * 2. 只有PENDING状态的用户才能被激活，防止非法状态转换
    * 3. 激活后用户可以进行正常的业务操作
+   * 4. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 验证当前用户状态是否为PENDING
    * 2. 将用户状态更新为ACTIVE
-   * 3. 记录状态变更时间戳
+   * 3. 记录状态变更审计信息
    *
+   * @param {string} [activatedBy='system'] 激活者ID，用于审计追踪
    * @throws {Error} 当用户状态不是PENDING时抛出异常
    * @since 1.0.0
    */
-  public activate(): void {
+  public activate(activatedBy: string = 'system'): void {
     if (this._status !== UserStatus.PENDING) {
       throw new Error('只有待激活状态的用户才能被激活');
     }
 
     this._status = UserStatus.ACTIVE;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(activatedBy);
   }
 
   /**
@@ -296,22 +329,24 @@ export class UserEntity {
    * 1. 遵循状态机模式，确保状态转换的合法性
    * 2. 只有ACTIVE状态的用户才能被暂停，防止非法状态转换
    * 3. 暂停后用户无法进行需要权限的业务操作
+   * 4. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 验证当前用户状态是否为ACTIVE
    * 2. 将用户状态更新为SUSPENDED
-   * 3. 记录状态变更时间戳
+   * 3. 记录状态变更审计信息
    *
+   * @param {string} [suspendedBy='system'] 暂停者ID，用于审计追踪
    * @throws {Error} 当用户状态不是ACTIVE时抛出异常
    * @since 1.0.0
    */
-  public suspend(): void {
+  public suspend(suspendedBy: string = 'system'): void {
     if (this._status !== UserStatus.ACTIVE) {
       throw new Error('只有激活状态的用户才能被暂停');
     }
 
     this._status = UserStatus.SUSPENDED;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(suspendedBy);
   }
 
   /**
@@ -323,22 +358,24 @@ export class UserEntity {
    * 1. 遵循状态机模式，确保状态转换的合法性
    * 2. 只有SUSPENDED状态的用户才能被恢复，防止非法状态转换
    * 3. 恢复后用户重新获得正常的业务操作权限
+   * 4. 使用BaseEntity的审计功能记录操作者和时间戳
    *
    * 功能与职责：
    * 1. 验证当前用户状态是否为SUSPENDED
    * 2. 将用户状态更新为ACTIVE
-   * 3. 记录状态变更时间戳
+   * 3. 记录状态变更审计信息
    *
+   * @param {string} [restoredBy='system'] 恢复者ID，用于审计追踪
    * @throws {Error} 当用户状态不是SUSPENDED时抛出异常
    * @since 1.0.0
    */
-  public restore(): void {
+  public restore(restoredBy: string = 'system'): void {
     if (this._status !== UserStatus.SUSPENDED) {
       throw new Error('只有暂停状态的用户才能被恢复');
     }
 
     this._status = UserStatus.ACTIVE;
-    this._updatedAt = new Date();
+    this.updateAuditInfo(restoredBy);
   }
 
   /**
@@ -350,22 +387,24 @@ export class UserEntity {
    * 1. 采用软删除策略，保留用户数据用于审计和恢复
    * 2. 防止重复删除操作，确保数据一致性
    * 3. 删除后用户数据仍然保留，但用户无法进行任何操作
+   * 4. 使用BaseEntity的软删除功能，提供完整的审计追踪
    *
    * 功能与职责：
    * 1. 验证当前用户状态是否已被删除
    * 2. 将用户状态更新为DELETED
-   * 3. 记录删除操作时间戳
+   * 3. 记录删除操作审计信息
    *
+   * @param {string} [deletedBy='system'] 删除者ID，用于审计追踪
    * @throws {Error} 当用户已被删除时抛出异常
    * @since 1.0.0
    */
-  public delete(): void {
+  public delete(deletedBy: string = 'system'): void {
     if (this._status === UserStatus.DELETED) {
       throw new Error('用户已经被删除');
     }
 
     this._status = UserStatus.DELETED;
-    this._updatedAt = new Date();
+    this.softDelete(deletedBy);
   }
 
   /**
@@ -474,6 +513,52 @@ export class UserEntity {
    * @since 1.0.0
    */
   public equals(other: UserEntity): boolean {
-    return this._id.equals(other._id);
+    if (!other) return false;
+    if (this === other) return true;
+    return this._id.toString() === other._id.toString();
+  }
+
+  /**
+   * @method getEntityId
+   * @description
+   * 获取实体ID，实现BaseEntity的抽象方法。
+   *
+   * 原理与机制：
+   * 1. 返回用户ID的字符串值，用于实体标识
+   * 2. 确保实体ID的唯一性和一致性
+   * 3. 支持多租户数据隔离和审计追踪
+   *
+   * 功能与职责：
+   * 1. 提供实体的唯一标识符
+   * 2. 支持BaseEntity的审计功能
+   * 3. 为数据访问和缓存提供键值
+   *
+   * @returns {string} 用户实体的唯一标识符
+   * @since 1.0.0
+   */
+  public getEntityId(): string {
+    return this._id.toString();
+  }
+
+  /**
+   * @method getTenantId
+   * @description
+   * 获取租户ID，实现BaseEntity的抽象方法，支持多租户数据隔离。
+   *
+   * 原理与机制：
+   * 1. 返回用户所属的租户ID，用于数据隔离
+   * 2. 支持多租户架构的数据访问控制
+   * 3. 确保数据安全和隐私保护
+   *
+   * 功能与职责：
+   * 1. 提供租户级数据隔离支持
+   * 2. 支持BaseEntity的审计功能
+   * 3. 为数据访问控制提供租户上下文
+   *
+   * @returns {string} 租户ID
+   * @since 1.0.0
+   */
+  public getTenantId(): string {
+    return this._tenantId;
   }
 }

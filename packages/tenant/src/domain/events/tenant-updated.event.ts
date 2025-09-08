@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { TenantId } from '../value-objects/tenant-id.vo';
+import { DomainEvent } from '@aiofix/core';
+import { TenantId } from '@aiofix/shared';
 
 /**
  * @class TenantUpdatedEvent
@@ -44,36 +44,14 @@ import { TenantId } from '../value-objects/tenant-id.vo';
  * ```
  * @since 1.0.0
  */
-export class TenantUpdatedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantUpdated';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+export class TenantUpdatedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly updateType: string,
     public readonly updateData: Record<string, unknown>,
     public readonly updatedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {Record<string, unknown>} 事件数据
-   */
-  public getEventData(): Record<string, unknown> {
-    return {
-      tenantId: this.tenantId.value,
-      updateType: this.updateType,
-      updateData: this.updateData,
-      updatedBy: this.updatedBy,
-    };
+    super(tenantId.toString(), 1);
   }
 
   /**
@@ -87,8 +65,11 @@ export class TenantUpdatedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      ...this.getEventData(),
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
+      updateType: this.updateType,
+      updateData: this.updateData,
+      updatedBy: this.updatedBy,
     };
   }
 

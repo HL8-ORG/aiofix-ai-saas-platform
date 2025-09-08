@@ -1,0 +1,328 @@
+1ab6372e9336eccd9aa3f416327c9d91
+"use strict";
+
+/* istanbul ignore next */
+function cov_1akguy5enw() {
+  var path = "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/base/event-sourced-aggregate-root.ts";
+  var hash = "9b4318cc472d56c6f6f97d120b513f67d3bac20d";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/base/event-sourced-aggregate-root.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 2,
+          column: 0
+        },
+        end: {
+          line: 2,
+          column: 62
+        }
+      },
+      "1": {
+        start: {
+          line: 3,
+          column: 0
+        },
+        end: {
+          line: 3,
+          column: 43
+        }
+      },
+      "2": {
+        start: {
+          line: 10,
+          column: 8
+        },
+        end: {
+          line: 10,
+          column: 31
+        }
+      },
+      "3": {
+        start: {
+          line: 20,
+          column: 8
+        },
+        end: {
+          line: 20,
+          column: 38
+        }
+      },
+      "4": {
+        start: {
+          line: 28,
+          column: 8
+        },
+        end: {
+          line: 28,
+          column: 33
+        }
+      },
+      "5": {
+        start: {
+          line: 36,
+          column: 8
+        },
+        end: {
+          line: 36,
+          column: 31
+        }
+      },
+      "6": {
+        start: {
+          line: 44,
+          column: 8
+        },
+        end: {
+          line: 44,
+          column: 33
+        }
+      },
+      "7": {
+        start: {
+          line: 47,
+          column: 0
+        },
+        end: {
+          line: 47,
+          column: 62
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 9,
+            column: 4
+          },
+          end: {
+            line: 9,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 9,
+            column: 18
+          },
+          end: {
+            line: 11,
+            column: 5
+          }
+        },
+        line: 9
+      },
+      "1": {
+        name: "(anonymous_1)",
+        decl: {
+          start: {
+            line: 19,
+            column: 4
+          },
+          end: {
+            line: 19,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 19,
+            column: 26
+          },
+          end: {
+            line: 21,
+            column: 5
+          }
+        },
+        line: 19
+      },
+      "2": {
+        name: "(anonymous_2)",
+        decl: {
+          start: {
+            line: 27,
+            column: 4
+          },
+          end: {
+            line: 27,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 27,
+            column: 22
+          },
+          end: {
+            line: 29,
+            column: 5
+          }
+        },
+        line: 27
+      },
+      "3": {
+        name: "(anonymous_3)",
+        decl: {
+          start: {
+            line: 35,
+            column: 4
+          },
+          end: {
+            line: 35,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 35,
+            column: 24
+          },
+          end: {
+            line: 37,
+            column: 5
+          }
+        },
+        line: 35
+      },
+      "4": {
+        name: "(anonymous_4)",
+        decl: {
+          start: {
+            line: 43,
+            column: 4
+          },
+          end: {
+            line: 43,
+            column: 5
+          }
+        },
+        loc: {
+          start: {
+            line: 43,
+            column: 28
+          },
+          end: {
+            line: 45,
+            column: 5
+          }
+        },
+        line: 43
+      }
+    },
+    branchMap: {},
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0
+    },
+    f: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0
+    },
+    b: {},
+    inputSourceMap: {
+      file: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/base/event-sourced-aggregate-root.ts",
+      mappings: ";;;AAgBA;;;GAGG;AACH,MAAsB,yBAAyB;IAA/C;QACU,iBAAY,GAAmB,EAAE,CAAC;IAuC5C,CAAC;IArCC;;;;;;OAMG;IACO,cAAc,CAAC,KAAmB;QAC1C,IAAI,CAAC,YAAY,CAAC,IAAI,CAAC,KAAK,CAAC,CAAC;IAChC,CAAC;IAED;;;;OAIG;IACI,eAAe;QACpB,OAAO,IAAI,CAAC,YAAY,CAAC;IAC3B,CAAC;IAED;;;;OAIG;IACI,iBAAiB;QACtB,IAAI,CAAC,YAAY,GAAG,EAAE,CAAC;IACzB,CAAC;IAED;;;;OAIG;IACI,qBAAqB;QAC1B,IAAI,CAAC,iBAAiB,EAAE,CAAC;IAC3B,CAAC;CACF;AAxCD,8DAwCC",
+      names: [],
+      sources: ["/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/core/src/domain/base/event-sourced-aggregate-root.ts"],
+      sourcesContent: ["/**\n * @interface IDomainEvent\n * @description \u9886\u57DF\u4E8B\u4EF6\u63A5\u53E3\uFF0C\u5B9A\u4E49\u9886\u57DF\u4E8B\u4EF6\u7684\u57FA\u672C\u7ED3\u6784\n */\nexport interface IDomainEvent {\n  readonly eventType: string;\n  readonly aggregateId: string;\n  readonly occurredOn: Date;\n  readonly eventVersion: number;\n\n  getEventType(): string;\n  getAggregateId(): string;\n  getEventId(): string;\n  toJSON(): object;\n}\n\n/**\n * @class EventSourcedAggregateRoot\n * @description \u4E8B\u4EF6\u6EAF\u6E90\u805A\u5408\u6839\u57FA\u7840\u7C7B\n */\nexport abstract class EventSourcedAggregateRoot {\n  private domainEvents: IDomainEvent[] = [];\n\n  /**\n   * @method addDomainEvent\n   * @description \u6DFB\u52A0\u9886\u57DF\u4E8B\u4EF6\n   * @param {IDomainEvent} event \u9886\u57DF\u4E8B\u4EF6\n   * @returns {void}\n   * @protected\n   */\n  protected addDomainEvent(event: IDomainEvent): void {\n    this.domainEvents.push(event);\n  }\n\n  /**\n   * @method getDomainEvents\n   * @description \u83B7\u53D6\u672A\u63D0\u4EA4\u7684\u9886\u57DF\u4E8B\u4EF6\n   * @returns {IDomainEvent[]} \u9886\u57DF\u4E8B\u4EF6\u5217\u8868\n   */\n  public getDomainEvents(): IDomainEvent[] {\n    return this.domainEvents;\n  }\n\n  /**\n   * @method clearDomainEvents\n   * @description \u6E05\u9664\u9886\u57DF\u4E8B\u4EF6\n   * @returns {void}\n   */\n  public clearDomainEvents(): void {\n    this.domainEvents = [];\n  }\n\n  /**\n   * @method markEventsAsCommitted\n   * @description \u6807\u8BB0\u4E8B\u4EF6\u4E3A\u5DF2\u63D0\u4EA4\n   * @returns {void}\n   */\n  public markEventsAsCommitted(): void {\n    this.clearDomainEvents();\n  }\n}\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "9b4318cc472d56c6f6f97d120b513f67d3bac20d"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1akguy5enw = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1akguy5enw();
+cov_1akguy5enw().s[0]++;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* istanbul ignore next */
+cov_1akguy5enw().s[1]++;
+exports.EventSourcedAggregateRoot = void 0;
+/**
+ * @class EventSourcedAggregateRoot
+ * @description 事件溯源聚合根基础类
+ */
+class EventSourcedAggregateRoot {
+  constructor() {
+    /* istanbul ignore next */
+    cov_1akguy5enw().f[0]++;
+    cov_1akguy5enw().s[2]++;
+    this.domainEvents = [];
+  }
+  /**
+   * @method addDomainEvent
+   * @description 添加领域事件
+   * @param {IDomainEvent} event 领域事件
+   * @returns {void}
+   * @protected
+   */
+  addDomainEvent(event) {
+    /* istanbul ignore next */
+    cov_1akguy5enw().f[1]++;
+    cov_1akguy5enw().s[3]++;
+    this.domainEvents.push(event);
+  }
+  /**
+   * @method getDomainEvents
+   * @description 获取未提交的领域事件
+   * @returns {IDomainEvent[]} 领域事件列表
+   */
+  getDomainEvents() {
+    /* istanbul ignore next */
+    cov_1akguy5enw().f[2]++;
+    cov_1akguy5enw().s[4]++;
+    return this.domainEvents;
+  }
+  /**
+   * @method clearDomainEvents
+   * @description 清除领域事件
+   * @returns {void}
+   */
+  clearDomainEvents() {
+    /* istanbul ignore next */
+    cov_1akguy5enw().f[3]++;
+    cov_1akguy5enw().s[5]++;
+    this.domainEvents = [];
+  }
+  /**
+   * @method markEventsAsCommitted
+   * @description 标记事件为已提交
+   * @returns {void}
+   */
+  markEventsAsCommitted() {
+    /* istanbul ignore next */
+    cov_1akguy5enw().f[4]++;
+    cov_1akguy5enw().s[6]++;
+    this.clearDomainEvents();
+  }
+}
+/* istanbul ignore next */
+cov_1akguy5enw().s[7]++;
+exports.EventSourcedAggregateRoot = EventSourcedAggregateRoot;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJFdmVudFNvdXJjZWRBZ2dyZWdhdGVSb290IiwiY29uc3RydWN0b3IiLCJjb3ZfMWFrZ3V5NWVudyIsImYiLCJzIiwiZG9tYWluRXZlbnRzIiwiYWRkRG9tYWluRXZlbnQiLCJldmVudCIsInB1c2giLCJnZXREb21haW5FdmVudHMiLCJjbGVhckRvbWFpbkV2ZW50cyIsIm1hcmtFdmVudHNBc0NvbW1pdHRlZCIsImV4cG9ydHMiXSwic291cmNlcyI6WyIvaG9tZS9hcmxpZ2xlL1YxL0Fpb2ZpeC9haW9maXgtYWktc2Fhcy1wbGF0Zm9ybS9wYWNrYWdlcy9jb3JlL3NyYy9kb21haW4vYmFzZS9ldmVudC1zb3VyY2VkLWFnZ3JlZ2F0ZS1yb290LnRzIl0sInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQGludGVyZmFjZSBJRG9tYWluRXZlbnRcbiAqIEBkZXNjcmlwdGlvbiDpoobln5/kuovku7bmjqXlj6PvvIzlrprkuYnpoobln5/kuovku7bnmoTln7rmnKznu5PmnoRcbiAqL1xuZXhwb3J0IGludGVyZmFjZSBJRG9tYWluRXZlbnQge1xuICByZWFkb25seSBldmVudFR5cGU6IHN0cmluZztcbiAgcmVhZG9ubHkgYWdncmVnYXRlSWQ6IHN0cmluZztcbiAgcmVhZG9ubHkgb2NjdXJyZWRPbjogRGF0ZTtcbiAgcmVhZG9ubHkgZXZlbnRWZXJzaW9uOiBudW1iZXI7XG5cbiAgZ2V0RXZlbnRUeXBlKCk6IHN0cmluZztcbiAgZ2V0QWdncmVnYXRlSWQoKTogc3RyaW5nO1xuICBnZXRFdmVudElkKCk6IHN0cmluZztcbiAgdG9KU09OKCk6IG9iamVjdDtcbn1cblxuLyoqXG4gKiBAY2xhc3MgRXZlbnRTb3VyY2VkQWdncmVnYXRlUm9vdFxuICogQGRlc2NyaXB0aW9uIOS6i+S7tua6r+a6kOiBmuWQiOagueWfuuehgOexu1xuICovXG5leHBvcnQgYWJzdHJhY3QgY2xhc3MgRXZlbnRTb3VyY2VkQWdncmVnYXRlUm9vdCB7XG4gIHByaXZhdGUgZG9tYWluRXZlbnRzOiBJRG9tYWluRXZlbnRbXSA9IFtdO1xuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGFkZERvbWFpbkV2ZW50XG4gICAqIEBkZXNjcmlwdGlvbiDmt7vliqDpoobln5/kuovku7ZcbiAgICogQHBhcmFtIHtJRG9tYWluRXZlbnR9IGV2ZW50IOmihuWfn+S6i+S7tlxuICAgKiBAcmV0dXJucyB7dm9pZH1cbiAgICogQHByb3RlY3RlZFxuICAgKi9cbiAgcHJvdGVjdGVkIGFkZERvbWFpbkV2ZW50KGV2ZW50OiBJRG9tYWluRXZlbnQpOiB2b2lkIHtcbiAgICB0aGlzLmRvbWFpbkV2ZW50cy5wdXNoKGV2ZW50KTtcbiAgfVxuXG4gIC8qKlxuICAgKiBAbWV0aG9kIGdldERvbWFpbkV2ZW50c1xuICAgKiBAZGVzY3JpcHRpb24g6I635Y+W5pyq5o+Q5Lqk55qE6aKG5Z+f5LqL5Lu2XG4gICAqIEByZXR1cm5zIHtJRG9tYWluRXZlbnRbXX0g6aKG5Z+f5LqL5Lu25YiX6KGoXG4gICAqL1xuICBwdWJsaWMgZ2V0RG9tYWluRXZlbnRzKCk6IElEb21haW5FdmVudFtdIHtcbiAgICByZXR1cm4gdGhpcy5kb21haW5FdmVudHM7XG4gIH1cblxuICAvKipcbiAgICogQG1ldGhvZCBjbGVhckRvbWFpbkV2ZW50c1xuICAgKiBAZGVzY3JpcHRpb24g5riF6Zmk6aKG5Z+f5LqL5Lu2XG4gICAqIEByZXR1cm5zIHt2b2lkfVxuICAgKi9cbiAgcHVibGljIGNsZWFyRG9tYWluRXZlbnRzKCk6IHZvaWQge1xuICAgIHRoaXMuZG9tYWluRXZlbnRzID0gW107XG4gIH1cblxuICAvKipcbiAgICogQG1ldGhvZCBtYXJrRXZlbnRzQXNDb21taXR0ZWRcbiAgICogQGRlc2NyaXB0aW9uIOagh+iusOS6i+S7tuS4uuW3suaPkOS6pFxuICAgKiBAcmV0dXJucyB7dm9pZH1cbiAgICovXG4gIHB1YmxpYyBtYXJrRXZlbnRzQXNDb21taXR0ZWQoKTogdm9pZCB7XG4gICAgdGhpcy5jbGVhckRvbWFpbkV2ZW50cygpO1xuICB9XG59XG4iXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFnQkE7Ozs7QUFJQSxNQUFzQkEseUJBQXlCO0VBQS9DQyxZQUFBO0lBQUE7SUFBQUMsY0FBQSxHQUFBQyxDQUFBO0lBQUFELGNBQUEsR0FBQUUsQ0FBQTtJQUNVLEtBQUFDLFlBQVksR0FBbUIsRUFBRTtFQXVDM0M7RUFyQ0U7Ozs7Ozs7RUFPVUMsY0FBY0EsQ0FBQ0MsS0FBbUI7SUFBQTtJQUFBTCxjQUFBLEdBQUFDLENBQUE7SUFBQUQsY0FBQSxHQUFBRSxDQUFBO0lBQzFDLElBQUksQ0FBQ0MsWUFBWSxDQUFDRyxJQUFJLENBQUNELEtBQUssQ0FBQztFQUMvQjtFQUVBOzs7OztFQUtPRSxlQUFlQSxDQUFBO0lBQUE7SUFBQVAsY0FBQSxHQUFBQyxDQUFBO0lBQUFELGNBQUEsR0FBQUUsQ0FBQTtJQUNwQixPQUFPLElBQUksQ0FBQ0MsWUFBWTtFQUMxQjtFQUVBOzs7OztFQUtPSyxpQkFBaUJBLENBQUE7SUFBQTtJQUFBUixjQUFBLEdBQUFDLENBQUE7SUFBQUQsY0FBQSxHQUFBRSxDQUFBO0lBQ3RCLElBQUksQ0FBQ0MsWUFBWSxHQUFHLEVBQUU7RUFDeEI7RUFFQTs7Ozs7RUFLT00scUJBQXFCQSxDQUFBO0lBQUE7SUFBQVQsY0FBQSxHQUFBQyxDQUFBO0lBQUFELGNBQUEsR0FBQUUsQ0FBQTtJQUMxQixJQUFJLENBQUNNLGlCQUFpQixFQUFFO0VBQzFCOztBQUNEO0FBQUFSLGNBQUEsR0FBQUUsQ0FBQTtBQXhDRFEsT0FBQSxDQUFBWix5QkFBQSxHQUFBQSx5QkFBQSIsImlnbm9yZUxpc3QiOltdfQ==

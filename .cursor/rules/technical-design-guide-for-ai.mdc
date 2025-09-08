@@ -1,0 +1,328 @@
+---
+description: 技术设计方案查阅指南
+globs:
+alwaysApply: true
+---
+
+# 技术设计方案查阅指南
+
+## 概述
+
+本指南旨在引导AI在开发过程中主动查阅相应的技术设计方案文档，确保开发工作严格按照既定的架构设计进行。
+
+## 核心原则
+
+- **设计先行**：在编写任何代码之前，必须先查阅相关的技术设计方案
+- **架构一致性**：确保实现与设计文档完全一致
+- **文档驱动**：以技术设计文档为准，不偏离既定架构
+- **主动查阅**：AI应主动识别需要查阅的文档并提前阅读
+
+## 技术设计文档结构
+
+### 主要设计文档
+
+- **架构概览**：`../../docs/technical-design/01-architecture-overview.md`
+- **分层架构**：`../../docs/technical-design/02-layered-architecture.md`
+- **领域层设计**：`../../docs/technical-design/03-domain-layer.md`
+- **应用层设计**：`../../docs/technical-design/05-application-layer.md`
+- **基础设施层设计**：`../../docs/technical-design/06-infrastructure.md`
+- **事件驱动架构设计**：`../../docs/technical-design/07-event-sourcing.md`
+- **通知模块设计**：`../../docs/technical-design/notification-design.md`
+
+### 支持文档
+
+- **业务需求**：`../../docs/business-requirements.md`
+- **开发计划**：`../../docs/development-plan.md`
+- **代码注释规范**：`../../.cursor/rules/code-annotation-specification.mdc`
+
+## 开发环节查阅指南
+
+### 1. 事件驱动架构基础设施开发
+
+**触发条件**：开发消息队列、事件总线、异步事件处理器等基础设施组件
+
+**必读文档**：
+
+- `../../docs/technical-design/07-event-sourcing.md` - 事件驱动架构设计
+- `../../docs/technical-design/06-infrastructure.md` - 基础设施层设计
+- `../../.cursor/rules/code-annotation-specification.mdc` - 异步事件处理器注释规范
+
+**查阅重点**：
+
+- Redis + Bull消息队列集成方案
+- 事件总线服务设计
+- 异步事件处理器实现模式
+- 事件重试和死信队列机制
+
+### 2. 通知模块开发
+
+**触发条件**：开发任何通知相关的功能（站内信、邮件、推送、短信、编排）
+
+**必读文档**：
+
+- `../../docs/technical-design/notification-design.md` - 通知模块完整设计
+- `../../docs/technical-design/05-application-layer.md` - 应用层设计
+- `../../docs/technical-design/06-infrastructure.md` - 基础设施层设计
+
+**查阅重点**：
+
+- 通知模块的5个子领域划分
+- 各子领域的聚合根设计
+- 通知编排策略
+- 外部服务适配器设计
+
+### 3. 领域模型开发
+
+**触发条件**：开发用户、租户、组织、部门等核心领域模型
+
+**必读文档**：
+
+- `../../docs/technical-design/03-domain-layer.md` - 领域层设计
+- `../../docs/business-requirements.md` - 业务需求
+- `../../docs/technical-design/01-architecture-overview.md` - 架构概览
+
+**查阅重点**：
+
+- 聚合根设计原则
+- 值对象和实体设计
+- 领域事件设计
+- 业务规则和不变性约束
+
+### 4. 应用层开发
+
+**触发条件**：开发命令、查询、命令处理器、查询处理器等应用层组件
+
+**必读文档**：
+
+- `../../docs/technical-design/05-application-layer.md` - 应用层设计
+- `../../docs/technical-design/02-layered-architecture.md` - 分层架构
+- `../../docs/technical-design/07-event-sourcing.md` - 事件驱动架构
+
+**查阅重点**：
+
+- CQRS模式实现
+- 命令和查询分离
+- 事件发布机制
+- 事务边界管理
+
+### 5. 基础设施层开发
+
+**触发条件**：开发仓储、数据库实体、外部服务适配器等基础设施组件
+
+**必读文档**：
+
+- `../../docs/technical-design/06-infrastructure.md` - 基础设施层设计
+- `../../docs/technical-design/02-layered-architecture.md` - 分层架构
+
+**查阅重点**：
+
+- 仓储模式实现
+- 数据库设计
+- 外部服务集成
+- 缓存策略
+
+### 6. 接口层开发
+
+**触发条件**：开发控制器、DTO、API等接口层组件
+
+**必读文档**：
+
+- `../../docs/technical-design/02-layered-architecture.md` - 分层架构
+- `../../docs/technical-design/01-architecture-overview.md` - 架构概览
+
+**查阅重点**：
+
+- RESTful API设计
+- DTO设计原则
+- 权限控制
+- 异常处理
+
+## AI查阅行为规范
+
+### 1. 主动识别查阅需求
+
+AI应在以下情况下主动查阅技术设计文档：
+
+- 接收到开发任务时，首先识别涉及的架构层次和模块
+- 遇到不熟悉的业务概念或技术模式时
+- 需要确认实现方案是否符合架构设计时
+- 编写代码注释时，需要参考注释规范时
+
+### 2. 查阅优先级
+
+**高优先级**（必须查阅）：
+
+- 架构概览文档
+- 相关模块的专门设计文档
+- 代码注释规范
+
+**中优先级**（建议查阅）：
+
+- 分层架构文档
+- 业务需求文档
+
+**低优先级**（可选查阅）：
+
+- 开发计划文档
+- 其他模块的设计文档
+
+### 3. 查阅方式
+
+- **并行查阅**：同时查阅多个相关文档
+- **重点查阅**：根据开发任务重点查阅特定章节
+- **交叉验证**：通过多个文档交叉验证设计一致性
+
+## 开发提示词模板
+
+### 事件驱动架构开发提示词
+
+```
+在开始开发事件驱动架构相关功能之前，请先查阅以下技术设计文档：
+
+1. 必读文档：
+   - ../../docs/technical-design/07-event-sourcing.md
+   - ../../docs/technical-design/06-infrastructure.md
+   - ../../.cursor/rules/code-annotation-specification.mdc
+
+2. 查阅重点：
+   - 消息队列服务设计（Redis + Bull）
+   - 事件总线服务实现
+   - 异步事件处理器模式
+   - 事件重试和错误处理机制
+
+3. 实现要求：
+   - 严格按照设计文档实现
+   - 遵循事件驱动架构原则
+   - 使用完整的TSDoc注释
+   - 实现完整的错误处理
+```
+
+### 通知模块开发提示词
+
+```
+在开始开发通知模块功能之前，请先查阅以下技术设计文档：
+
+1. 必读文档：
+   - ../../docs/technical-design/notification-design.md
+   - ../../docs/technical-design/05-application-layer.md
+   - ../../docs/technical-design/06-infrastructure.md
+
+2. 查阅重点：
+   - 5个子领域的划分和职责
+   - 各聚合根的设计和业务方法
+   - 通知编排策略
+   - 外部服务适配器设计
+
+3. 实现要求：
+   - 严格按照子领域划分实现
+   - 遵循DDD和Clean Architecture原则
+   - 实现完整的事件驱动处理
+   - 使用完整的TSDoc注释
+```
+
+### 领域模型开发提示词
+
+```
+在开始开发领域模型之前，请先查阅以下技术设计文档：
+
+1. 必读文档：
+   - ../../docs/technical-design/03-domain-layer.md
+   - ../../docs/business-requirements.md
+   - ../../docs/technical-design/01-architecture-overview.md
+
+2. 查阅重点：
+   - 聚合根设计原则
+   - 值对象和实体设计
+   - 领域事件设计
+   - 业务规则和不变性约束
+
+3. 实现要求：
+   - 严格按照DDD原则实现
+   - 保持领域层纯净性
+   - 实现完整的事件溯源
+   - 使用完整的TSDoc注释
+```
+
+## 质量保证
+
+### 1. 设计一致性检查
+
+- 实现前：确认实现方案与设计文档一致
+- 实现中：持续对照设计文档检查实现
+- 实现后：验证实现结果符合设计要求
+
+### 2. 文档同步更新
+
+- 发现设计文档问题时，及时反馈
+- 实现过程中的设计调整，及时更新文档
+- 保持代码与文档的一致性
+
+### 3. 架构合规性
+
+- 确保实现符合分层架构原则
+- 验证依赖关系正确性
+- 检查事件驱动架构实现
+
+## 常见查阅场景
+
+### 场景1：开发新的聚合根
+
+**查阅文档**：
+
+- `03-domain-layer.md` - 聚合根设计原则
+- `business-requirements.md` - 业务需求
+- `code-annotation-specification.mdc` - 注释规范
+
+**查阅重点**：
+
+- 聚合根的生命周期管理
+- 业务方法设计
+- 领域事件发布
+- 不变性约束
+
+### 场景2：实现事件处理器
+
+**查阅文档**：
+
+- `07-event-sourcing.md` - 事件驱动架构
+- `06-infrastructure.md` - 基础设施层
+- `code-annotation-specification.mdc` - 异步事件处理器注释
+
+**查阅重点**：
+
+- Bull队列处理器实现
+- 事件处理重试机制
+- 错误处理和恢复
+- 读模型更新
+
+### 场景3：设计API接口
+
+**查阅文档**：
+
+- `02-layered-architecture.md` - 分层架构
+- `01-architecture-overview.md` - 架构概览
+- `business-requirements.md` - 业务需求
+
+**查阅重点**：
+
+- RESTful API设计原则
+- DTO设计规范
+- 权限控制机制
+- 异常处理策略
+
+## 总结
+
+本指南的核心目标是确保AI在开发过程中能够：
+
+1. **主动查阅**：根据开发任务主动识别需要查阅的文档
+2. **准确实现**：严格按照技术设计文档实现功能
+3. **保持一致性**：确保实现与设计完全一致
+4. **质量保证**：通过文档查阅保证代码质量
+
+通过遵循本指南，AI将能够更好地理解项目架构，实现高质量的代码，并保持与设计文档的一致性。
+
+---
+
+**文档版本**：1.0  
+**创建日期**：2024-01-01  
+**维护者**：项目开发团队

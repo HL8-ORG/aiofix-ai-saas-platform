@@ -2,8 +2,8 @@
   "name": "@aiofix/user",
   "version": "1.0.0",
   "description": "用户管理模块 - 基于DDD和事件溯源的用户聚合根",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/user/src/index.js",
+  "types": "dist/user/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
@@ -22,11 +22,9 @@
   "dependencies": {
     "@aiofix/common": "workspace:*",
     "@aiofix/core": "workspace:*",
-    "@nestjs/common": "^11.1.6",
-    "@nestjs/core": "^11.1.6",
+    "@aiofix/shared": "workspace:*",
+    "@nestjs/common": "^10.0.0",
     "bcrypt": "^5.1.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

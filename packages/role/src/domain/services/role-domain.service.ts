@@ -1,8 +1,7 @@
 import { RoleId } from '../value-objects/role-id.vo';
-import { RoleName } from '../value-objects/role-name.vo';
+import { RoleName } from '@aiofix/shared';
 import { Permission } from '../value-objects/permission.vo';
 import { RoleType, RoleTypeHelper } from '../enums/role-type.enum';
-import { RoleStatus, RoleStatusHelper } from '../enums/role-status.enum';
 import { TenantId } from '@aiofix/shared';
 import { OrganizationId } from '@aiofix/organization';
 import { DepartmentId } from '@aiofix/department';
@@ -84,7 +83,10 @@ export class RoleDomainService {
    * 2. 层级角色只能管理同级或下级角色
    * 3. 自定义角色不能管理其他角色
    */
-  canRoleManageRole(managerRoleType: RoleType, targetRoleType: RoleType): boolean {
+  canRoleManageRole(
+    managerRoleType: RoleType,
+    targetRoleType: RoleType,
+  ): boolean {
     return RoleTypeHelper.canManage(managerRoleType, targetRoleType);
   }
 
@@ -104,7 +106,7 @@ export class RoleDomainService {
     departmentId?: DepartmentId,
   ): RoleHierarchy {
     const level = RoleTypeHelper.getLevel(roleType);
-    
+
     // 计算父角色
     const parentRoles: RoleId[] = [];
     if (departmentId && organizationId) {
@@ -147,16 +149,16 @@ export class RoleDomainService {
       if (!permissionMap.has(key)) {
         permissionMap.set(key, []);
       }
-      permissionMap.get(key)!.push(permission);
+      permissionMap.get(key)?.push(permission);
     }
 
     // 检测重复权限
-    for (const [key, perms] of permissionMap) {
+    for (const [, perms] of permissionMap) {
       if (perms.length > 1) {
         for (const permission of perms) {
           conflicts.push({
             permission,
-            conflictingRoles: perms.map(p => new RoleId()),
+            conflictingRoles: perms.map(_ => new RoleId()),
             conflictType: 'duplicate',
             severity: 'medium',
           });
@@ -195,7 +197,10 @@ export class RoleDomainService {
     }
 
     if (roleType === RoleType.CUSTOM) {
-      if (name.toLowerCase().includes('admin') || name.toLowerCase().includes('system')) {
+      if (
+        name.toLowerCase().includes('admin') ||
+        name.toLowerCase().includes('system')
+      ) {
         warnings.push('自定义角色名称不建议包含"admin"或"system"关键字');
       }
     }
@@ -214,7 +219,10 @@ export class RoleDomainService {
    * @param {RoleType} roleType 角色类型
    * @returns {ValidationResult} 验证结果
    */
-  validateRolePermissions(permissions: Permission[], roleType: RoleType): ValidationResult {
+  validateRolePermissions(
+    permissions: Permission[],
+    roleType: RoleType,
+  ): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 
@@ -235,8 +243,10 @@ export class RoleDomainService {
 
     // 角色类型特定验证
     if (roleType === RoleType.SYSTEM) {
-      const hasSystemPermissions = permissions.some(p => 
-        p.getResource().startsWith('system') || p.getResource().startsWith('platform')
+      const hasSystemPermissions = permissions.some(
+        p =>
+          p.getResource().startsWith('system') ||
+          p.getResource().startsWith('platform'),
       );
       if (!hasSystemPermissions) {
         warnings.push('系统角色建议包含系统级权限');
@@ -301,16 +311,18 @@ export class RoleDomainService {
     userPermissions: Permission[],
     resource: string,
     action: string,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
   ): boolean {
     for (const permission of userPermissions) {
       if (permission.matches(resource, action)) {
         // 检查权限条件
-        if (context && permission.getConditions()) {
+        if (context) {
           const conditions = permission.getConditions();
-          for (const [key, value] of Object.entries(conditions)) {
-            if (context[key] !== value) {
-              return false;
+          if (conditions) {
+            for (const [key, value] of Object.entries(conditions)) {
+              if (context[key] !== value) {
+                return false;
+              }
             }
           }
         }

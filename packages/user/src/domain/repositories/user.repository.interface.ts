@@ -1,5 +1,5 @@
 import { UserAggregate } from '../aggregates/user.aggregate';
-import { UserId } from '../value-objects';
+import { UserId } from '@aiofix/shared';
 
 /**
  * @interface IUserRepository

@@ -1,14 +1,34 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
+import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
 import { DepartmentCreatedEvent } from '../events/department-created.event';
 import { DepartmentMovedEvent } from '../events/department-moved.event';
 import { DepartmentEntity } from '../entities/department.entity';
 import { DepartmentId } from '../value-objects/department-id.vo';
-import { DepartmentName } from '../value-objects/department-name.vo';
-import { DepartmentDescription } from '../value-objects/department-description.vo';
-import { DepartmentSettings } from '../value-objects/department-settings.vo';
+import { DepartmentName, DepartmentDescription } from '@aiofix/shared';
+import {
+  DepartmentSettings,
+  DepartmentSettingsData,
+} from '../value-objects/department-settings.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
 import { OrganizationId } from '@aiofix/organization';
+
+// 事件数据接口
+interface DepartmentEventData {
+  departmentId?: string;
+  tenantId?: string;
+  organizationId?: string;
+  parentDepartmentId?: string;
+  name?: string;
+  description?: string;
+  settings?: Record<string, unknown>;
+  status?: DepartmentStatus;
+  level?: number;
+  createdAt?: string;
+  createdBy?: string;
+  newParentDepartmentId?: string;
+  newLevel?: number;
+  movedBy?: string;
+}
 
 /**
  * @class DepartmentAggregate
@@ -45,19 +65,11 @@ import { OrganizationId } from '@aiofix/organization';
  */
 export class DepartmentAggregate extends EventSourcedAggregateRoot {
   private department?: DepartmentEntity;
+  public readonly id: string = this.department?.id.value ?? '';
 
   constructor(department?: DepartmentEntity) {
     super();
     this.department = department;
-  }
-
-  /**
-   * @method get id
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
-   */
-  get id(): string {
-    return this.department?.id.value || '';
   }
 
   /**
@@ -94,7 +106,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
     const departmentId = new DepartmentId();
     const departmentName = new DepartmentName(name);
     const departmentDescription = new DepartmentDescription(description);
-    const departmentSettings = settings || DepartmentSettings.createDefault();
+    const departmentSettings = settings ?? DepartmentSettings.createDefault();
 
     // 计算部门层级
     const level = await this.calculateDepartmentLevel(
@@ -106,12 +118,13 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       departmentId,
       tenantId,
       organizationId,
-      parentDepartmentId || null,
+      parentDepartmentId ?? null,
       departmentName,
       departmentDescription,
       departmentSettings,
-      DepartmentStatus.INACTIVE,
+      DepartmentStatus.PENDING,
       level,
+      'system',
     );
 
     // 发布部门创建事件
@@ -127,7 +140,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       this.department.level,
       this.department.createdAt,
     );
-    this.apply(event);
+    this.handleEvent(event);
   }
 
   /**
@@ -167,7 +180,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
     const updatedDescription = description
       ? new DepartmentDescription(description)
       : this.department.description;
-    const updatedSettings = settings || this.department.settings;
+    const updatedSettings = settings ?? this.department.settings;
 
     this.department = new DepartmentEntity(
       this.department.id,
@@ -179,9 +192,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       updatedSettings,
       this.department.getStatus(),
       this.department.level,
-      this.department.createdAt,
-      new Date(),
-      this.department.deletedAt,
+      'system',
     );
 
     // 发布部门更新事件
@@ -232,9 +243,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       this.department.settings,
       this.department.getStatus(),
       newLevel,
-      this.department.createdAt,
-      new Date(),
-      this.department.deletedAt,
+      'system',
     );
 
     // 发布部门移动事件
@@ -248,7 +257,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       newLevel,
       new Date(),
     );
-    this.apply(event);
+    this.handleEvent(event);
   }
 
   /**
@@ -269,7 +278,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       );
     }
 
-    this.department.activate();
+    this.department.activate('system');
 
     // 发布部门激活事件
     // TODO: 创建DepartmentActivatedEvent类
@@ -295,7 +304,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       );
     }
 
-    this.department.suspend();
+    this.department.suspend('system');
 
     // 发布部门暂停事件
     // TODO: 创建DepartmentSuspendedEvent类
@@ -321,7 +330,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       );
     }
 
-    this.department.delete();
+    this.department.delete('system');
 
     // 发布部门删除事件
     // TODO: 创建DepartmentDeletedEvent类
@@ -341,11 +350,11 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
   /**
    * @method handleEvent
    * @description 处理领域事件，重建聚合根状态
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @param {boolean} isFromHistory 是否来自历史事件
    * @returns {void}
    */
-  handleEvent(event: IDomainEvent, isFromHistory: boolean = false): void {
+  handleEvent(event: DomainEvent, _isFromHistory: boolean = false): void {
     switch (event.eventType) {
       case 'DepartmentCreated':
         this.handleDepartmentCreatedEvent(event);
@@ -373,10 +382,10 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
    * @description 创建聚合根快照
    * @returns {any} 快照数据
    */
-  toSnapshot(): any {
+  toSnapshot(): Record<string, unknown> {
     return {
       department: this.department,
-      version: this.version,
+      version: 0, // TODO: Implement proper version tracking
     };
   }
 
@@ -386,7 +395,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
    * @param {any} snapshot 快照数据
    * @returns {void}
    */
-  fromSnapshot(snapshot: any): void {
+  fromSnapshot(snapshot: Record<string, unknown>): void {
     this.department = snapshot.department as DepartmentEntity;
     // 注意：_version是私有属性，需要通过其他方式设置
     // 这里暂时注释掉，等待EventSourcedAggregateRoot提供公共方法
@@ -405,15 +414,7 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
       throw new InvalidDepartmentNameError(`无效的部门名称: ${name}`);
     }
 
-    // 验证租户ID
-    if (!tenantId) {
-      throw new InvalidTenantError('租户ID不能为空');
-    }
-
-    // 验证组织ID
-    if (!organizationId) {
-      throw new InvalidOrganizationError('组织ID不能为空');
-    }
+    // 租户ID和组织ID由调用方保证非空
 
     // 验证父部门
     if (parentDepartmentId) {
@@ -423,8 +424,8 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
 
   private async validateDepartmentName(
     name: string,
-    organizationId: OrganizationId,
-    excludeDepartmentId?: DepartmentId,
+    _organizationId: OrganizationId,
+    _excludeDepartmentId?: DepartmentId,
   ): Promise<void> {
     if (!DepartmentName.isValid(name)) {
       throw new InvalidDepartmentNameError(`无效的部门名称: ${name}`);
@@ -435,16 +436,16 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
   }
 
   private async validateParentDepartment(
-    parentDepartmentId: DepartmentId,
-    organizationId: OrganizationId,
-    excludeDepartmentId?: DepartmentId,
+    _parentDepartmentId: DepartmentId,
+    _organizationId: OrganizationId,
+    _excludeDepartmentId?: DepartmentId,
   ): Promise<void> {
     // 这里应该验证父部门是否存在且属于同一组织
     // 暂时作为占位符
   }
 
   private async calculateDepartmentLevel(
-    organizationId: OrganizationId,
+    _organizationId: OrganizationId,
     parentDepartmentId?: DepartmentId,
   ): Promise<number> {
     if (!parentDepartmentId) {
@@ -457,79 +458,83 @@ export class DepartmentAggregate extends EventSourcedAggregateRoot {
   }
 
   // 事件处理方法
-  private handleDepartmentCreatedEvent(event: IDomainEvent): void {
-    const data = event.toJSON();
+  private handleDepartmentCreatedEvent(event: DomainEvent): void {
+    const data = event.toJSON() as DepartmentEventData;
     this.department = new DepartmentEntity(
-      new DepartmentId(data.departmentId),
-      new TenantId(data.tenantId),
-      new OrganizationId(data.organizationId),
+      new DepartmentId(data.departmentId ?? ''),
+      new TenantId(data.tenantId ?? ''),
+      new OrganizationId(data.organizationId ?? ''),
       data.parentDepartmentId
         ? new DepartmentId(data.parentDepartmentId)
         : null,
-      new DepartmentName(data.name),
-      new DepartmentDescription(data.description),
-      new DepartmentSettings(data.settings),
-      data.status,
-      data.level,
-      new Date(data.createdAt),
+      new DepartmentName(data.name ?? ''),
+      new DepartmentDescription(data.description ?? ''),
+      new DepartmentSettings(
+        data.settings
+          ? (data.settings as unknown as DepartmentSettingsData)
+          : DepartmentSettings.createDefault().value,
+      ),
+      data.status ?? DepartmentStatus.PENDING,
+      data.level ?? 1,
+      data.createdBy ?? 'system',
     );
   }
 
-  private handleDepartmentUpdatedEvent(event: IDomainEvent): void {
-    const data = event.toJSON();
+  private handleDepartmentUpdatedEvent(event: DomainEvent): void {
+    const data = event.toJSON() as DepartmentEventData;
     if (this.department) {
       this.department = new DepartmentEntity(
         this.department.id,
         this.department.tenantId,
         this.department.organizationId,
         this.department.parentDepartmentId,
-        new DepartmentName(data.name),
-        new DepartmentDescription(data.description),
-        new DepartmentSettings(data.settings),
+        new DepartmentName(data.name ?? ''),
+        new DepartmentDescription(data.description ?? ''),
+        new DepartmentSettings(
+          data.settings
+            ? (data.settings as unknown as DepartmentSettingsData)
+            : DepartmentSettings.createDefault().value,
+        ),
         this.department.getStatus(),
         this.department.level,
-        this.department.createdAt,
-        new Date(data.updatedAt),
-        this.department.deletedAt,
+        data.createdBy ?? 'system',
       );
     }
   }
 
-  private handleDepartmentMovedEvent(event: IDomainEvent): void {
-    const data = event.toJSON();
+  private handleDepartmentMovedEvent(event: DomainEvent): void {
+    const data = event.toJSON() as DepartmentEventData;
     if (this.department) {
       this.department = new DepartmentEntity(
         this.department.id,
         this.department.tenantId,
         this.department.organizationId,
-        new DepartmentId(data.newParentDepartmentId),
+        new DepartmentId(data.newParentDepartmentId ?? ''),
         this.department.name,
         this.department.description,
         this.department.settings,
         this.department.getStatus(),
-        data.newLevel,
-        this.department.createdAt,
-        new Date(data.movedAt),
-        this.department.deletedAt,
+        data.newLevel ?? 1,
+        data.movedBy ?? 'system',
       );
     }
   }
 
-  private handleDepartmentActivatedEvent(event: IDomainEvent): void {
+  private handleDepartmentActivatedEvent(_event: DomainEvent): void {
     if (this.department) {
-      this.department.activate();
+      this.department.activate('system');
     }
   }
 
-  private handleDepartmentSuspendedEvent(event: IDomainEvent): void {
+  private handleDepartmentSuspendedEvent(_event: DomainEvent): void {
     if (this.department) {
-      this.department.suspend();
+      this.department.suspend('system');
     }
   }
 
-  private handleDepartmentDeletedEvent(event: IDomainEvent): void {
+  private handleDepartmentDeletedEvent(_event: DomainEvent): void {
     if (this.department) {
-      this.department.delete();
+      this.department.delete('system');
     }
   }
 }

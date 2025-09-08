@@ -1,10 +1,12 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
+import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
 import { RoleEntity } from '../entities/role.entity';
 import { RoleId } from '../value-objects/role-id.vo';
-import { RoleName } from '../value-objects/role-name.vo';
-import { RoleDescription } from '../value-objects/role-description.vo';
-import { RoleSettings } from '../value-objects/role-settings.vo';
-import { Permission } from '../value-objects/permission.vo';
+import { RoleName, RoleDescription } from '@aiofix/shared';
+import {
+  RoleSettings,
+  RoleSettingsData,
+} from '../value-objects/role-settings.vo';
+import { Permission, PermissionData } from '../value-objects/permission.vo';
 import { RoleStatus } from '../enums/role-status.enum';
 import { RoleType } from '../enums/role-type.enum';
 import { TenantId } from '@aiofix/shared';
@@ -52,7 +54,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
    * @returns {string} 聚合根ID
    */
   get id(): string {
-    return this.role?.id.value ?? '';
+    return this.role?.id.toString() ?? '';
   }
 
   /**
@@ -100,12 +102,13 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       roleName,
       roleDescription,
       type,
-      RoleStatus.INACTIVE,
+      RoleStatus.PENDING,
       settings,
       permissions,
       tenantId,
-      organizationId,
-      departmentId,
+      organizationId ?? null,
+      departmentId ?? null,
+      'system',
     );
 
     // 发布角色创建事件
@@ -155,9 +158,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       this.role.tenantId,
       this.role.organizationId,
       this.role.departmentId,
-      this.role.createdAt,
-      new Date(),
-      this.role.deletedAt,
+      this.role.createdBy,
     );
 
     this.role = updatedRole;
@@ -186,7 +187,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new InvalidStateError('角色状态不允许修改');
     }
 
-    this.role.addPermission(permission);
+    this.role.addPermission(permission, 'system');
 
     // 发布权限添加事件
     // TODO: 创建PermissionAddedEvent类
@@ -212,7 +213,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new InvalidStateError('角色状态不允许修改');
     }
 
-    this.role.removePermission(permission);
+    this.role.removePermission(permission, 'system');
 
     // 发布权限移除事件
     // TODO: 创建PermissionRemovedEvent类
@@ -232,7 +233,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new RoleNotFoundError('角色不存在');
     }
 
-    this.role.activate();
+    this.role.activate('system');
 
     // 发布角色激活事件
     // TODO: 创建RoleActivatedEvent类
@@ -252,7 +253,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new RoleNotFoundError('角色不存在');
     }
 
-    this.role.deactivate();
+    this.role.deactivate('system');
 
     // 发布角色停用事件
     // TODO: 创建RoleDeactivatedEvent类
@@ -272,7 +273,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new RoleNotFoundError('角色不存在');
     }
 
-    this.role.suspend();
+    this.role.suspend('system');
 
     // 发布角色暂停事件
     // TODO: 创建RoleSuspendedEvent类
@@ -296,7 +297,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
       throw new InvalidStateTransitionError('角色不能被删除');
     }
 
-    this.role.delete();
+    this.role.delete('system');
 
     // 发布角色删除事件
     // TODO: 创建RoleDeletedEvent类
@@ -328,19 +329,19 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
    * @returns {number} 版本号
    */
   getVersion(): number {
-    return this.version;
+    return 0; // TODO: Implement proper version tracking
   }
 
   /**
    * @method handleEvent
    * @description 处理领域事件，更新聚合根状态
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @param {boolean} isFromHistory 是否来自历史事件重放
    * @returns {void}
    * @protected
    */
   protected handleEvent(
-    event: IDomainEvent,
+    event: DomainEvent,
     _isFromHistory: boolean = false,
   ): void {
     switch (event.eventType) {
@@ -382,7 +383,7 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
   toSnapshot(): Record<string, unknown> {
     return {
       role: this.role,
-      version: this.version,
+      version: 0, // TODO: Implement proper version tracking
     };
   }
 
@@ -421,8 +422,8 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
   }
 
   private async validateRoleNameUniqueness(
-    name: string,
-    tenantId: TenantId,
+    _name: string,
+    _tenantId: TenantId,
   ): Promise<void> {
     // TODO: 实现角色名称唯一性验证
     // 这里应该查询数据库检查角色名称是否已存在
@@ -430,81 +431,83 @@ export class RoleAggregate extends EventSourcedAggregateRoot {
   }
 
   // 事件处理方法
-  private handleRoleCreatedEvent(event: IDomainEvent): void {
+  private handleRoleCreatedEvent(event: DomainEvent): void {
     const data = event.toJSON();
     this.role = new RoleEntity(
-      new RoleId(data.roleId),
-      new RoleName(data.name),
-      new RoleDescription(data.description),
-      data.type,
-      data.status,
-      new RoleSettings(data.settings),
-      data.permissions.map((p: any) => new Permission(p)),
-      new TenantId(data.tenantId),
-      data.organizationId ? new OrganizationId(data.organizationId) : undefined,
-      data.departmentId ? new DepartmentId(data.departmentId) : undefined,
-      new Date(data.createdAt),
+      new RoleId(data.roleId as string),
+      new RoleName(data.name as string),
+      new RoleDescription(data.description as string),
+      data.type as RoleType,
+      data.status as RoleStatus,
+      new RoleSettings(data.settings as RoleSettingsData),
+      (data.permissions as unknown[]).map(
+        (p: unknown) => new Permission(p as PermissionData),
+      ),
+      new TenantId(data.tenantId as string),
+      data.organizationId
+        ? new OrganizationId(data.organizationId as string)
+        : null,
+      data.departmentId ? new DepartmentId(data.departmentId as string) : null,
+      data.createdBy as string,
     );
   }
 
-  private handleRoleUpdatedEvent(event: IDomainEvent): void {
+  private handleRoleUpdatedEvent(event: DomainEvent): void {
     const data = event.toJSON();
     if (this.role) {
       this.role = new RoleEntity(
         this.role.id,
-        new RoleName(data.name),
-        new RoleDescription(data.description),
+        new RoleName(data.name as string),
+        new RoleDescription(data.description as string),
         this.role.type,
         this.role.getStatus(),
-        new RoleSettings(data.settings),
+        new RoleSettings(data.settings as RoleSettingsData),
         this.role.getPermissions(),
         this.role.tenantId,
         this.role.organizationId,
         this.role.departmentId,
-        this.role.createdAt,
-        new Date(data.updatedAt),
-        this.role.deletedAt,
+        this.role.createdBy,
       );
     }
   }
 
-  private handlePermissionAddedEvent(event: IDomainEvent): void {
+  private handlePermissionAddedEvent(event: DomainEvent): void {
     const data = event.toJSON();
     if (this.role) {
-      const newPermission = new Permission(data.permission);
-      this.role.addPermission(newPermission);
+      const newPermission = new Permission(data.permission as PermissionData);
+      this.role.addPermission(newPermission, 'system');
     }
   }
 
-  private handlePermissionRemovedEvent(event: IDomainEvent): void {
+  private handlePermissionRemovedEvent(event: DomainEvent): void {
     const data = event.toJSON();
     if (this.role) {
-      const permission = new Permission(data.permission);
-      this.role.removePermission(permission);
+      const permission = new Permission(data.permission as PermissionData);
+      this.role.removePermission(permission, 'system');
     }
   }
 
-  private handleRoleActivatedEvent(event: IDomainEvent): void {
+  private handleRoleActivatedEvent(_event: DomainEvent): void {
     if (this.role) {
-      this.role.activate();
+      this.role.activate('system');
     }
   }
 
-  private handleRoleDeactivatedEvent(event: IDomainEvent): void {
+  private handleRoleDeactivatedEvent(_event: DomainEvent): void {
     if (this.role) {
-      this.role.deactivate();
+      this.role.deactivate('system');
     }
   }
 
-  private handleRoleSuspendedEvent(event: IDomainEvent): void {
+  private handleRoleSuspendedEvent(_event: DomainEvent): void {
     if (this.role) {
-      this.role.suspend();
+      this.role.suspend('system');
     }
   }
 
-  private handleRoleDeletedEvent(event: IDomainEvent): void {
+  private handleRoleDeletedEvent(_event: DomainEvent): void {
     if (this.role) {
-      this.role.delete();
+      this.role.delete('system');
     }
   }
 }

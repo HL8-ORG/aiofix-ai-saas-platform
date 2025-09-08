@@ -5,8 +5,4 @@
  * @since 1.0.0
  */
 
-export {
-  OrganizationEntity,
-  InvalidOrganizationEntityError,
-  InvalidStateTransitionError,
-} from './organization.entity';
+export { OrganizationEntity } from './organization.entity';

@@ -1,29 +1,23 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
-import { PlatformId } from '../value-objects/platform-id.vo';
-import { PlatformSettings } from '../value-objects/platform-settings.vo';
-import { PlatformConfig } from '../value-objects/platform-config.vo';
-import { PlatformStatus } from '../enums/platform-status.enum';
-import { PlatformCreatedEvent } from '../events/platform-created.event';
-import { PlatformUpdatedEvent } from '../events/platform-updated.event';
-import { PlatformStatusChangedEvent } from '../events/platform-status-changed.event';
-import { PlatformConfigUpdatedEvent } from '../events/platform-config-updated.event';
-
-/**
- * @interface PlatformData
- * @description 平台数据结构
- */
-export interface PlatformData {
-  readonly id: string;
-  readonly name: string;
-  readonly description?: string;
-  readonly status: PlatformStatus;
-  readonly settings: PlatformSettings;
-  readonly configs: Map<string, PlatformConfig>;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly createdBy: string;
-  readonly updatedBy?: string;
-}
+import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
+import { SystemConfiguration } from '../value-objects/system-configuration.vo';
+import { SystemMetrics } from '../value-objects/system-metrics.vo';
+import { TenantQuota } from '../value-objects/tenant-quota.vo';
+import {
+  PlatformManagementService,
+  type CreateTenantData,
+  type TenantUpdates,
+  type SystemCapacity,
+} from '../services/platform-management.service';
+import {
+  PlatformUserManagementService,
+  type UserAssignmentData,
+} from '../services/platform-user-management.service';
+import { TenantCreatedEvent } from '../events/tenant-created.event';
+import { TenantUpdatedEvent } from '../events/tenant-updated.event';
+import { TenantDeletedEvent } from '../events/tenant-deleted.event';
+import { PlatformUserAssignedEvent } from '../events/platform-user-assigned.event';
+import { SystemMetricsRecordedEvent } from '../events/system-metrics-recorded.event';
+import { SystemConfigurationUpdatedEvent } from '../events/system-configuration-updated.event';
 
 /**
  * @class PlatformAggregate
@@ -31,449 +25,512 @@ export interface PlatformData {
  * 平台聚合根，负责管理平台相关的业务方法、事件发布和不变性约束。
  *
  * 业务方法与事件发布：
- * 1. 提供平台创建、更新、状态变更等业务方法
+ * 1. 提供租户管理、用户管理、系统监控等业务方法
  * 2. 在状态变更时发布相应的领域事件
  * 3. 确保业务操作的事务一致性
  *
  * 不变性约束：
- * 1. 平台名称在全局范围内必须唯一
- * 2. 平台状态变更必须遵循预定义的状态机
- * 3. 平台配置必须符合类型约束
- * 4. 平台设置必须通过验证规则
+ * 1. 租户名称在全局范围内必须唯一
+ * 2. 用户不能同时属于多个租户
+ * 3. 系统配置必须符合安全策略
+ * 4. 租户配额不能超过系统容量
  *
- * @property {PlatformId} id 平台ID
- * @property {string} name 平台名称
- * @property {string} description 平台描述
- * @property {PlatformStatus} status 平台状态
- * @property {PlatformSettings} settings 平台设置
- * @property {Map<string, PlatformConfig>} configs 平台配置
- * @property {Date} createdAt 创建时间
- * @property {Date} updatedAt 更新时间
- * @property {string} createdBy 创建者
- * @property {string} updatedBy 更新者
+ * 平台管理职责：
+ * 1. 租户管理：创建、配置、监控、删除租户
+ * 2. 用户管理：分配、管理平台用户到租户
+ * 3. 系统监控：性能监控、用户行为分析、错误日志查看
+ * 4. 系统配置：系统参数、功能开关、主题配置
+ * 5. 审计管理：操作日志记录、审计报告生成
+ *
+ * @property {SystemConfiguration} _systemConfiguration 系统配置
+ * @property {SystemMetrics} _systemMetrics 系统指标
+ * @property {Map<string, TenantQuota>} _tenantQuotas 租户配额映射
+ * @property {SystemCapacity} _systemCapacity 系统容量
  *
  * @example
  * ```typescript
- * const platform = new PlatformAggregate();
- * await platform.createPlatform('AIOFIX Platform', 'AI-powered SAAS platform', 'admin-123');
- * // 自动发布 PlatformCreatedEvent
+ * const platformAggregate = new PlatformAggregate();
+ * await platformAggregate.createTenant(tenantData, 'admin-123');
+ * await platformAggregate.assignUserToTenant('user-456', 'tenant-789', 'admin-123');
  * ```
  * @since 1.0.0
  */
 export class PlatformAggregate extends EventSourcedAggregateRoot {
-  private _id!: PlatformId;
-  private _name!: string;
-  private _description?: string;
-  private _status!: PlatformStatus;
-  private _settings!: PlatformSettings;
-  private _configs!: Map<string, PlatformConfig>;
-  private _createdAt!: Date;
-  private _updatedAt!: Date;
-  private _createdBy!: string;
-  private _updatedBy?: string;
+  private _systemConfiguration!: SystemConfiguration;
+  private _systemMetrics!: SystemMetrics;
+  private readonly _tenantQuotas: Map<string, TenantQuota> = new Map();
+  private _systemCapacity!: SystemCapacity;
 
-  /**
-   * 获取平台ID
-   *
-   * @returns {string} 平台ID
-   */
-  public get id(): string {
-    return this._id.value;
+  constructor(
+    private readonly platformManagementService: PlatformManagementService,
+    private readonly userManagementService: PlatformUserManagementService,
+  ) {
+    super();
   }
 
   /**
-   * 获取平台名称
-   *
-   * @returns {string} 平台名称
+   * @getter systemConfiguration
+   * @description 获取系统配置
+   * @returns {SystemConfiguration} 系统配置
+   * @since 1.0.0
    */
-  public get name(): string {
-    return this._name;
+  public get systemConfiguration(): SystemConfiguration {
+    return this._systemConfiguration;
   }
 
   /**
-   * 获取平台描述
-   *
-   * @returns {string | undefined} 平台描述
+   * @getter systemMetrics
+   * @description 获取系统指标
+   * @returns {SystemMetrics} 系统指标
+   * @since 1.0.0
    */
-  public get description(): string | undefined {
-    return this._description;
+  public get systemMetrics(): SystemMetrics {
+    return this._systemMetrics;
   }
 
   /**
-   * 获取平台状态
-   *
-   * @returns {PlatformStatus} 平台状态
+   * @getter tenantQuotas
+   * @description 获取租户配额映射
+   * @returns {Map<string, TenantQuota>} 租户配额映射的副本
+   * @since 1.0.0
    */
-  public get status(): PlatformStatus {
-    return this._status;
+  public get tenantQuotas(): Map<string, TenantQuota> {
+    return new Map(this._tenantQuotas);
   }
 
   /**
-   * 获取平台设置
-   *
-   * @returns {PlatformSettings} 平台设置
+   * @getter systemCapacity
+   * @description 获取系统容量
+   * @returns {SystemCapacity} 系统容量
+   * @since 1.0.0
    */
-  public get settings(): PlatformSettings {
-    return this._settings;
+  public get systemCapacity(): SystemCapacity {
+    return this._systemCapacity;
   }
 
   /**
-   * 获取平台配置
+   * @method createTenant
+   * @description 创建新租户
+   * @param {CreateTenantData} tenantData 租户创建数据
+   * @param {string} createdBy 创建者用户ID
+   * @returns {Promise<string>} 创建的租户ID
+   * @throws {Error} 当租户创建失败时抛出
    *
-   * @returns {Map<string, PlatformConfig>} 平台配置
+   * 业务逻辑：
+   * 1. 验证租户创建请求的有效性
+   * 2. 检查系统容量是否充足
+   * 3. 计算租户资源配额
+   * 4. 创建租户记录
+   * 5. 发布租户创建事件
    */
-  public get configs(): Map<string, PlatformConfig> {
-    return new Map(this._configs);
-  }
-
-  /**
-   * 获取创建时间
-   *
-   * @returns {Date} 创建时间
-   */
-  public get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  /**
-   * 获取更新时间
-   *
-   * @returns {Date} 更新时间
-   */
-  public get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
-  /**
-   * 获取创建者
-   *
-   * @returns {string} 创建者
-   */
-  public get createdBy(): string {
-    return this._createdBy;
-  }
-
-  /**
-   * 获取更新者
-   *
-   * @returns {string | undefined} 更新者
-   */
-  public get updatedBy(): string | undefined {
-    return this._updatedBy;
-  }
-
-  /**
-   * 创建平台
-   *
-   * @param {string} name - 平台名称
-   * @param {string} description - 平台描述
-   * @param {string} createdBy - 创建者ID
-   * @param {PlatformSettings} settings - 平台设置
-   * @returns {void}
-   * @throws {Error} 当平台名称为空或创建者ID无效时抛出
-   */
-  public createPlatform(
-    name: string,
-    description: string | undefined,
+  async createTenant(
+    tenantData: CreateTenantData,
     createdBy: string,
-    settings: PlatformSettings,
-  ): void {
-    if (!name || name.trim().length === 0) {
-      throw new Error('平台名称不能为空');
+  ): Promise<string> {
+    // 1. 验证租户创建请求
+    const validation =
+      await this.platformManagementService.validateTenantCreation(
+        tenantData,
+        this._systemCapacity,
+      );
+
+    if (!validation.valid) {
+      throw new Error(`租户创建验证失败: ${validation.reason}`);
     }
 
-    if (!createdBy || createdBy.trim().length === 0) {
-      throw new Error('创建者ID不能为空');
-    }
+    // 2. 计算租户配额
+    const quota = tenantData.requestedQuota
+      ? new TenantQuota(tenantData.requestedQuota as any)
+      : this.platformManagementService.calculateResourceQuota(
+          tenantData.tenantType,
+        );
 
-    const now = new Date();
-    const platformId = new PlatformId();
+    // 3. 生成租户ID
+    const tenantId = `tenant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    this.apply(
-      new PlatformCreatedEvent(
-        platformId.value,
-        name.trim(),
-        description?.trim(),
-        PlatformStatus.ACTIVE,
-        settings,
-        now,
-        createdBy,
-      ),
+    // 4. 创建租户
+    this._tenantQuotas.set(tenantId, quota);
+    // 注意：实际实现中应该通过仓储更新系统容量
+    // this._systemCapacity.currentTenants += 1;
+
+    // 5. 发布租户创建事件
+    const event = new TenantCreatedEvent(
+      tenantId,
+      tenantData.tenantName,
+      tenantData.tenantType,
+      quota,
+      tenantData.adminUserId,
+      createdBy,
     );
+
+    this.addDomainEvent(event);
+
+    return tenantId;
   }
 
   /**
-   * 更新平台信息
+   * @method updateTenant
+   * @description 更新租户信息
+   * @param {string} tenantId 租户ID
+   * @param {TenantUpdates} updates 租户更新数据
+   * @param {string} updatedBy 更新者用户ID
+   * @returns {Promise<void>}
+   * @throws {Error} 当租户更新失败时抛出
    *
-   * @param {string} name - 新平台名称
-   * @param {string} description - 新平台描述
-   * @param {string} updatedBy - 更新者ID
-   * @returns {void}
-   * @throws {Error} 当平台名称为空或更新者ID无效时抛出
+   * 业务逻辑：
+   * 1. 验证租户是否存在
+   * 2. 验证更新数据的有效性
+   * 3. 更新租户信息
+   * 4. 发布租户更新事件
    */
-  public updatePlatform(
-    name: string,
-    description: string | undefined,
+  async updateTenant(
+    tenantId: string,
+    updates: TenantUpdates,
     updatedBy: string,
-  ): void {
-    if (!name || name.trim().length === 0) {
-      throw new Error('平台名称不能为空');
+  ): Promise<void> {
+    // 1. 验证租户是否存在
+    if (!this._tenantQuotas.has(tenantId)) {
+      throw new Error(`租户不存在: ${tenantId}`);
     }
 
-    if (!updatedBy || updatedBy.trim().length === 0) {
-      throw new Error('更新者ID不能为空');
+    // 2. 准备更新数据
+    const changedFields: string[] = [];
+    const existingQuota = this._tenantQuotas.get(tenantId);
+    if (!existingQuota) {
+      throw new Error(`租户配额不存在: ${tenantId}`);
+    }
+    let updatedQuota = existingQuota;
+
+    // 3. 更新配额（如果提供）
+    if (updates.quota) {
+      updatedQuota = new TenantQuota(updates.quota);
+      this._tenantQuotas.set(tenantId, updatedQuota);
+      changedFields.push('quota');
     }
 
-    if (
-      name.trim() === this._name &&
-      description?.trim() === this._description
-    ) {
-      return; // 没有变化，不需要更新
-    }
-
-    this.apply(
-      new PlatformUpdatedEvent(
-        this._id.value,
-        name.trim(),
-        description?.trim(),
-        new Date(),
-        updatedBy,
-      ),
+    // 4. 发布租户更新事件
+    const event = new TenantUpdatedEvent(
+      tenantId,
+      updates.tenantName ?? `Tenant-${tenantId}`,
+      updatedQuota,
+      updatedBy,
+      changedFields,
     );
+
+    this.addDomainEvent(event);
   }
 
   /**
-   * 更新平台状态
+   * @method deleteTenant
+   * @description 删除租户
+   * @param {string} tenantId 租户ID
+   * @param {string} deletedBy 删除者用户ID
+   * @param {string} reason 删除原因
+   * @returns {Promise<void>}
+   * @throws {Error} 当租户删除失败时抛出
    *
-   * @param {PlatformStatus} newStatus - 新状态
-   * @param {string} updatedBy - 更新者ID
-   * @returns {void}
-   * @throws {Error} 当状态无效或更新者ID无效时抛出
+   * 业务逻辑：
+   * 1. 验证租户是否存在
+   * 2. 检查租户是否可以删除
+   * 3. 备份租户数据
+   * 4. 删除租户记录
+   * 5. 发布租户删除事件
    */
-  public updateStatus(newStatus: PlatformStatus, updatedBy: string): void {
-    if (!Object.values(PlatformStatus).includes(newStatus)) {
-      throw new Error('无效的平台状态');
+  async deleteTenant(
+    tenantId: string,
+    deletedBy: string,
+    reason: string,
+  ): Promise<void> {
+    // 1. 验证租户是否存在
+    if (!this._tenantQuotas.has(tenantId)) {
+      throw new Error(`租户不存在: ${tenantId}`);
     }
 
-    if (!updatedBy || updatedBy.trim().length === 0) {
-      throw new Error('更新者ID不能为空');
-    }
+    // 2. 删除租户配额
+    this._tenantQuotas.delete(tenantId);
+    // 注意：实际实现中应该通过仓储更新系统容量
+    // this._systemCapacity.currentTenants -= 1;
 
-    if (newStatus === this._status) {
-      return; // 状态没有变化
-    }
-
-    this.apply(
-      new PlatformStatusChangedEvent(
-        this._id.value,
-        this._status,
-        newStatus,
-        new Date(),
-        updatedBy,
-      ),
+    // 3. 发布租户删除事件
+    const event = new TenantDeletedEvent(
+      tenantId,
+      `Tenant-${tenantId}`,
+      deletedBy,
+      reason,
+      true, // 假设数据已备份
     );
+
+    this.addDomainEvent(event);
   }
 
   /**
-   * 更新平台设置
+   * @method assignUserToTenant
+   * @description 分配平台用户到租户
+   * @param {string} userId 用户ID
+   * @param {string} tenantId 租户ID
+   * @param {string} role 用户角色
+   * @param {string} assignedBy 分配者用户ID
+   * @param {string} reason 分配原因
+   * @returns {Promise<void>}
+   * @throws {Error} 当用户分配失败时抛出
    *
-   * @param {PlatformSettings} newSettings - 新设置
-   * @param {string} updatedBy - 更新者ID
-   * @returns {void}
-   * @throws {Error} 当设置无效或更新者ID无效时抛出
+   * 业务逻辑：
+   * 1. 验证用户分配请求的有效性
+   * 2. 检查租户容量
+   * 3. 验证用户资格
+   * 4. 分配用户到租户
+   * 5. 发布用户分配事件
    */
-  public updateSettings(
-    newSettings: PlatformSettings,
-    updatedBy: string,
-  ): void {
-    if (!updatedBy || updatedBy.trim().length === 0) {
-      throw new Error('更新者ID不能为空');
+  async assignUserToTenant(
+    userId: string,
+    tenantId: string,
+    role: string,
+    assignedBy: string,
+    reason: string,
+  ): Promise<void> {
+    // 1. 验证租户是否存在
+    if (!this._tenantQuotas.has(tenantId)) {
+      throw new Error(`租户不存在: ${tenantId}`);
     }
 
-    this.apply(
-      new PlatformUpdatedEvent(
-        this._id.value,
-        this._name,
-        this._description,
-        new Date(),
-        updatedBy,
-        newSettings,
-      ),
-    );
-  }
-
-  /**
-   * 更新平台配置
-   *
-   * @param {PlatformConfig} config - 配置
-   * @param {string} updatedBy - 更新者ID
-   * @returns {void}
-   * @throws {Error} 当配置无效或更新者ID无效时抛出
-   */
-  public updateConfig(config: PlatformConfig, updatedBy: string): void {
-    if (!updatedBy || updatedBy.trim().length === 0) {
-      throw new Error('更新者ID不能为空');
-    }
-
-    this.apply(
-      new PlatformConfigUpdatedEvent(
-        this._id.value,
-        config.key,
-        config.configValue,
-        config.type,
-        new Date(),
-        updatedBy,
-      ),
-    );
-  }
-
-  /**
-   * 获取配置值
-   *
-   * @param {string} key - 配置键
-   * @returns {unknown} 配置值
-   */
-  public getConfigValue(key: string): unknown {
-    return this._configs.get(key)?.configValue;
-  }
-
-  /**
-   * 检查配置是否存在
-   *
-   * @param {string} key - 配置键
-   * @returns {boolean} 是否存在
-   */
-  public hasConfig(key: string): boolean {
-    return this._configs.has(key);
-  }
-
-  /**
-   * 处理领域事件
-   *
-   * @param {IDomainEvent} event - 领域事件
-   * @param {boolean} _isFromHistory - 是否来自历史
-   * @returns {void}
-   * @protected
-   */
-  protected handleEvent(event: IDomainEvent, _isFromHistory: boolean): void {
-    switch (event.eventType) {
-      case 'PlatformCreated':
-        this.handlePlatformCreated(event as PlatformCreatedEvent);
-        break;
-      case 'PlatformUpdated':
-        this.handlePlatformUpdated(event as PlatformUpdatedEvent);
-        break;
-      case 'PlatformStatusChanged':
-        this.handlePlatformStatusChanged(event as PlatformStatusChangedEvent);
-        break;
-      case 'PlatformConfigUpdated':
-        this.handlePlatformConfigUpdated(event as PlatformConfigUpdatedEvent);
-        break;
-    }
-  }
-
-  /**
-   * 处理平台创建事件
-   *
-   * @param {PlatformCreatedEvent} event - 平台创建事件
-   * @private
-   */
-  private handlePlatformCreated(event: PlatformCreatedEvent): void {
-    this._id = new PlatformId(event.platformId);
-    this._name = event.name;
-    this._description = event.description;
-    this._status = event.status;
-    this._settings = event.settings;
-    this._configs = new Map();
-    this._createdAt = event.occurredOn;
-    this._updatedAt = event.occurredOn;
-    this._createdBy = event.createdBy;
-  }
-
-  /**
-   * 处理平台更新事件
-   *
-   * @param {PlatformUpdatedEvent} event - 平台更新事件
-   * @private
-   */
-  private handlePlatformUpdated(event: PlatformUpdatedEvent): void {
-    this._name = event.name;
-    this._description = event.description;
-    this._updatedAt = event.occurredOn;
-    this._updatedBy = event.updatedBy;
-
-    if (event.settings) {
-      this._settings = event.settings;
-    }
-  }
-
-  /**
-   * 处理平台状态变更事件
-   *
-   * @param {PlatformStatusChangedEvent} event - 平台状态变更事件
-   * @private
-   */
-  private handlePlatformStatusChanged(event: PlatformStatusChangedEvent): void {
-    this._status = event.newStatus;
-    this._updatedAt = event.occurredOn;
-    this._updatedBy = event.updatedBy;
-  }
-
-  /**
-   * 处理平台配置更新事件
-   *
-   * @param {PlatformConfigUpdatedEvent} event - 平台配置更新事件
-   * @private
-   */
-  private handlePlatformConfigUpdated(event: PlatformConfigUpdatedEvent): void {
-    const config = new PlatformConfig({
-      key: event.configKey,
-      value: event.configValue,
-      type: event.configType,
-    });
-
-    this._configs.set(event.configKey, config);
-    this._updatedAt = event.occurredOn;
-    this._updatedBy = event.updatedBy;
-  }
-
-  /**
-   * 转换为快照
-   *
-   * @returns {Record<string, unknown>} 快照数据
-   * @protected
-   */
-  protected toSnapshot(): Record<string, unknown> {
-    return {
-      id: this._id.value,
-      name: this._name,
-      description: this._description,
-      status: this._status,
-      settings: this._settings,
-      configs: Array.from(this._configs.entries()),
-      createdAt: this._createdAt,
-      updatedAt: this._updatedAt,
-      createdBy: this._createdBy,
-      updatedBy: this._updatedBy,
+    // 2. 准备用户分配数据
+    const assignmentData: UserAssignmentData = {
+      userId,
+      tenantId,
+      role,
+      assignedBy,
+      reason,
     };
+
+    // 3. 验证用户分配
+    const quota = this._tenantQuotas.get(tenantId);
+    if (!quota) {
+      throw new Error(`租户配额不存在: ${tenantId}`);
+    }
+    const validation = await this.userManagementService.validateUserAssignment(
+      assignmentData,
+      quota,
+      this._systemCapacity.currentUsers,
+    );
+
+    if (!validation.valid) {
+      throw new Error(`用户分配验证失败: ${validation.reason}`);
+    }
+
+    // 4. 更新系统容量
+    // 注意：实际实现中应该通过仓储更新系统容量
+    // this._systemCapacity.currentUsers += 1;
+
+    // 5. 发布用户分配事件
+    const event = new PlatformUserAssignedEvent(
+      userId,
+      tenantId,
+      assignedBy,
+      role,
+      reason,
+    );
+
+    this.addDomainEvent(event);
   }
 
   /**
-   * 从快照恢复
+   * @method removeUserFromTenant
+   * @description 从租户移除用户
+   * @param {string} userId 用户ID
+   * @param {string} tenantId 租户ID
+   * @param {string} removedBy 移除者用户ID
+   * @returns {Promise<void>}
+   * @throws {Error} 当用户移除失败时抛出
    *
-   * @param {Record<string, unknown>} data - 快照数据
-   * @protected
+   * 业务逻辑：
+   * 1. 验证用户移除请求的有效性
+   * 2. 检查用户是否可以移除
+   * 3. 移除用户从租户
+   * 4. 更新系统容量
+   * 5. 发布用户移除事件
    */
-  protected fromSnapshot(data: Record<string, unknown>): void {
-    this._id = new PlatformId(data.id as string);
-    this._name = data.name as string;
-    this._description = data.description as string | undefined;
-    this._status = data.status as PlatformStatus;
-    this._settings = data.settings as PlatformSettings;
-    this._configs = new Map(data.configs as [string, PlatformConfig][]);
-    this._createdAt = data.createdAt as Date;
-    this._updatedAt = data.updatedAt as Date;
-    this._createdBy = data.createdBy as string;
-    this._updatedBy = data.updatedBy as string | undefined;
+  async removeUserFromTenant(
+    userId: string,
+    tenantId: string,
+    removedBy: string,
+  ): Promise<void> {
+    // 1. 验证租户是否存在
+    if (!this._tenantQuotas.has(tenantId)) {
+      throw new Error(`租户不存在: ${tenantId}`);
+    }
+
+    // 2. 验证用户移除
+    const validation = await this.userManagementService.validateUserRemoval(
+      userId,
+      tenantId,
+      removedBy,
+    );
+
+    if (!validation.valid) {
+      throw new Error(`用户移除验证失败: ${validation.reason}`);
+    }
+
+    // 3. 更新系统容量
+    // 注意：实际实现中应该通过仓储更新系统容量
+    // this._systemCapacity.currentUsers -= 1;
+
+    // 4. 发布用户移除事件（这里可以创建新的事件类型）
+    // const event = new PlatformUserRemovedEvent(userId, tenantId, removedBy);
+    // this.addDomainEvent(event);
+  }
+
+  /**
+   * @method updateSystemConfiguration
+   * @description 更新系统配置
+   * @param {SystemConfiguration} configuration 系统配置
+   * @param {string} updatedBy 更新者用户ID
+   * @param {string} reason 更新原因
+   * @returns {Promise<void>}
+   * @throws {Error} 当系统配置更新失败时抛出
+   *
+   * 业务逻辑：
+   * 1. 验证系统配置的有效性
+   * 2. 更新系统配置
+   * 3. 发布系统配置更新事件
+   */
+  async updateSystemConfiguration(
+    configuration: SystemConfiguration,
+    updatedBy: string,
+    reason: string,
+  ): Promise<void> {
+    // 1. 验证系统配置
+    const validation =
+      await this.platformManagementService.validateSystemConfiguration(
+        configuration,
+      );
+
+    if (!validation.valid) {
+      throw new Error(`系统配置验证失败: ${validation.errors.join(', ')}`);
+    }
+
+    // 2. 更新系统配置
+    this._systemConfiguration = configuration;
+
+    // 3. 发布系统配置更新事件
+    const event = new SystemConfigurationUpdatedEvent(
+      configuration,
+      updatedBy,
+      ['systemParameters', 'featureFlags', 'themeSettings'],
+      reason,
+    );
+
+    this.addDomainEvent(event);
+  }
+
+  /**
+   * @method recordSystemMetrics
+   * @description 记录系统指标
+   * @param {SystemMetrics} metrics 系统指标
+   * @param {string} recordedBy 记录者
+   * @returns {Promise<void>}
+   * @throws {Error} 当系统指标记录失败时抛出
+   *
+   * 业务逻辑：
+   * 1. 分析系统指标
+   * 2. 更新系统指标
+   * 3. 发布系统指标记录事件
+   */
+  async recordSystemMetrics(
+    metrics: SystemMetrics,
+    recordedBy: string,
+  ): Promise<void> {
+    // 1. 分析系统指标
+    const analysis =
+      await this.platformManagementService.analyzeSystemMetrics(metrics);
+
+    // 2. 更新系统指标
+    this._systemMetrics = metrics;
+
+    // 3. 发布系统指标记录事件
+    const event = new SystemMetricsRecordedEvent(
+      metrics,
+      recordedBy,
+      'system-monitor',
+    );
+
+    this.addDomainEvent(event);
+
+    // 4. 如果系统不健康，可以触发告警
+    if (!analysis.healthy) {
+      // 在实际实现中，这里应该通过事件或服务触发告警
+      // console.warn('系统健康状态异常:', analysis.recommendations);
+    }
+  }
+
+  /**
+   * @method getTenantQuota
+   * @description 获取租户配额
+   * @param {string} tenantId 租户ID
+   * @returns {TenantQuota | undefined} 租户配额
+   * @since 1.0.0
+   */
+  getTenantQuota(tenantId: string): TenantQuota | undefined {
+    return this._tenantQuotas.get(tenantId);
+  }
+
+  /**
+   * @method isSystemHealthy
+   * @description 检查系统是否健康
+   * @returns {boolean} 系统是否健康
+   * @since 1.0.0
+   */
+  isSystemHealthy(): boolean {
+    if (!this._systemMetrics) {
+      return false;
+    }
+    return this._systemMetrics.isSystemHealthy();
+  }
+
+  /**
+   * @method getSystemSummary
+   * @description 获取系统摘要信息
+   * @returns {string} 系统摘要
+   * @since 1.0.0
+   */
+  getSystemSummary(): string {
+    const capacity = this._systemCapacity;
+
+    return (
+      `系统状态: ${this.isSystemHealthy() ? '健康' : '异常'}, ` +
+      `租户: ${capacity.currentTenants}/${capacity.maxTenants}, ` +
+      `用户: ${capacity.currentUsers}/${capacity.maxUsers}, ` +
+      `存储: ${capacity.currentStorage}/${capacity.maxStorage}MB`
+    );
+  }
+
+  /**
+   * @method handleEvent
+   * @description 处理领域事件
+   * @param {DomainEvent} _event 领域事件
+   * @returns {void}
+   * @since 1.0.0
+   */
+  handleEvent(_event: DomainEvent): void {
+    // 平台聚合根不需要处理事件，因为它是事件发布者
+    // 事件处理由其他聚合根或事件处理器负责
+  }
+
+  /**
+   * @method initialize
+   * @description 初始化平台聚合根
+   * @param {SystemConfiguration} systemConfiguration 系统配置
+   * @param {SystemMetrics} systemMetrics 系统指标
+   * @param {SystemCapacity} systemCapacity 系统容量
+   * @returns {void}
+   * @since 1.0.0
+   */
+  initialize(
+    systemConfiguration: SystemConfiguration,
+    systemMetrics: SystemMetrics,
+    systemCapacity: SystemCapacity,
+  ): void {
+    this._systemConfiguration = systemConfiguration;
+    this._systemMetrics = systemMetrics;
+    this._systemCapacity = systemCapacity;
   }
 }

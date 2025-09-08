@@ -2,8 +2,8 @@
   "name": "@aiofix/config",
   "version": "1.0.0",
   "description": "Aiofix配置模块 - 提供统一的配置管理功能",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/config/src/index.js",
+  "types": "dist/config/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",

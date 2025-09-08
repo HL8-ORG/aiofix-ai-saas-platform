@@ -1,8 +1,10 @@
 import { DomainEvent } from '@aiofix/core';
 import { OrganizationId } from '../value-objects/organization-id.vo';
-import { OrganizationName } from '../value-objects/organization-name.vo';
-import { OrganizationDescription } from '../value-objects/organization-description.vo';
-import { OrganizationSettings } from '../value-objects/organization-settings.vo';
+import { OrganizationName, OrganizationDescription } from '@aiofix/shared';
+import {
+  OrganizationSettings,
+  OrganizationSettingsData,
+} from '../value-objects/organization-settings.vo';
 import { OrganizationStatus } from '../enums/organization-status.enum';
 import { TenantId } from '@aiofix/shared';
 
@@ -143,7 +145,7 @@ export class OrganizationCreatedEvent extends DomainEvent {
       new TenantId(data.tenantId as string),
       new OrganizationName(data.name as string),
       new OrganizationDescription(data.description as string),
-      new OrganizationSettings(data.settings as any),
+      new OrganizationSettings(data.settings as OrganizationSettingsData),
       data.status as OrganizationStatus,
       new Date(data.createdAt as string),
     );

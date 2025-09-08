@@ -1,7 +1,6 @@
 import { DomainEvent } from '@aiofix/core';
 import { OrganizationId } from '../value-objects/organization-id.vo';
-import { OrganizationName } from '../value-objects/organization-name.vo';
-import { OrganizationDescription } from '../value-objects/organization-description.vo';
+import { OrganizationName, OrganizationDescription } from '@aiofix/shared';
 import { OrganizationSettings } from '../value-objects/organization-settings.vo';
 import { TenantId } from '@aiofix/shared';
 

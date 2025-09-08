@@ -1,0 +1,32 @@
+{
+  "name": "@aiofix/notif-analytics",
+  "version": "1.0.0",
+  "description": "通知分析子领域 - 领域层",
+  "main": "dist/analytics/src/index.js",
+  "types": "dist/analytics/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:example": "ts-node test-example.ts",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@aiofix/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "notification",
+    "analytics",
+    "domain",
+    "ddd",
+    "clean-architecture"
+  ],
+  "author": "Aiofix Team",
+  "license": "MIT"
+}

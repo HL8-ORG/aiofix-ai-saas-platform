@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 import { DepartmentId } from '../value-objects/department-id.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
@@ -54,13 +54,7 @@ import { OrganizationId } from '@aiofix/organization';
  * ```
  * @since 1.0.0
  */
-export class DepartmentDeletedEvent implements IDomainEvent {
-  public readonly eventType: string = 'DepartmentDeleted';
-  public readonly aggregateId: string;
-  public readonly occurredOn: Date = new Date();
-  public readonly eventVersion: number = 1;
-  public readonly eventId: string;
-
+export class DepartmentDeletedEvent extends DomainEvent {
   constructor(
     public readonly departmentId: DepartmentId,
     public readonly tenantId: TenantId,
@@ -70,53 +64,7 @@ export class DepartmentDeletedEvent implements IDomainEvent {
     public readonly status: DepartmentStatus = DepartmentStatus.DELETED,
     public readonly deletedAt: Date = new Date(),
   ) {
-    this.aggregateId = this.departmentId.value;
-    this.eventId = `${this.eventType}-${this.aggregateId}-${this.occurredOn.getTime()}`;
-  }
-
-  /**
-   * @method getEventType
-   * @description 获取事件类型标识
-   * @returns {string} 事件类型
-   */
-  getEventType(): string {
-    return this.eventType;
-  }
-
-  /**
-   * @method getAggregateId
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
-   */
-  getAggregateId(): string {
-    return this.aggregateId;
-  }
-
-  /**
-   * @method getOccurredOn
-   * @description 获取事件发生时间
-   * @returns {Date} 事件发生时间
-   */
-  getOccurredOn(): Date {
-    return this.occurredOn;
-  }
-
-  /**
-   * @method getEventVersion
-   * @description 获取事件版本号
-   * @returns {number} 事件版本号
-   */
-  getEventVersion(): number {
-    return this.eventVersion;
-  }
-
-  /**
-   * @method getEventId
-   * @description 获取事件唯一标识
-   * @returns {string} 事件ID
-   */
-  getEventId(): string {
-    return `${this.eventType}-${this.aggregateId}-${this.occurredOn.getTime()}`;
+    super(departmentId.value);
   }
 
   /**
@@ -126,10 +74,7 @@ export class DepartmentDeletedEvent implements IDomainEvent {
    */
   toJSON(): Record<string, unknown> {
     return {
-      eventType: this.eventType,
-      aggregateId: this.aggregateId,
-      occurredOn: this.occurredOn.toISOString(),
-      eventVersion: this.eventVersion,
+      ...this.getBaseEventData(),
       departmentId: this.departmentId.value,
       tenantId: this.tenantId.value,
       organizationId: this.organizationId.value,

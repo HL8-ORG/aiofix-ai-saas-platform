@@ -1,0 +1,30 @@
+{
+  "name": "@aiofix/notif-sms",
+  "version": "1.0.0",
+  "description": "短信通知子领域 - 领域层",
+  "main": "dist/sms/src/index.js",
+  "types": "dist/sms/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "@aiofix/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "notification",
+    "sms",
+    "domain",
+    "ddd",
+    "clean-architecture"
+  ],
+  "author": "Aiofix Team",
+  "license": "MIT"
+}

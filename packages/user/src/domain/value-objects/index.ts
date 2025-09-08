@@ -7,9 +7,7 @@
  * - 便于其他模块引用
  */
 
-// 基础值对象
-export { UserId, InvalidUserIdError } from './user-id.vo';
-export { Email, InvalidEmailError } from './email.vo';
+// 基础值对象 - UserId和Email现在来自@aiofix/shared
 export {
   Password,
   InvalidPasswordError,

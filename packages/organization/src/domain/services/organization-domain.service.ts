@@ -1,5 +1,5 @@
 import { OrganizationId } from '../value-objects/organization-id.vo';
-import { OrganizationName } from '../value-objects/organization-name.vo';
+import { OrganizationName } from '@aiofix/shared';
 import { OrganizationSettings } from '../value-objects/organization-settings.vo';
 import { OrganizationStatus } from '../enums/organization-status.enum';
 import { TenantId } from '@aiofix/shared';

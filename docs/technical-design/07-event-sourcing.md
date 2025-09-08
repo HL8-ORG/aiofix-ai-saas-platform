@@ -1,10 +1,10 @@
-# 事件溯源设计
+# 事件驱动架构设计
 
 ## 概述
 
-事件溯源是一种将应用程序状态变更存储为事件序列的架构模式。在SAAS平台中，事件溯源提供了完整的审计追踪、业务分析能力和时间旅行调试功能，是构建可观测、可审计系统的关键技术。
+事件驱动架构是一种基于事件的消息传递架构模式，结合事件溯源技术，为SAAS平台提供完整的审计追踪、业务分析能力和时间旅行调试功能。通过消息队列实现异步事件处理，确保系统的松耦合和最终一致性。
 
-## 为什么选择事件溯源
+## 为什么选择事件驱动架构
 
 ### 业务驱动因素
 
@@ -107,7 +107,7 @@ export class ConsistencyService {
 }
 ```
 
-## 事件溯源的核心价值
+## 事件驱动架构的核心价值
 
 ### 业务价值
 
@@ -185,7 +185,7 @@ export class DisasterRecoveryService {
 }
 ```
 
-## 事件溯源的设计考量
+## 事件驱动架构的设计考量
 
 ### 事件设计原则
 
@@ -380,6 +380,68 @@ export class EventCompressionService {
       timestamps: events.map(e => e.occurredOn),
       keyData: events.map(e => this.extractKeyData(e)),
     };
+  }
+}
+```
+
+### 消息队列设计
+
+#### 事件发布机制
+
+```typescript
+// 事件总线服务
+@Injectable()
+export class EventBusService {
+  constructor(
+    private readonly eventStore: IEventStore,
+    private readonly messageQueue: IMessageQueue,
+  ) {}
+
+  async publish(event: IDomainEvent): Promise<void> {
+    // 1. 保存到事件存储
+    await this.eventStore.saveEvent(event);
+
+    // 2. 发布到消息队列
+    await this.messageQueue.publish('domain_events', {
+      eventId: event.eventId,
+      eventType: event.eventType,
+      aggregateId: event.aggregateId,
+      eventData: event.toJSON(),
+      occurredOn: event.occurredOn,
+    });
+  }
+}
+```
+
+#### 异步事件处理
+
+```typescript
+// 事件处理器
+@Processor('domain_events')
+export class DomainEventProcessor {
+  @Process('UserCreatedEvent')
+  async handleUserCreated(job: Job<UserCreatedEvent>): Promise<void> {
+    const event = job.data;
+
+    // 并行处理多个后续操作
+    await Promise.allSettled([
+      this.updateReadModel(event),
+      this.sendWelcomeEmail(event),
+      this.logAuditEvent(event),
+      this.createUserPermissions(event),
+    ]);
+  }
+
+  @Process('TenantCreatedEvent')
+  async handleTenantCreated(job: Job<TenantCreatedEvent>): Promise<void> {
+    const event = job.data;
+
+    await Promise.allSettled([
+      this.updateTenantReadModel(event),
+      this.allocateResources(event),
+      this.sendNotification(event),
+      this.logAuditEvent(event),
+    ]);
   }
 }
 ```
@@ -611,102 +673,120 @@ export class EventSourcingGuidelines {
 }
 ```
 
-## 架构选择：事件溯源 vs 事件驱动
+## 架构选择：事件驱动架构 + 事件溯源
 
-### 为什么选择事件溯源而不采用事件驱动
+### 为什么选择事件驱动架构结合事件溯源
 
 #### 技术复杂度对比
 
-**事件溯源复杂度**
+**事件驱动架构 + 事件溯源复杂度**
 
 - 事件存储设计和管理
+- 消息队列集成和管理
 - 聚合重建机制
+- 异步事件处理
 - 读模型同步
 - 快照管理
-
-**事件驱动复杂度**
-
-- 消息队列管理
 - 事件路由和分发
-- 分布式事务处理
-- 服务间协调
-- 事件版本兼容性
 - 死信队列处理
 - 消息重试机制
 
+**传统同步架构复杂度**
+
+- 紧耦合的服务调用
+- 复杂的分布式事务
+- 难以扩展的架构
+- 缺乏审计追踪
+- 难以实现最终一致性
+
 #### 资源开销对比
 
-**事件溯源资源需求**
+**事件驱动架构 + 事件溯源资源需求**
 
 - 事件存储空间
+- 消息队列基础设施
 - 聚合重建计算
 - 读模型维护
-
-**事件驱动资源需求**
-
-- 消息队列基础设施
-- 网络通信开销
-- 服务发现和注册
-- 负载均衡
+- 异步处理资源
 - 监控和日志
+
+**传统同步架构资源需求**
+
+- 数据库连接池
+- 同步服务调用
+- 复杂的缓存策略
+- 难以优化的查询
+- 紧耦合的部署
 
 #### 开发效率对比
 
-**事件溯源开发效率**
+**事件驱动架构 + 事件溯源开发效率**
 
 - 业务逻辑集中
-- 调试相对简单
-- 测试容易编写
+- 松耦合架构易于扩展
+- 异步处理提升性能
+- 完整的审计追踪
+- 事件驱动易于测试
 
-**事件驱动开发效率**
+**传统同步架构开发效率**
 
-- 分布式调试复杂
-- 集成测试困难
-- 错误排查耗时
+- 紧耦合难以扩展
+- 同步调用性能瓶颈
+- 缺乏审计追踪
+- 难以实现最终一致性
+- 复杂的错误处理
 
 #### 团队技能要求对比
 
-**事件溯源技能要求**
+**事件驱动架构 + 事件溯源技能要求**
 
 - DDD概念理解
 - 事件设计能力
 - 聚合建模技能
-
-**事件驱动技能要求**
-
-- 分布式系统设计
 - 消息队列技术
-- 微服务架构
-- 服务治理
-- 分布式事务
+- 异步处理理解
+- 最终一致性概念
+
+**传统同步架构技能要求**
+
+- 传统CRUD开发
+- 同步服务调用
+- 数据库优化
+- 缓存策略
+- 紧耦合架构
 
 #### 运维复杂度对比
 
-**事件溯源运维**
+**事件驱动架构 + 事件溯源运维**
 
 - 事件存储备份
-- 读模型监控
-- 性能优化
-
-**事件驱动运维**
-
 - 消息队列监控
-- 服务健康检查
-- 分布式追踪
+- 读模型监控
+- 异步处理监控
+- 性能优化
 - 故障恢复
 - 容量规划
 
+**传统同步架构运维**
+
+- 数据库监控
+- 服务健康检查
+- 缓存监控
+- 紧耦合部署
+- 难以扩展
+
 ### 架构选择总结
 
-选择事件溯源而非完整的事件驱动架构的原因：
+选择事件驱动架构结合事件溯源的原因：
 
-1. **降低复杂度**：避免分布式系统的复杂性
-2. **减少资源开销**：不需要额外的消息队列基础设施
-3. **提高开发效率**：集中式开发，调试简单
-4. **降低技能要求**：团队更容易掌握
-5. **简化运维**：减少运维复杂度
+1. **完整的业务价值**：提供审计追踪、业务分析、时间旅行调试
+2. **松耦合架构**：支持系统的灵活扩展和快速迭代
+3. **最终一致性**：通过异步处理保证数据完整性
+4. **高性能**：异步事件处理提升系统响应速度
+5. **可扩展性**：消息队列支持水平扩展
+6. **可靠性**：消息队列提供重试和死信队列机制
 
-通过选择事件溯源，我们在保持核心价值（审计追踪、业务分析、时间旅行调试）的同时，显著降低了系统的复杂度和资源需求。
+通过选择事件驱动架构结合事件溯源，我们在保持核心价值的同时，实现了松耦合、高性能、可扩展的现代化架构。
 
 ## 相关文档
 

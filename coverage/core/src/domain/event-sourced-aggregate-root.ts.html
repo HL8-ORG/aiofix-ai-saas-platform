@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.14% </span>
+                <span class="strong">78.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/35</span>
+                <span class='fraction'>26/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>21/28</span>
+                <span class='fraction'>10/16</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.41% </span>
+                <span class="strong">81.25% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/34</span>
+                <span class='fraction'>26/32</span>
             </div>
         
             
@@ -345,11 +345,7 @@
 <a name='L280'></a><a href='#L280'>280</a>
 <a name='L281'></a><a href='#L281'>281</a>
 <a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a>
-<a name='L284'></a><a href='#L284'>284</a>
-<a name='L285'></a><a href='#L285'>285</a>
-<a name='L286'></a><a href='#L286'>286</a>
-<a name='L287'></a><a href='#L287'>287</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L283'></a><a href='#L283'>283</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -400,7 +396,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -590,10 +586,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
@@ -792,7 +784,7 @@ export abstract class EventSourcedAggregateRoot {
     events: IDomainEvent[],
     fromVersion: number = 0,
   ): void {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!events || events.length === 0) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (events.length === 0) {
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
@@ -838,7 +830,7 @@ export abstract class EventSourcedAggregateRoot {
    * @public
    */
   public restoreFromSnapshot(snapshot: IAggregateSnapshot): void {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!snapshot || snapshot.aggregateId !== this.id) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (snapshot.aggregateId !== this.id) {
 <span class="cstat-no" title="statement not covered" >      throw new Error('无效的快照数据');</span>
     }
 &nbsp;
@@ -851,24 +843,24 @@ export abstract class EventSourcedAggregateRoot {
    *
    * 子类必须实现此方法，定义如何将聚合状态序列化为快照数据。
    *
-   * @returns {any} 快照数据
+   * @returns {Record&lt;string, unknown&gt;} 快照数据
    *
    * @protected
    * @abstract
    */
-  protected abstract toSnapshot(): any;
+  protected abstract toSnapshot(): Record&lt;string, unknown&gt;;
 &nbsp;
   /**
    * 从快照数据恢复聚合状态
    *
    * 子类必须实现此方法，定义如何从快照数据恢复聚合状态。
    *
-   * @param {any} data - 快照数据
+   * @param {Record&lt;string, unknown&gt;} data - 快照数据
    *
    * @protected
    * @abstract
    */
-  protected abstract fromSnapshot(data: any): void;
+  protected abstract fromSnapshot(data: Record&lt;string, unknown&gt;): void;
 &nbsp;
   /**
    * 验证事件的有效性
@@ -878,19 +870,15 @@ export abstract class EventSourcedAggregateRoot {
    * @private
    */
   private validateEvent(event: IDomainEvent): void {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!event) {
-<span class="cstat-no" title="statement not covered" >      throw new Error('事件不能为空');</span>
-    }
-&nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!event.aggregateId || event.aggregateId !== this.id) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (event.aggregateId !== this.id) {
 <span class="cstat-no" title="statement not covered" >      throw new Error('事件的聚合根ID与当前聚合根不匹配');</span>
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!event.eventId || event.eventId.trim().length === 0) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (event.eventId.trim().length === 0) {
 <span class="cstat-no" title="statement not covered" >      throw new Error('事件ID不能为空');</span>
     }
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!event.eventType || event.eventType.trim().length === 0) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (event.eventType.trim().length === 0) {
 <span class="cstat-no" title="statement not covered" >      throw new Error('事件类型不能为空');</span>
     }
 &nbsp;
@@ -928,7 +916,7 @@ export abstract class EventSourcedAggregateRoot {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-07T11:11:23.717Z
+                at 2025-09-08T15:14:36.097Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

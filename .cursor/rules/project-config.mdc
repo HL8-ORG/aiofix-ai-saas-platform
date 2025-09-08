@@ -3,6 +3,7 @@ description: 项目配置规则
 globs:
 alwaysApply: true
 ---
+
 # 项目配置规则
 
 ## 概述
@@ -18,18 +19,21 @@ alwaysApply: true
 ## Cursor特定配置
 
 ### 开发环境设置
+
 - 使用TypeScript严格模式
 - 启用ESLint和Prettier
 - 配置自动格式化
 - 启用代码提示和智能补全
 
 ### 文件组织规则
+
 - 遵循项目的分层架构
 - 保持文件命名一致性
 - 使用相对路径引用
 - 维护清晰的目录结构
 
 ### 代码质量规则
+
 - 所有代码必须通过linter检查
 - 保持测试覆盖率在80%以上
 - 编写详细的中文注释
@@ -41,16 +45,19 @@ alwaysApply: true
 2. 阅读 `../../docs/business-requirements.md` 理解业务需求
 3. 阅读 `../../docs/development-plan.md` 了解开发计划
 4. 参考 `../../docs/technical-design/README.md` 掌握技术架构
+5. **重要**：阅读 `technical-design-guide-for-ai.mdc` 了解技术设计方案查阅指南
+6. **快速查阅**：参考 `quick-reference.mdc` 快速定位需要查阅的文档
 
 ## 开发提示
 
 ### 项目初始化提示词
+
 ```
 你是一个全栈工程师，精通TypeScript语言，有丰富的Node.js开发经验。
 
 项目背景：
 - 这是一个现代化的SAAS平台项目，支持多租户架构
-- 采用DDD + Clean Architecture + CQRS + 事件溯源架构
+- 采用DDD + Clean Architecture + CQRS + 事件溯源架构 + 事件驱动架构
 - 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis
 
 开发原则：
@@ -65,15 +72,20 @@ alwaysApply: true
 - 技术设计文档：`../../docs/technical-design/README.md`
 - 开发计划：`../../docs/development-plan.md`
 - AI配置文件：`../../.ai-config.md`
+- 技术设计查阅指南：`technical-design-guide-for-ai.mdc`
+- 快速查阅指南：`quick-reference.mdc`
 ```
 
 ### 架构遵循原则
+
 - 严格按照DDD和Clean Architecture分层
 - 确保依赖倒置原则
 - 保持领域层的纯净性
 - 实现CQRS和事件溯源模式
+- **重要**：开发前必须先查阅相关技术设计文档
 
 ### 代码质量标准
+
 - 使用TypeScript严格模式
 - 编写详细的中文注释
 - 遵循TSDoc规范
@@ -88,6 +100,7 @@ alwaysApply: true
 
 ---
 
-**Cursor规则版本**：1.0  
+**Cursor规则版本**：1.1  
 **创建日期**：2024-01-01  
+**最后更新**：2024-01-01  
 **维护者**：项目开发团队

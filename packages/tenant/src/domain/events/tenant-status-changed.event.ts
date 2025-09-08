@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { TenantId } from '../value-objects/tenant-id.vo';
+import { DomainEvent } from '@aiofix/core';
+import { TenantId } from '@aiofix/shared';
 import { TenantStatus } from '../value-objects/tenant-settings.vo';
 
 /**
@@ -47,13 +47,7 @@ import { TenantStatus } from '../value-objects/tenant-settings.vo';
  * ```
  * @since 1.0.0
  */
-export class TenantStatusChangedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantStatusChanged';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+export class TenantStatusChangedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly oldStatus: TenantStatus,
@@ -61,9 +55,7 @@ export class TenantStatusChangedEvent implements IDomainEvent {
     public readonly reason: string,
     public readonly changedBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
+    super(tenantId.toString(), 1);
     this.validate();
   }
 
@@ -166,8 +158,12 @@ export class TenantStatusChangedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      ...this.getEventData(),
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
+      oldStatus: this.oldStatus,
+      newStatus: this.newStatus,
+      reason: this.reason,
+      changedBy: this.changedBy,
     };
   }
 

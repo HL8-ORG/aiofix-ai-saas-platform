@@ -6,14 +6,8 @@
  */
 
 export { DepartmentId, InvalidDepartmentIdError } from './department-id.vo';
-export {
-  DepartmentName,
-  InvalidDepartmentNameError,
-} from './department-name.vo';
-export {
-  DepartmentDescription,
-  InvalidDepartmentDescriptionError,
-} from './department-description.vo';
+export { DepartmentName, InvalidNameError } from '@aiofix/shared';
+export { DepartmentDescription, InvalidDescriptionError } from '@aiofix/shared';
 export {
   DepartmentSettings,
   InvalidDepartmentSettingsError,

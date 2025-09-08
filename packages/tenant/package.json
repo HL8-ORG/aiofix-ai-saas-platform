@@ -2,8 +2,8 @@
   "name": "@aiofix/tenant",
   "version": "1.0.0",
   "description": "租户管理模块，提供完整的租户管理功能",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/tenant/src/index.js",
+  "types": "dist/tenant/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

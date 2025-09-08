@@ -1,4 +1,4 @@
-import { ValueObject } from '@aiofix/core';
+import { BaseEntity } from '@aiofix/core';
 import {
   PermissionId,
   Resource,
@@ -55,7 +55,7 @@ import { TenantId } from '@aiofix/shared';
  * ```
  * @since 1.0.0
  */
-export class PermissionEntity extends ValueObject<PermissionId> {
+export class PermissionEntity extends BaseEntity {
   constructor(
     public readonly id: PermissionId,
     public readonly resource: Resource,
@@ -65,13 +65,20 @@ export class PermissionEntity extends ValueObject<PermissionId> {
     public readonly type: PermissionType,
     public readonly settings: PermissionSettings,
     public readonly tenantId: TenantId,
-    private status: PermissionStatus = PermissionStatus.ACTIVE,
-    public readonly createdAt: Date = new Date(),
-    public readonly updatedAt: Date = new Date(),
-    public readonly deletedAt?: Date,
+    private _status: PermissionStatus = PermissionStatus.ACTIVE,
+    createdBy: string = 'system',
   ) {
-    super(id);
+    super(createdBy);
     this.validatePermission();
+  }
+
+  /**
+   * @getter status
+   * @description 获取权限状态
+   * @returns {PermissionStatus} 权限状态
+   */
+  public get status(): PermissionStatus {
+    return this._status;
   }
 
   /**
@@ -187,7 +194,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {PermissionStatus} 权限状态
    */
   getStatus(): PermissionStatus {
-    return this.status;
+    return this._status;
   }
 
   /**
@@ -199,10 +206,10 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   activate(): void {
     if (!this.canBeActivated()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 转换为 ${PermissionStatus.ACTIVE}`,
+        `权限状态不能从 ${this._status} 转换为 ${PermissionStatus.ACTIVE}`,
       );
     }
-    this.status = PermissionStatus.ACTIVE;
+    this._status = PermissionStatus.ACTIVE;
   }
 
   /**
@@ -214,10 +221,10 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   deactivate(): void {
     if (!this.canBeDeactivated()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 转换为 ${PermissionStatus.INACTIVE}`,
+        `权限状态不能从 ${this._status} 转换为 ${PermissionStatus.INACTIVE}`,
       );
     }
-    this.status = PermissionStatus.INACTIVE;
+    this._status = PermissionStatus.INACTIVE;
   }
 
   /**
@@ -229,10 +236,10 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   suspend(): void {
     if (!this.canBeSuspended()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 转换为 ${PermissionStatus.SUSPENDED}`,
+        `权限状态不能从 ${this._status} 转换为 ${PermissionStatus.SUSPENDED}`,
       );
     }
-    this.status = PermissionStatus.SUSPENDED;
+    this._status = PermissionStatus.SUSPENDED;
   }
 
   /**
@@ -244,10 +251,57 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   restore(): void {
     if (!this.canBeRestored()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 恢复`,
+        `权限状态不能从 ${this._status} 恢复`,
       );
     }
-    this.status = PermissionStatus.ACTIVE;
+    this._status = PermissionStatus.ACTIVE;
+  }
+
+  /**
+   * @method updatePermission
+   * @description 更新权限信息
+   * @param {Resource} newResource 新的权限资源
+   * @param {Action} newAction 新的权限操作
+   * @param {PermissionCondition[]} newConditions 新的权限条件列表
+   * @param {PermissionScope} newScope 新的权限作用域
+   * @param {PermissionSettings} newSettings 新的权限设置
+   * @param {string} updatedBy 更新者ID
+   * @returns {void}
+   * @throws {InvalidResourceError} 当资源无效时抛出
+   * @throws {InvalidActionError} 当操作无效时抛出
+   * @throws {InvalidScopeError} 当作用域无效时抛出
+   *
+   * 业务逻辑：
+   * 1. 验证新的权限数据
+   * 2. 更新权限属性
+   * 3. 更新审计信息
+   */
+  updatePermission(
+    newResource: Resource,
+    newAction: Action,
+    newConditions: PermissionCondition[],
+    newScope: PermissionScope,
+    newSettings: PermissionSettings,
+    updatedBy: string,
+  ): void {
+    // 验证新的权限数据
+    this.validatePermissionData(
+      newResource,
+      newAction,
+      newConditions,
+      newScope,
+    );
+
+    // 更新权限属性（注意：由于实体是不可变的，这里应该创建新实例）
+    // 但为了简化，我们直接更新属性
+    (this as any).resource = newResource;
+    (this as any).action = newAction;
+    (this as any).conditions = newConditions;
+    (this as any).scope = newScope;
+    (this as any).settings = newSettings;
+
+    // 更新审计信息
+    this.updateAuditInfo(updatedBy);
   }
 
   /**
@@ -256,7 +310,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {void}
    */
   expire(): void {
-    this.status = PermissionStatus.EXPIRED;
+    this._status = PermissionStatus.EXPIRED;
   }
 
   /**
@@ -268,10 +322,10 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   approve(): void {
     if (!this.canBeApproved()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 审批通过`,
+        `权限状态不能从 ${this._status} 审批通过`,
       );
     }
-    this.status = PermissionStatus.ACTIVE;
+    this._status = PermissionStatus.ACTIVE;
   }
 
   /**
@@ -283,10 +337,10 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   reject(): void {
     if (!this.canBeRejected()) {
       throw new InvalidStateTransitionError(
-        `权限状态不能从 ${this.status} 拒绝`,
+        `权限状态不能从 ${this._status} 拒绝`,
       );
     }
-    this.status = PermissionStatus.REJECTED;
+    this._status = PermissionStatus.REJECTED;
   }
 
   /**
@@ -299,7 +353,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
       PermissionStatus.INACTIVE,
       PermissionStatus.SUSPENDED,
       PermissionStatus.PENDING_APPROVAL,
-    ].includes(this.status);
+    ].includes(this._status);
   }
 
   /**
@@ -308,7 +362,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {boolean} 是否可以停用
    */
   canBeDeactivated(): boolean {
-    return this.status === PermissionStatus.ACTIVE;
+    return this._status === PermissionStatus.ACTIVE;
   }
 
   /**
@@ -317,7 +371,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {boolean} 是否可以暂停
    */
   canBeSuspended(): boolean {
-    return this.status === PermissionStatus.ACTIVE;
+    return this._status === PermissionStatus.ACTIVE;
   }
 
   /**
@@ -327,7 +381,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    */
   canBeRestored(): boolean {
     return [PermissionStatus.SUSPENDED, PermissionStatus.INACTIVE].includes(
-      this.status,
+      this._status,
     );
   }
 
@@ -337,7 +391,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {boolean} 是否可以审批
    */
   canBeApproved(): boolean {
-    return this.status === PermissionStatus.PENDING_APPROVAL;
+    return this._status === PermissionStatus.PENDING_APPROVAL;
   }
 
   /**
@@ -346,7 +400,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {boolean} 是否可以拒绝
    */
   canBeRejected(): boolean {
-    return this.status === PermissionStatus.PENDING_APPROVAL;
+    return this._status === PermissionStatus.PENDING_APPROVAL;
   }
 
   /**
@@ -362,7 +416,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
         PermissionStatus.SUSPENDED,
         PermissionStatus.PENDING_APPROVAL,
         PermissionStatus.REJECTED,
-      ].includes(this.status) && this.settings.canBeDeleted()
+      ].includes(this._status) && this.settings.canBeDeleted()
     );
   }
 
@@ -378,7 +432,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
         PermissionStatus.INACTIVE,
         PermissionStatus.SUSPENDED,
         PermissionStatus.PENDING_APPROVAL,
-      ].includes(this.status) && this.settings.canBeModified()
+      ].includes(this._status) && this.settings.canBeModified()
     );
   }
 
@@ -388,7 +442,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    * @returns {boolean} 是否处于活跃状态
    */
   isActive(): boolean {
-    return this.status === PermissionStatus.ACTIVE;
+    return this._status === PermissionStatus.ACTIVE;
   }
 
   /**
@@ -398,7 +452,7 @@ export class PermissionEntity extends ValueObject<PermissionId> {
    */
   isExpired(): boolean {
     return (
-      this.status === PermissionStatus.EXPIRED || this.settings.isExpired()
+      this._status === PermissionStatus.EXPIRED || this.settings.isExpired()
     );
   }
 
@@ -495,6 +549,63 @@ export class PermissionEntity extends ValueObject<PermissionId> {
   }
 
   /**
+   * @method getEntityId
+   * @description 获取实体ID，实现BaseEntity抽象方法
+   * @returns {string} 实体ID
+   */
+  public getEntityId(): string {
+    return this.id.toString();
+  }
+
+  /**
+   * @method getTenantId
+   * @description 获取租户ID，实现BaseEntity抽象方法
+   * @returns {string} 租户ID
+   */
+  public getTenantId(): string {
+    return this.tenantId.toString();
+  }
+
+  /**
+   * @method validatePermissionData
+   * @description 验证权限数据的有效性
+   * @param {Resource} resource 权限资源
+   * @param {Action} action 权限操作
+   * @param {PermissionCondition[]} conditions 权限条件列表
+   * @param {PermissionScope} scope 权限作用域
+   * @returns {void}
+   * @throws {InvalidResourceError} 当资源无效时抛出
+   * @throws {InvalidActionError} 当操作无效时抛出
+   * @throws {InvalidScopeError} 当作用域无效时抛出
+   * @private
+   */
+  private validatePermissionData(
+    resource: Resource,
+    action: Action,
+    conditions: PermissionCondition[],
+    scope: PermissionScope,
+  ): void {
+    if (!resource) {
+      throw new Error('权限资源无效');
+    }
+
+    if (!action) {
+      throw new Error('权限操作无效');
+    }
+
+    if (!scope) {
+      throw new Error('权限作用域无效');
+    }
+
+    // 验证权限条件
+    for (const condition of conditions) {
+      if (!condition) {
+        throw new Error('权限条件无效');
+      }
+    }
+  }
+
+  /**
    * @method toJSON
    * @description 将权限实体转换为JSON格式
    * @returns {Record<string, unknown>} JSON格式的权限数据
@@ -507,13 +618,70 @@ export class PermissionEntity extends ValueObject<PermissionId> {
       conditions: this.conditions.map(c => c.toJSON()),
       scope: this.scope.toJSON(),
       type: this.type,
-      status: this.status,
+      status: this._status,
       settings: this.settings.toJSON(),
       tenantId: this.tenantId.value,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString(),
+      createdAt: this.getCreatedAt().toISOString(),
+      updatedAt: this.getUpdatedAt().toISOString(),
+      deletedAt: this.getDeletedAt()?.toISOString(),
     };
+  }
+
+  /**
+   * @method toSnapshot
+   * @description 创建权限实体快照
+   * @returns {Record<string, unknown>} 权限实体快照
+   */
+  toSnapshot(): Record<string, unknown> {
+    return {
+      id: this.id.toString(),
+      resource: this.resource.toJSON(),
+      action: this.action.toJSON(),
+      conditions: this.conditions.map(condition => condition.toJSON()),
+      scope: this.scope.toJSON(),
+      type: this.type,
+      status: this._status,
+      settings: this.settings.toJSON(),
+      tenantId: this.tenantId.toString(),
+      createdBy: this.getCreatedBy(),
+      createdAt: this.getCreatedAt(),
+      updatedAt: this.getUpdatedAt(),
+      updatedBy: this.getUpdatedBy(),
+      deletedAt: this.getDeletedAt(),
+    };
+  }
+
+  /**
+   * @method fromSnapshot
+   * @description 从快照恢复权限实体
+   * @param {Record<string, unknown>} snapshot 权限实体快照
+   * @returns {PermissionEntity} 权限实体实例
+   * @static
+   */
+  static fromSnapshot(snapshot: Record<string, unknown>): PermissionEntity {
+    const entity = new PermissionEntity(
+      new PermissionId(snapshot.id as string),
+      snapshot.resource as Resource,
+      snapshot.action as Action,
+      snapshot.conditions as PermissionCondition[],
+      snapshot.scope as PermissionScope,
+      snapshot.type as PermissionType,
+      snapshot.settings as PermissionSettings,
+      new TenantId(snapshot.tenantId as string),
+      snapshot.status as PermissionStatus,
+      snapshot.createdBy as string,
+    );
+
+    // 恢复审计信息
+    if (snapshot.updatedAt) {
+      entity.updateAuditInfo(snapshot.updatedBy as string);
+    }
+
+    if (snapshot.deletedAt) {
+      entity.softDelete(snapshot.deletedBy as string);
+    }
+
+    return entity;
   }
 }
 

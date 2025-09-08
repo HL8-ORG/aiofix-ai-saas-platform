@@ -39,9 +39,7 @@ import { UserAggregate } from '../../domain/aggregates/user.aggregate';
  */
 @Injectable()
 export class UserApplicationService {
-  constructor() // private readonly tenantRepository: ITenantRepository, // private readonly userRepository: IUserRepository,
-  // private readonly eventBus: IEventBus,
-  {}
+  constructor() {} // private readonly eventBus: IEventBus, // private readonly tenantRepository: ITenantRepository, // private readonly userRepository: IUserRepository,
 
   /**
    * @method createUser
@@ -68,13 +66,15 @@ export class UserApplicationService {
     // }
 
     // 3. 创建用户聚合根
-    const valueObjects = command.toValueObjects();
+    const valueObjects = await command.toValueObjects();
     const userAggregate = new UserAggregate(
       valueObjects.id,
       valueObjects.email,
       valueObjects.password,
       valueObjects.profile,
       valueObjects.preferences,
+      command.tenantId,
+      'platform', // platformId - 暂时使用固定值
     );
 
     // 4. 保存到数据库
@@ -91,8 +91,8 @@ export class UserApplicationService {
     return {
       id: userAggregate.id,
       email: userAggregate.email.value,
-      firstName: userAggregate.profile.firstName,
-      lastName: userAggregate.profile.lastName,
+      firstName: userAggregate.profile.value.firstName,
+      lastName: userAggregate.profile.value.lastName,
       status: userAggregate.status,
       createdAt: userAggregate.createdAt,
     };

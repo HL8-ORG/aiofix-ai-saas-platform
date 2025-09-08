@@ -117,8 +117,10 @@ export class RoleDeletedEvent extends DomainEvent {
    */
   getStatusDisplayName(): string {
     const statusNames: Record<RoleStatus, string> = {
+      [RoleStatus.PENDING]: '待激活',
       [RoleStatus.ACTIVE]: '激活',
       [RoleStatus.INACTIVE]: '非激活',
+      [RoleStatus.DISABLED]: '禁用',
       [RoleStatus.SUSPENDED]: '暂停',
       [RoleStatus.DELETED]: '已删除',
       [RoleStatus.EXPIRED]: '已过期',
@@ -188,8 +190,10 @@ export class RoleDeletedEvent extends DomainEvent {
   getDeletionDescription(): string {
     const statusName = this.getStatusDisplayName();
     const reasonText = this.hasReason() ? `，原因：${this.reason}` : '';
-    const deletedByText = this.hasDeletedBy() ? `，操作者：${this.deletedBy}` : '';
-    
+    const deletedByText = this.hasDeletedBy()
+      ? `，操作者：${this.deletedBy}`
+      : '';
+
     return `角色在${statusName}状态下被删除${reasonText}${deletedByText}`;
   }
 }

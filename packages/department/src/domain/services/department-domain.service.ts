@@ -1,5 +1,5 @@
 import { DepartmentId } from '../value-objects/department-id.vo';
-import { DepartmentName } from '../value-objects/department-name.vo';
+import { DepartmentName } from '@aiofix/shared';
 import { DepartmentSettings } from '../value-objects/department-settings.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
@@ -123,7 +123,7 @@ export class DepartmentDomainService {
     try {
       // 1. 验证部门状态
       const department = await this.getDepartment(departmentId);
-      if (!department || !department.isOperational()) {
+      if (!department?.isOperational()) {
         return false;
       }
 
@@ -172,7 +172,7 @@ export class DepartmentDomainService {
     try {
       // 1. 验证部门状态
       const department = await this.getDepartment(departmentId);
-      if (!department || !department.isOperational()) {
+      if (!department?.isOperational()) {
         return false;
       }
 
@@ -237,7 +237,7 @@ export class DepartmentDomainService {
     try {
       // 1. 验证部门状态
       const department = await this.getDepartment(departmentId);
-      if (!department || !department.canBeDeleted()) {
+      if (!department?.canBeDeleted()) {
         return false;
       }
 

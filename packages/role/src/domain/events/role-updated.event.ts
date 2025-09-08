@@ -1,8 +1,10 @@
 import { DomainEvent } from '@aiofix/core';
 import { RoleId } from '../value-objects/role-id.vo';
-import { RoleName } from '../value-objects/role-name.vo';
-import { RoleDescription } from '../value-objects/role-description.vo';
-import { RoleSettings } from '../value-objects/role-settings.vo';
+import { RoleName, RoleDescription } from '@aiofix/shared';
+import {
+  RoleSettings,
+  RoleSettingsData,
+} from '../value-objects/role-settings.vo';
 import { RoleType } from '../enums/role-type.enum';
 import { TenantId } from '@aiofix/shared';
 import { OrganizationId } from '@aiofix/organization';
@@ -120,10 +122,14 @@ export class RoleUpdatedEvent extends DomainEvent {
       new RoleName(data.name as string),
       new RoleDescription(data.description as string),
       data.type as RoleType,
-      new RoleSettings(data.settings as any),
+      new RoleSettings(data.settings as unknown as RoleSettingsData),
       new TenantId(data.tenantId as string),
-      data.organizationId ? new OrganizationId(data.organizationId as string) : undefined,
-      data.departmentId ? new DepartmentId(data.departmentId as string) : undefined,
+      data.organizationId
+        ? new OrganizationId(data.organizationId as string)
+        : undefined,
+      data.departmentId
+        ? new DepartmentId(data.departmentId as string)
+        : undefined,
       new Date(data.updatedAt as string),
     );
   }

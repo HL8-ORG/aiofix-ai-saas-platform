@@ -1,7 +1,6 @@
 import { DomainEvent } from '@aiofix/core';
 import { RoleId } from '../value-objects/role-id.vo';
-import { RoleName } from '../value-objects/role-name.vo';
-import { RoleDescription } from '../value-objects/role-description.vo';
+import { RoleName, RoleDescription } from '@aiofix/shared';
 import { RoleSettings } from '../value-objects/role-settings.vo';
 import { Permission } from '../value-objects/permission.vo';
 import { RoleStatus } from '../enums/role-status.enum';

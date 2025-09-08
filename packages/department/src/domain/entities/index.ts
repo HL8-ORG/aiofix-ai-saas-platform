@@ -5,8 +5,4 @@
  * @since 1.0.0
  */
 
-export {
-  DepartmentEntity,
-  InvalidDepartmentEntityError,
-  InvalidStateTransitionError,
-} from './department.entity';
+export { DepartmentEntity } from './department.entity';

@@ -7,12 +7,15 @@
 
 export { RoleId, InvalidRoleIdError } from './role-id.vo';
 
-export { RoleName, InvalidRoleNameError } from './role-name.vo';
+export {
+  RoleName,
+  InvalidNameError as InvalidRoleNameError,
+} from '@aiofix/shared';
 
 export {
   RoleDescription,
-  InvalidRoleDescriptionError,
-} from './role-description.vo';
+  InvalidDescriptionError as InvalidRoleDescriptionError,
+} from '@aiofix/shared';
 
 export { Permission, InvalidPermissionError } from './permission.vo';
 export type { PermissionData } from './permission.vo';

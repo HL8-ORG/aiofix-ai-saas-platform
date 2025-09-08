@@ -1,8 +1,7 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
+import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
 import { OrganizationEntity } from '../entities/organization.entity';
 import { OrganizationId } from '../value-objects/organization-id.vo';
-import { OrganizationName } from '../value-objects/organization-name.vo';
-import { OrganizationDescription } from '../value-objects/organization-description.vo';
+import { OrganizationName, OrganizationDescription } from '@aiofix/shared';
 import { OrganizationSettings } from '../value-objects/organization-settings.vo';
 import { OrganizationStatus } from '../enums/organization-status.enum';
 import { TenantId } from '@aiofix/shared';
@@ -47,13 +46,10 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
   }
 
   /**
-   * @method get id
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
+   * @property id
+   * @description 聚合根的唯一标识符
    */
-  get id(): string {
-    return this.organization?.id.value || '';
-  }
+  public readonly id: string = this.organization?.id.value || '';
 
   /**
    * @method createOrganization
@@ -88,6 +84,8 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
       organizationName,
       organizationDescription,
       organizationSettings,
+      OrganizationStatus.PENDING,
+      'system',
     );
 
     // 发布组织创建事件
@@ -139,10 +137,8 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
       updatedName,
       updatedDescription,
       updatedSettings,
-      this.organization.getStatus(),
-      this.organization.createdAt,
-      new Date(),
-      this.organization.deletedAt,
+      this.organization.status,
+      this.organization.createdBy,
     );
 
     // 发布组织更新事件
@@ -165,11 +161,11 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
 
     if (!this.organization.canBeActivated()) {
       throw new InvalidStateTransitionError(
-        `无法从${this.organization.getStatus()}状态激活组织`,
+        `无法从${this.organization.status}状态激活组织`,
       );
     }
 
-    this.organization.activate();
+    this.organization.activate('system');
 
     // 发布组织激活事件
     // TODO: 创建OrganizationActivatedEvent类
@@ -191,11 +187,11 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
 
     if (!this.organization.canBeSuspended()) {
       throw new InvalidStateTransitionError(
-        `无法从${this.organization.getStatus()}状态暂停组织`,
+        `无法从${this.organization.status}状态暂停组织`,
       );
     }
 
-    this.organization.suspend();
+    this.organization.suspend('system');
 
     // 发布组织暂停事件
     // TODO: 创建OrganizationSuspendedEvent类
@@ -217,11 +213,11 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
 
     if (!this.organization.canBeDeleted()) {
       throw new InvalidStateTransitionError(
-        `无法从${this.organization.getStatus()}状态删除组织`,
+        `无法从${this.organization.status}状态删除组织`,
       );
     }
 
-    this.organization.delete();
+    this.organization.delete('system');
 
     // 发布组织删除事件
     // TODO: 创建OrganizationDeletedEvent类
@@ -241,11 +237,11 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
   /**
    * @method handleEvent
    * @description 处理领域事件，重建聚合根状态
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @param {boolean} isFromHistory 是否来自历史事件
    * @returns {void}
    */
-  handleEvent(event: IDomainEvent, isFromHistory: boolean = false): void {
+  handleEvent(event: DomainEvent, isFromHistory: boolean = false): void {
     switch (event.eventType) {
       case 'OrganizationCreated':
         this.handleOrganizationCreatedEvent(event);
@@ -273,7 +269,7 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
   toSnapshot(): any {
     return {
       organization: this.organization,
-      version: this.version,
+      version: (this as any).version,
     };
   }
 
@@ -339,12 +335,12 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
   /**
    * @method handleOrganizationCreatedEvent
    * @description 处理组织创建事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private handleOrganizationCreatedEvent(event: IDomainEvent): void {
-    const data = event.toJSON();
+  private handleOrganizationCreatedEvent(event: DomainEvent): void {
+    const data = event.toJSON() as any;
     this.organization = new OrganizationEntity(
       new OrganizationId(data.organizationId),
       new TenantId(data.tenantId),
@@ -352,19 +348,19 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
       new OrganizationDescription(data.description),
       new OrganizationSettings(data.settings),
       data.status,
-      new Date(data.createdAt),
+      data.createdBy,
     );
   }
 
   /**
    * @method handleOrganizationUpdatedEvent
    * @description 处理组织更新事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private handleOrganizationUpdatedEvent(event: IDomainEvent): void {
-    const data = event.toJSON();
+  private handleOrganizationUpdatedEvent(event: DomainEvent): void {
+    const data = event.toJSON() as any;
     if (this.organization) {
       this.organization = new OrganizationEntity(
         this.organization.id,
@@ -372,10 +368,8 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
         new OrganizationName(data.name),
         new OrganizationDescription(data.description),
         new OrganizationSettings(data.settings),
-        this.organization.getStatus(),
-        this.organization.createdAt,
-        new Date(data.updatedAt),
-        this.organization.deletedAt,
+        this.organization.status,
+        this.organization.createdBy,
       );
     }
   }
@@ -383,39 +377,39 @@ export class OrganizationAggregate extends EventSourcedAggregateRoot {
   /**
    * @method handleOrganizationActivatedEvent
    * @description 处理组织激活事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private handleOrganizationActivatedEvent(event: IDomainEvent): void {
+  private handleOrganizationActivatedEvent(event: DomainEvent): void {
     if (this.organization) {
-      this.organization.activate();
+      this.organization.activate('system');
     }
   }
 
   /**
    * @method handleOrganizationSuspendedEvent
    * @description 处理组织暂停事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private handleOrganizationSuspendedEvent(event: IDomainEvent): void {
+  private handleOrganizationSuspendedEvent(event: DomainEvent): void {
     if (this.organization) {
-      this.organization.suspend();
+      this.organization.suspend('system');
     }
   }
 
   /**
    * @method handleOrganizationDeletedEvent
    * @description 处理组织删除事件
-   * @param {IDomainEvent} event 领域事件
+   * @param {DomainEvent} event 领域事件
    * @returns {void}
    * @private
    */
-  private handleOrganizationDeletedEvent(event: IDomainEvent): void {
+  private handleOrganizationDeletedEvent(event: DomainEvent): void {
     if (this.organization) {
-      this.organization.delete();
+      this.organization.delete('system');
     }
   }
 }

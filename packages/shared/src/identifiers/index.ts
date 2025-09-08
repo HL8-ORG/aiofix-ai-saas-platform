@@ -12,6 +12,7 @@
 // 标识符值对象
 export { UserId, InvalidUserIdError } from './user-id.vo';
 export { TenantId, InvalidTenantIdError } from './tenant-id.vo';
+export { NotifId, InvalidNotifIdError } from './notif-id.vo';
 
 // 类型定义
 export type { UserId as UserIdType } from './user-id.vo';

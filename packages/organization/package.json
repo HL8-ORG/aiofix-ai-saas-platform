@@ -2,8 +2,8 @@
   "name": "@aiofix/organization",
   "version": "1.0.0",
   "description": "组织管理模块 - 支持多租户组织架构管理",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/organization/src/index.js",
+  "types": "dist/organization/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest --config ../../jest.config.js",

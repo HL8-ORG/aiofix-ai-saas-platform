@@ -2,8 +2,8 @@
   "name": "@aiofix/common",
   "version": "1.0.0",
   "description": "公共基础包 - 提供通用的工具函数、装饰器、异常等基础组件",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/common/src/index.js",
+  "types": "dist/common/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",

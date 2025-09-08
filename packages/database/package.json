@@ -2,8 +2,8 @@
   "name": "@aiofix/database",
   "version": "1.0.0",
   "description": "Aiofix数据库模块 - 提供统一的数据库管理功能",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/database/src/index.js",
+  "types": "dist/database/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",

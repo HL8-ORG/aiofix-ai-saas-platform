@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { UserId } from '../value-objects';
+import { DomainEvent } from '@aiofix/core';
+import { UserId } from '@aiofix/shared';
 
 /**
  * @class UserAssignedToTenantEvent
@@ -28,9 +28,6 @@ import { UserId } from '../value-objects';
  * @property {string} [organizationId] 所属组织ID，可选
  * @property {string} [departmentId] 所属部门ID，可选
  * @property {string} [role] 用户角色，可选
- * @property {string} eventId 事件唯一标识符
- * @property {Date} occurredOn 事件发生时间
- * @property {string} eventType 事件类型标识
  *
  * @example
  * ```typescript
@@ -44,15 +41,10 @@ import { UserId } from '../value-objects';
  * );
  * eventBus.publish(event);
  * ```
+ * @extends DomainEvent
  * @since 1.0.0
  */
-export class UserAssignedToTenantEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'UserAssignedToTenant';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+export class UserAssignedToTenantEvent extends DomainEvent {
   constructor(
     public readonly userId: UserId,
     public readonly tenantId: string,
@@ -61,38 +53,24 @@ export class UserAssignedToTenantEvent implements IDomainEvent {
     public readonly departmentId?: string,
     public readonly role?: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.userId.value;
+    super(userId.toString());
   }
 
   /**
-   * 获取事件数据
-   * 用于事件存储和序列化
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于事件序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
+   * @since 1.0.0
    */
-  public getEventData(): Record<string, unknown> {
+  public toJSON(): Record<string, unknown> {
     return {
-      userId: this.userId.value,
+      ...this.getBaseEventData(),
+      userId: this.userId.toString(),
       tenantId: this.tenantId,
       assignedBy: this.assignedBy,
       organizationId: this.organizationId,
       departmentId: this.departmentId,
       role: this.role,
-    };
-  }
-
-  /**
-   * 将事件转换为JSON格式
-   * 用于事件序列化和存储
-   */
-  public toJSON(): Record<string, unknown> {
-    return {
-      eventId: this.eventId,
-      eventType: this.eventType,
-      aggregateId: this.aggregateId,
-      eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      ...this.getEventData(),
     };
   }
 }

@@ -2,7 +2,7 @@
 
 ## 概述
 
-基础设施层负责提供技术实现，包括数据持久化、外部服务集成、消息传递、缓存、日志等。本层实现了领域层定义的接口，为应用层提供具体的技术服务。
+基础设施层负责提供技术实现，包括数据持久化、外部服务集成、消息传递、事件处理、缓存、日志等。本层实现了领域层定义的接口，为应用层提供具体的技术服务，并支持事件驱动架构的异步处理。
 
 ## 基础设施层架构
 
@@ -29,8 +29,18 @@
 │       └── 事件存储适配器 (Adapters)
 ├── 消息传递 (Messaging)
 │   ├── 消息队列 (Message Queue)
+│   │   ├── Redis + Bull队列
+│   │   ├── 事件发布 (Event Publishing)
+│   │   ├── 异步处理 (Async Processing)
+│   │   └── 死信队列 (Dead Letter Queue)
 │   ├── 事件总线 (Event Bus)
-│   └── 消息路由 (Message Routing)
+│   │   ├── 事件路由 (Event Routing)
+│   │   ├── 事件分发 (Event Dispatching)
+│   │   └── 事件存储 (Event Storage)
+│   └── 事件处理器 (Event Processors)
+│       ├── 异步处理器 (Async Processors)
+│       ├── 重试机制 (Retry Mechanism)
+│       └── 错误处理 (Error Handling)
 ├── 外部服务集成 (External Services)
 │   ├── 邮件服务 (Email Service)
 │   ├── 短信服务 (SMS Service)
@@ -838,58 +848,101 @@ export class EventStoreService implements IEventStore {
 ### 消息队列服务
 
 ```typescript
-// 消息队列服务
+// 消息队列服务 - Redis + Bull集成
 @Injectable()
 export class MessageQueueService {
+  private readonly queues: Map<string, Queue> = new Map();
+
   constructor(
-    private readonly redisService: RedisService,
+    private readonly bullModule: BullModule,
     private readonly logger: Logger,
   ) {}
 
-  async publishMessage(queueName: string, message: any): Promise<void> {
+  async publishEvent(queueName: string, event: IDomainEvent): Promise<void> {
     try {
-      await this.redisService.lpush(queueName, JSON.stringify(message));
-      this.logger.log(`Message published to queue: ${queueName}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to publish message to queue: ${queueName}`,
-        error,
+      const queue = this.getQueue(queueName);
+
+      await queue.add(
+        'process_event',
+        {
+          eventId: event.eventId,
+          eventType: event.eventType,
+          aggregateId: event.aggregateId,
+          eventData: event.toJSON(),
+          occurredOn: event.occurredOn,
+          tenantId: this.extractTenantId(event),
+        },
+        {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000,
+          },
+          removeOnComplete: 100,
+          removeOnFail: 50,
+        },
       );
-      throw error;
+
+      this.logger.log(
+        `Event published to queue: ${queueName}, eventType: ${event.eventType}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to publish event: ${error.message}`);
+      throw new MessagePublishError(
+        `Failed to publish event: ${error.message}`,
+      );
     }
   }
 
-  async consumeMessage(
-    queueName: string,
-    handler: (message: any) => Promise<void>,
-  ): Promise<void> {
-    while (true) {
-      try {
-        const message = await this.redisService.brpop(queueName, 5);
-        if (message) {
-          const parsedMessage = JSON.parse(message[1]);
-          await handler(parsedMessage);
-        }
-      } catch (error) {
-        this.logger.error(
-          `Error consuming message from queue: ${queueName}`,
-          error,
-        );
-        // 继续处理下一个消息
-      }
+  async publishCommand(queueName: string, command: ICommand): Promise<void> {
+    try {
+      const queue = this.getQueue(queueName);
+
+      await queue.add(
+        'process_command',
+        {
+          commandId: command.commandId,
+          commandType: command.constructor.name,
+          commandData: command.toJSON(),
+          requestedBy: command.requestedBy,
+          tenantId: command.tenantId,
+        },
+        {
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 2000,
+          },
+          removeOnComplete: 100,
+          removeOnFail: 50,
+        },
+      );
+
+      this.logger.log(
+        `Command published to queue: ${queueName}, commandType: ${command.constructor.name}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to publish command: ${error.message}`);
+      throw new MessagePublishError(
+        `Failed to publish command: ${error.message}`,
+      );
     }
   }
 
-  async publishEvent(event: IDomainEvent): Promise<void> {
-    const eventMessage = {
-      eventId: event.eventId,
-      eventType: event.eventType,
-      aggregateId: event.aggregateId,
-      eventData: event.toJSON(),
-      occurredOn: event.occurredOn,
-    };
+  private getQueue(queueName: string): Queue {
+    if (!this.queues.has(queueName)) {
+      const queue = this.bullModule.getQueue(queueName);
+      this.queues.set(queueName, queue);
+    }
+    return this.queues.get(queueName)!;
+  }
 
-    await this.publishMessage('domain_events', eventMessage);
+  private extractTenantId(event: IDomainEvent): string | undefined {
+    // 从事件中提取租户ID
+    if ('tenantId' in event) {
+      return (event as any).tenantId;
+    }
+    return undefined;
   }
 }
 ```
@@ -897,43 +950,174 @@ export class MessageQueueService {
 ### 事件总线实现
 
 ```typescript
-// 事件总线实现
+// 事件总线实现 - 真正的事件驱动
 @Injectable()
 export class EventBusService {
-  private readonly eventHandlers = new Map<string, EventHandler[]>();
-
   constructor(
+    private readonly eventStore: IEventStore,
     private readonly messageQueueService: MessageQueueService,
     private readonly logger: Logger,
   ) {}
 
-  registerHandler(eventType: string, handler: EventHandler): void {
-    if (!this.eventHandlers.has(eventType)) {
-      this.eventHandlers.set(eventType, []);
-    }
-    this.eventHandlers.get(eventType)!.push(handler);
-  }
-
   async publish(event: IDomainEvent): Promise<void> {
-    // 发布到消息队列
-    await this.messageQueueService.publishEvent(event);
+    try {
+      // 1. 保存到事件存储
+      await this.eventStore.saveEvent(event);
 
-    // 同步处理事件处理器
-    const handlers = this.eventHandlers.get(event.eventType) || [];
-    for (const handler of handlers) {
-      try {
-        await handler.handle(event);
-      } catch (error) {
-        this.logger.error(`Error handling event: ${event.eventType}`, error);
-        // 继续处理其他处理器
-      }
+      // 2. 发布到消息队列进行异步处理
+      await this.messageQueueService.publishEvent('domain_events', event);
+
+      this.logger.log(
+        `Event published: ${event.eventType} for aggregate ${event.aggregateId}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to publish event: ${event.eventType}`, error);
+      throw new EventPublishError(`Failed to publish event: ${error.message}`);
     }
   }
 
   async publishAll(events: IDomainEvent[]): Promise<void> {
-    for (const event of events) {
-      await this.publish(event);
+    // 批量发布事件
+    const publishPromises = events.map(event => this.publish(event));
+    await Promise.allSettled(publishPromises);
+  }
+}
+```
+
+### 异步事件处理器
+
+```typescript
+// 异步事件处理器 - 使用Bull队列
+@Processor('domain_events')
+export class DomainEventProcessor {
+  constructor(
+    private readonly logger: Logger,
+    private readonly userReadRepository: IUserReadRepository,
+    private readonly tenantReadRepository: ITenantReadRepository,
+    private readonly emailService: EmailService,
+    private readonly notificationService: NotificationService,
+    private readonly auditService: AuditService,
+  ) {}
+
+  @Process('UserCreatedEvent')
+  async handleUserCreated(job: Job<UserCreatedEvent>): Promise<void> {
+    const event = job.data;
+
+    try {
+      // 并行处理多个后续操作
+      await Promise.allSettled([
+        this.updateUserReadModel(event),
+        this.sendWelcomeEmail(event),
+        this.logAuditEvent(event),
+        this.createUserPermissions(event),
+      ]);
+
+      this.logger.log(
+        `UserCreatedEvent processed successfully: ${event.aggregateId}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to process UserCreatedEvent: ${event.aggregateId}`,
+        error,
+      );
+      throw error; // 让Bull重试
     }
+  }
+
+  @Process('UserAssignedToTenantEvent')
+  async handleUserAssignedToTenant(
+    job: Job<UserAssignedToTenantEvent>,
+  ): Promise<void> {
+    const event = job.data;
+
+    try {
+      await Promise.allSettled([
+        this.updateUserReadModel(event),
+        this.updateTenantReadModel(event),
+        this.sendNotifications(event),
+      ]);
+
+      this.logger.log(
+        `UserAssignedToTenantEvent processed successfully: ${event.aggregateId}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to process UserAssignedToTenantEvent: ${event.aggregateId}`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  @Process('TenantCreatedEvent')
+  async handleTenantCreated(job: Job<TenantCreatedEvent>): Promise<void> {
+    const event = job.data;
+
+    try {
+      await Promise.allSettled([
+        this.updateTenantReadModel(event),
+        this.allocateResources(event),
+        this.sendNotification(event),
+        this.logAuditEvent(event),
+      ]);
+
+      this.logger.log(
+        `TenantCreatedEvent processed successfully: ${event.aggregateId}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to process TenantCreatedEvent: ${event.aggregateId}`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  private async updateUserReadModel(event: UserCreatedEvent): Promise<void> {
+    const userReadModel: UserReadModel = {
+      id: event.aggregateId,
+      email: event.email,
+      profile: event.profile,
+      status: UserStatus.ACTIVE,
+      platformId: event.platformId,
+      tenantId: null,
+      organizationId: null,
+      departmentId: null,
+      roles: ['PERSONAL_USER'],
+      permissions: this.getDefaultPermissions(),
+      createdAt: event.occurredOn,
+      updatedAt: event.occurredOn,
+      version: event.eventVersion,
+    };
+
+    await this.userReadRepository.save(userReadModel);
+  }
+
+  private async sendWelcomeEmail(event: UserCreatedEvent): Promise<void> {
+    await this.emailService.sendWelcomeEmail(
+      event.email,
+      event.profile.firstName,
+    );
+  }
+
+  private async logAuditEvent(event: IDomainEvent): Promise<void> {
+    await this.auditService.logEvent({
+      eventType: event.eventType,
+      aggregateId: event.aggregateId,
+      details: event.toJSON(),
+      timestamp: event.occurredOn,
+    });
+  }
+
+  private async createUserPermissions(event: UserCreatedEvent): Promise<void> {
+    await this.permissionService.createDefaultPermissions(
+      event.aggregateId,
+      event.platformId,
+    );
+  }
+
+  private getDefaultPermissions(): string[] {
+    return ['user:read:own', 'user:update:own', 'platform:service:use'];
   }
 }
 ```

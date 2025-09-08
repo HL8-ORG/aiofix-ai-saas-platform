@@ -35,7 +35,7 @@ export class RoleId extends ValueObject<string> {
   constructor(value?: string) {
     const id = value ?? uuidv4();
     super(id);
-    this.validateRoleId(this.value);
+    this.validateRoleId(id);
   }
 
   /**

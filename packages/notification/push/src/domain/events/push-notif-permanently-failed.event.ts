@@ -1,0 +1,153 @@
+import { IDomainEvent } from '@aiofix/core';
+import { PushToken } from '../value-objects/push-token.vo';
+import { PushContent } from '../value-objects/push-content.vo';
+import { PushPriorityLevel } from '../value-objects/push-priority.vo';
+
+/**
+ * @class PushNotifPermanentlyFailedEvent
+ * @description
+ * 推送通知永久失败事件，表示推送通知经过多次重试后仍然失败。
+ *
+ * 事件含义：
+ * 1. 表示推送通知经过多次重试后仍然失败
+ * 2. 包含推送通知永久失败时的关键信息
+ * 3. 为其他聚合根提供推送通知永久失败通知
+ * 4. 触发推送通知的最终失败处理
+ *
+ * 触发条件：
+ * 1. 推送通知聚合根达到最大重试次数后自动触发
+ * 2. 推送服务持续返回失败响应
+ * 3. 推送通知状态更新为永久失败
+ * 4. 推送通知失败原因记录完成
+ *
+ * 影响范围：
+ * 1. 通知推送服务停止重试机制
+ * 2. 触发推送通知的最终失败处理
+ * 3. 更新推送通知永久失败统计
+ * 4. 记录推送通知永久失败审计日志
+ *
+ * @property {string} pushNotifId 推送通知ID
+ * @property {string} tenantId 租户ID
+ * @property {string} userId 用户ID
+ * @property {PushToken} pushToken 推送令牌
+ * @property {PushContent} content 推送内容
+ * @property {PushPriorityLevel} priority 推送优先级
+ * @property {string} failureReason 失败原因
+ * @property {number} retryCount 重试次数
+ * @property {Date} occurredOn 事件发生时间
+ *
+ * @example
+ * ```typescript
+ * const event = new PushNotifPermanentlyFailedEvent(
+ *   'push-123',
+ *   'tenant-456',
+ *   'user-789',
+ *   pushToken,
+ *   pushContent,
+ *   PushPriorityLevel.NORMAL,
+ *   '推送令牌无效',
+ *   3
+ * );
+ * eventBus.publish(event);
+ * ```
+ * @since 1.0.0
+ */
+export class PushNotifPermanentlyFailedEvent implements IDomainEvent {
+  public readonly occurredOn: Date = new Date();
+
+  constructor(
+    public readonly pushNotifId: string,
+    public readonly tenantId: string,
+    public readonly userId: string,
+    public readonly pushToken: PushToken,
+    public readonly content: PushContent,
+    public readonly priority: PushPriorityLevel,
+    public readonly failureReason: string,
+    public readonly retryCount: number,
+  ) {}
+
+  /**
+   * @method getEventType
+   * @description 获取事件类型标识
+   * @returns {string} 事件类型
+   */
+  getEventType(): string {
+    return 'PushNotifPermanentlyFailed';
+  }
+
+  /**
+   * @method getAggregateId
+   * @description 获取聚合根ID
+   * @returns {string} 聚合根ID
+   */
+  getAggregateId(): string {
+    return this.pushNotifId;
+  }
+
+  /**
+   * @method getEventId
+   * @description 获取事件ID
+   * @returns {string} 事件ID
+   */
+  getEventId(): string {
+    return `${this.getEventType()}-${this.pushNotifId}-${this.occurredOn.getTime()}`;
+  }
+
+  /**
+   * @method getEventVersion
+   * @description 获取事件版本
+   * @returns {number} 事件版本
+   */
+  getEventVersion(): number {
+    return 1;
+  }
+
+  /**
+   * @method getEventData
+   * @description 获取事件数据
+   * @returns {Record<string, any>} 事件数据
+   */
+  getEventData(): Record<string, any> {
+    return {
+      pushNotifId: this.pushNotifId,
+      tenantId: this.tenantId,
+      userId: this.userId,
+      pushToken: this.pushToken.toString(),
+      content: this.content.toPlainObject(),
+      priority: this.priority,
+      failureReason: this.failureReason,
+      retryCount: this.retryCount,
+      occurredOn: this.occurredOn,
+    };
+  }
+
+  /**
+   * @method getEventMetadata
+   * @description 获取事件元数据
+   * @returns {Record<string, any>} 事件元数据
+   */
+  getEventMetadata(): Record<string, any> {
+    return {
+      eventType: this.getEventType(),
+      eventId: this.getEventId(),
+      eventVersion: this.getEventVersion(),
+      aggregateId: this.getAggregateId(),
+      tenantId: this.tenantId,
+      userId: this.userId,
+      occurredOn: this.occurredOn,
+      pushPlatform: this.pushToken.getPlatform(),
+      priority: this.priority,
+      failureReason: this.failureReason,
+      retryCount: this.retryCount,
+    };
+  }
+
+  /**
+   * @method toString
+   * @description 返回事件的字符串表示
+   * @returns {string} 事件字符串
+   */
+  toString(): string {
+    return `PushNotifPermanentlyFailedEvent: ${this.pushNotifId} for user ${this.userId} in tenant ${this.tenantId} - ${this.failureReason} (final retry ${this.retryCount})`;
+  }
+}

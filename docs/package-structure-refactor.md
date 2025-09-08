@@ -117,7 +117,7 @@ export * from './strategies/memory-cache.strategy';
 export * from './cache.module';
 ```
 
-#### 2.4 @aiofix/notification - 通知模块
+#### 2.4 @aiofix/notif - 通知模块
 
 **职责**：提供统一的通知发送功能
 **功能**：

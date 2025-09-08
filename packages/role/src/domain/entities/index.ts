@@ -5,11 +5,4 @@
  * @since 1.0.0
  */
 
-export {
-  RoleEntity,
-  InvalidStateTransitionError,
-  InvalidStateError,
-  DuplicatePermissionError,
-  PermissionNotFoundError,
-  InvalidRoleEntityError,
-} from './role.entity';
+export { RoleEntity } from './role.entity';

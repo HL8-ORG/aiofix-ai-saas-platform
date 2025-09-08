@@ -1,0 +1,67 @@
+---
+description: 技术设计文档快速查阅指南
+globs:
+alwaysApply: true
+---
+
+# 技术设计文档快速查阅指南
+
+## 核心原则
+
+**开发前必读**：在编写任何代码之前，必须先查阅相关的技术设计文档！
+
+## 快速查阅表
+
+| 开发任务                 | 必读文档                                                      | 查阅重点                                               |
+| ------------------------ | ------------------------------------------------------------- | ------------------------------------------------------ |
+| **事件驱动架构基础设施** | `07-event-sourcing.md`<br>`06-infrastructure.md`              | Redis + Bull消息队列<br>事件总线服务<br>异步事件处理器 |
+| **通知模块开发**         | `notification-design.md`<br>`05-application-layer.md`         | 5个子领域划分<br>聚合根设计<br>通知编排策略            |
+| **领域模型开发**         | `03-domain-layer.md`<br>`business-requirements.md`            | 聚合根设计<br>值对象设计<br>领域事件                   |
+| **应用层开发**           | `05-application-layer.md`<br>`07-event-sourcing.md`           | CQRS模式<br>命令查询分离<br>事件发布                   |
+| **基础设施层开发**       | `06-infrastructure.md`<br>`02-layered-architecture.md`        | 仓储模式<br>数据库设计<br>外部服务集成                 |
+| **接口层开发**           | `02-layered-architecture.md`<br>`01-architecture-overview.md` | RESTful API<br>DTO设计<br>权限控制                     |
+
+## 常用提示词
+
+### 事件驱动开发
+
+```
+请先查阅 ../../docs/technical-design/07-event-sourcing.md 和 ../../docs/technical-design/06-infrastructure.md，了解事件驱动架构设计，然后实现相关功能。
+```
+
+### 通知模块开发
+
+```
+请先查阅 ../../docs/technical-design/notification-design.md，了解通知模块的完整设计，然后实现相关功能。
+```
+
+### 领域模型开发
+
+```
+请先查阅 ../../docs/technical-design/03-domain-layer.md 和 ../../docs/business-requirements.md，了解领域模型设计，然后实现相关功能。
+```
+
+## 文档路径速查
+
+- 架构概览：`../../docs/technical-design/01-architecture-overview.md`
+- 分层架构：`../../docs/technical-design/02-layered-architecture.md`
+- 领域层：`../../docs/technical-design/03-domain-layer.md`
+- 应用层：`../../docs/technical-design/05-application-layer.md`
+- 基础设施层：`../../docs/technical-design/06-infrastructure.md`
+- 事件驱动架构：`../../docs/technical-design/07-event-sourcing.md`
+- 通知模块：`../../docs/technical-design/notification-design.md`
+- 业务需求：`../../docs/business-requirements.md`
+- 代码注释规范：`code-annotation-specification.mdc`
+
+## 重要提醒
+
+1. **设计先行**：必须先查阅设计文档，再编写代码
+2. **架构一致性**：确保实现与设计文档完全一致
+3. **完整注释**：使用TSDoc规范编写详细的中文注释
+4. **质量保证**：完成代码后必须进行linter检查
+
+---
+
+**文档版本**：1.0  
+**创建日期**：2024-01-01  
+**维护者**：项目开发团队

@@ -773,7 +773,7 @@ export class CacheService {
 }
 ```
 
-### 通知模块 (@aiofix/notification)
+### 通知模块 (@aiofix/notif)
 
 ```typescript
 // packages/notification/src/services/notification.service.ts

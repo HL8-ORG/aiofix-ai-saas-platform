@@ -26,7 +26,7 @@ module.exports = {
     '^@aiofix/logging$': '<rootDir>/packages/logging/src',
     '^@aiofix/config$': '<rootDir>/packages/config/src',
     '^@aiofix/database$': '<rootDir>/packages/database/src',
-    '^@aiofix/notification$': '<rootDir>/packages/notification/src',
+
     '^@aiofix/user$': '<rootDir>/packages/user/src',
     '^@aiofix/tenant$': '<rootDir>/packages/tenant/src',
     '^@aiofix/organization$': '<rootDir>/packages/organization/src',

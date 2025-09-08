@@ -1,4 +1,38 @@
-import { IDomainEvent, IAggregateSnapshot } from './domain-event.interface';
+import { DomainEvent } from '../domain-event';
+
+/**
+ * 聚合快照接口
+ *
+ * 聚合快照用于优化事件溯源性能，通过定期创建快照，
+ * 可以避免重放大量历史事件来重建聚合状态。
+ *
+ * @interface IAggregateSnapshot
+ * @author AI开发团队
+ * @since 1.0.0
+ */
+export interface IAggregateSnapshot {
+  /**
+   * 聚合根的唯一标识符
+   */
+  readonly aggregateId: string;
+
+  /**
+   * 快照对应的版本号
+   * 表示快照创建时的聚合版本
+   */
+  readonly version: number;
+
+  /**
+   * 快照数据
+   * 包含聚合在指定版本时的完整状态
+   */
+  readonly data: Record<string, unknown>;
+
+  /**
+   * 快照创建时间
+   */
+  readonly createdAt: Date;
+}
 
 /**
  * 事件存储接口
@@ -25,7 +59,7 @@ export interface IEventStore {
    * 使用乐观锁机制确保并发安全。
    *
    * @param {string} aggregateId - 聚合根的唯一标识符
-   * @param {IDomainEvent[]} events - 要保存的事件列表
+   * @param {DomainEvent[]} events - 要保存的事件列表
    * @param {number} expectedVersion - 期望的版本号（乐观锁）
    *
    * @returns {Promise<void>} 保存操作的Promise
@@ -35,7 +69,7 @@ export interface IEventStore {
    */
   saveEvents(
     aggregateId: string,
-    events: IDomainEvent[],
+    events: DomainEvent[],
     expectedVersion: number,
   ): Promise<void>;
 
@@ -48,11 +82,11 @@ export interface IEventStore {
    * @param {string} aggregateId - 聚合根的唯一标识符
    * @param {number} [fromVersion] - 起始版本号（可选）
    *
-   * @returns {Promise<IDomainEvent[]>} 事件历史列表
+   * @returns {Promise<DomainEvent[]>} 事件历史列表
    *
    * @throws {EventStoreError} 当检索失败时抛出事件存储错误
    */
-  getEvents(aggregateId: string, fromVersion?: number): Promise<IDomainEvent[]>;
+  getEvents(aggregateId: string, fromVersion?: number): Promise<DomainEvent[]>;
 
   /**
    * 根据事件类型获取事件
@@ -63,11 +97,11 @@ export interface IEventStore {
    * @param {string} eventType - 事件类型名称
    * @param {Date} [fromDate] - 起始时间（可选）
    *
-   * @returns {Promise<IDomainEvent[]>} 匹配的事件列表
+   * @returns {Promise<DomainEvent[]>} 匹配的事件列表
    *
    * @throws {EventStoreError} 当检索失败时抛出事件存储错误
    */
-  getEventsByType(eventType: string, fromDate?: Date): Promise<IDomainEvent[]>;
+  getEventsByType(eventType: string, fromDate?: Date): Promise<DomainEvent[]>;
 
   /**
    * 获取聚合根的最新快照

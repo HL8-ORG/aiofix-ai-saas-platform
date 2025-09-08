@@ -9,14 +9,7 @@ export {
   OrganizationId,
   InvalidOrganizationIdError,
 } from './organization-id.vo';
-export {
-  OrganizationName,
-  InvalidOrganizationNameError,
-} from './organization-name.vo';
-export {
-  OrganizationDescription,
-  InvalidOrganizationDescriptionError,
-} from './organization-description.vo';
+export { OrganizationName, OrganizationDescription } from '@aiofix/shared';
 export {
   OrganizationSettings,
   InvalidOrganizationSettingsError,

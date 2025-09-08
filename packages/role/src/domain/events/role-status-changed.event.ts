@@ -169,9 +169,11 @@ export class RoleStatusChangedEvent extends DomainEvent {
     const statusLevels: Record<RoleStatus, number> = {
       [RoleStatus.DELETED]: 0,
       [RoleStatus.EXPIRED]: 1,
-      [RoleStatus.INACTIVE]: 2,
-      [RoleStatus.SUSPENDED]: 3,
-      [RoleStatus.ACTIVE]: 4,
+      [RoleStatus.PENDING]: 2,
+      [RoleStatus.DISABLED]: 2,
+      [RoleStatus.INACTIVE]: 3,
+      [RoleStatus.SUSPENDED]: 4,
+      [RoleStatus.ACTIVE]: 5,
     };
     return statusLevels[this.newStatus] > statusLevels[this.previousStatus];
   }
@@ -185,9 +187,11 @@ export class RoleStatusChangedEvent extends DomainEvent {
     const statusLevels: Record<RoleStatus, number> = {
       [RoleStatus.DELETED]: 0,
       [RoleStatus.EXPIRED]: 1,
-      [RoleStatus.INACTIVE]: 2,
-      [RoleStatus.SUSPENDED]: 3,
-      [RoleStatus.ACTIVE]: 4,
+      [RoleStatus.PENDING]: 2,
+      [RoleStatus.DISABLED]: 2,
+      [RoleStatus.INACTIVE]: 3,
+      [RoleStatus.SUSPENDED]: 4,
+      [RoleStatus.ACTIVE]: 5,
     };
     return statusLevels[this.newStatus] < statusLevels[this.previousStatus];
   }
@@ -199,8 +203,10 @@ export class RoleStatusChangedEvent extends DomainEvent {
    */
   getStatusChangeDescription(): string {
     const statusNames: Record<RoleStatus, string> = {
+      [RoleStatus.PENDING]: '待激活',
       [RoleStatus.ACTIVE]: '激活',
       [RoleStatus.INACTIVE]: '停用',
+      [RoleStatus.DISABLED]: '禁用',
       [RoleStatus.SUSPENDED]: '暂停',
       [RoleStatus.DELETED]: '删除',
       [RoleStatus.EXPIRED]: '过期',

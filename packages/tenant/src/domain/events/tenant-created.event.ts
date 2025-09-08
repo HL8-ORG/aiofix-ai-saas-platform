@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { TenantId } from '../value-objects/tenant-id.vo';
+import { DomainEvent } from '@aiofix/core';
+import { TenantId } from '@aiofix/shared';
 import { TenantQuota } from '../value-objects/tenant-quota.vo';
 import { TenantConfiguration } from '../value-objects/tenant-configuration.vo';
 
@@ -50,13 +50,7 @@ import { TenantConfiguration } from '../value-objects/tenant-configuration.vo';
  * ```
  * @since 1.0.0
  */
-export class TenantCreatedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TenantCreated';
-  public readonly aggregateId: string;
-  public readonly eventVersion: number = 1;
-
+export class TenantCreatedEvent extends DomainEvent {
   constructor(
     public readonly tenantId: TenantId,
     public readonly name: string,
@@ -65,25 +59,7 @@ export class TenantCreatedEvent implements IDomainEvent {
     public readonly configuration: TenantConfiguration,
     public readonly createdBy: string,
   ) {
-    this.eventId = crypto.randomUUID();
-    this.occurredOn = new Date();
-    this.aggregateId = this.tenantId.value;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {Record<string, unknown>} 事件数据
-   */
-  public getEventData(): Record<string, unknown> {
-    return {
-      tenantId: this.tenantId.value,
-      name: this.name,
-      type: this.type,
-      quota: this.quota,
-      configuration: this.configuration,
-      createdBy: this.createdBy,
-    };
+    super(tenantId.toString(), 1);
   }
 
   /**
@@ -97,8 +73,13 @@ export class TenantCreatedEvent implements IDomainEvent {
       eventType: this.eventType,
       aggregateId: this.aggregateId,
       eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn.toISOString(),
-      ...this.getEventData(),
+      occurredOn: this.occurredOn,
+      tenantId: this.tenantId.toString(),
+      name: this.name,
+      type: this.type,
+      quota: this.quota,
+      configuration: this.configuration,
+      createdBy: this.createdBy,
     };
   }
 }

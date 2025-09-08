@@ -1,7 +1,6 @@
 import { DomainEvent } from '@aiofix/core';
 import { DepartmentId } from '../value-objects/department-id.vo';
-import { DepartmentName } from '../value-objects/department-name.vo';
-import { DepartmentDescription } from '../value-objects/department-description.vo';
+import { DepartmentName, DepartmentDescription } from '@aiofix/shared';
 import { DepartmentSettings } from '../value-objects/department-settings.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';

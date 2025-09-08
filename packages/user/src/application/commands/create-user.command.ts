@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
+import { UserId, Email } from '@aiofix/shared';
 import {
-  UserId,
-  Email,
   Password,
   UserProfile,
   UserPreferences,

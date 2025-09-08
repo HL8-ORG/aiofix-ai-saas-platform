@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IDomainEvent } from './interfaces/domain-event.interface';
 
 /**
  * @class DomainEvent
@@ -49,10 +48,9 @@ import { IDomainEvent } from './interfaces/domain-event.interface';
  * }
  * ```
  * @abstract
- * @implements {IDomainEvent}
  * @since 1.0.0
  */
-export abstract class DomainEvent implements IDomainEvent {
+export abstract class DomainEvent {
   /**
    * 事件的唯一标识符
    * 使用UUID确保全局唯一性
@@ -130,6 +128,30 @@ export abstract class DomainEvent implements IDomainEvent {
       eventType: this.eventType,
       eventVersion: this.eventVersion,
     };
+  }
+
+  /**
+   * 获取事件类型
+   * @returns {string} 事件类型
+   */
+  public getEventType(): string {
+    return this.eventType;
+  }
+
+  /**
+   * 获取聚合根ID
+   * @returns {string} 聚合根ID
+   */
+  public getAggregateId(): string {
+    return this.aggregateId;
+  }
+
+  /**
+   * 获取事件ID
+   * @returns {string} 事件ID
+   */
+  public getEventId(): string {
+    return this.eventId;
   }
 
   /**

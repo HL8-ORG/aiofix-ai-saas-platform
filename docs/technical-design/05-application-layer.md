@@ -2,7 +2,7 @@
 
 ## 概述
 
-应用层是连接接口层和领域层的桥梁，负责协调业务用例的执行，管理事务边界，处理命令和查询，以及发布领域事件。本层实现了CQRS模式，将命令（写操作）和查询（读操作）完全分离。
+应用层是连接接口层和领域层的桥梁，负责协调业务用例的执行，管理事务边界，处理命令和查询，以及发布领域事件。本层实现了CQRS模式和事件驱动架构，将命令（写操作）和查询（读操作）完全分离，通过事件总线实现异步事件处理。
 
 ## 应用层架构
 
@@ -19,9 +19,9 @@
 │   ├── 查询处理器 (Query Handlers)
 │   └── 查询总线 (Query Bus)
 ├── 事件处理 (Event Handling)
-│   ├── 事件处理器 (Event Handlers)
-│   ├── 事件投影器 (Event Projectors)
-│   └── 事件总线 (Event Bus)
+│   ├── 事件总线 (Event Bus)
+│   ├── 事件发布 (Event Publishing)
+│   └── 事件路由 (Event Routing)
 └── 应用服务 (Application Services)
     ├── 用例协调 (Use Case Orchestration)
     ├── 事务管理 (Transaction Management)
@@ -257,11 +257,11 @@ export class CreateUserHandler {
     // 3. 保存到事件存储
     await this.saveUserEvents(user);
 
-    // 4. 发送欢迎邮件
-    await this.sendWelcomeEmail(user);
+    // 4. 发布事件到事件总线（异步处理）
+    await this.eventBus.publishAll(user.uncommittedEvents);
 
-    // 5. 记录审计日志
-    await this.logAuditEvent(command, user);
+    // 5. 标记事件为已提交
+    user.markEventsAsCommitted();
   }
 
   private async validateBusinessRules(
@@ -307,31 +307,6 @@ export class CreateUserHandler {
       user.uncommittedEvents,
       user.version,
     );
-
-    user.markEventsAsCommitted();
-  }
-
-  private async sendWelcomeEmail(user: User): Promise<void> {
-    await this.emailService.sendWelcomeEmail(
-      user.email,
-      user.profile.firstName,
-    );
-  }
-
-  private async logAuditEvent(
-    command: CreateUserCommand,
-    user: User,
-  ): Promise<void> {
-    await this.auditService.logEvent({
-      eventType: 'USER_CREATED',
-      userId: user.id,
-      performedBy: 'system',
-      details: {
-        email: user.email,
-        platformId: command.platformId,
-      },
-      timestamp: new Date(),
-    });
   }
 }
 
@@ -361,8 +336,15 @@ export class AssignUserToTenantHandler {
     // 5. 保存事件
     await this.saveEvents(user, tenant);
 
-    // 6. 发送通知
-    await this.sendNotifications(user, tenant, command);
+    // 6. 发布事件到事件总线（异步处理）
+    await this.eventBus.publishAll([
+      ...user.uncommittedEvents,
+      ...tenant.uncommittedEvents,
+    ]);
+
+    // 7. 标记事件为已提交
+    user.markEventsAsCommitted();
+    tenant.markEventsAsCommitted();
   }
 
   private async getUserAggregate(userId: string): Promise<User> {
@@ -423,33 +405,6 @@ export class AssignUserToTenantHandler {
       tenant.uncommittedEvents,
       tenant.version,
     );
-
-    user.markEventsAsCommitted();
-    tenant.markEventsAsCommitted();
-  }
-
-  private async sendNotifications(
-    user: User,
-    tenant: Tenant,
-    command: AssignUserToTenantCommand,
-  ): Promise<void> {
-    // 通知用户
-    await this.notificationService.sendNotification({
-      userId: user.id,
-      type: 'TENANT_ASSIGNMENT',
-      title: '您已被分配到租户',
-      message: `您已被分配到租户：${tenant.name}`,
-      data: { tenantId: tenant.id, tenantName: tenant.name },
-    });
-
-    // 通知租户管理员
-    await this.notificationService.sendNotification({
-      userId: command.assignedBy,
-      type: 'USER_ASSIGNED',
-      title: '用户分配完成',
-      message: `用户 ${user.email} 已成功分配到租户`,
-      data: { userId: user.id, userEmail: user.email },
-    });
   }
 }
 ```
@@ -477,14 +432,14 @@ export class CreateTenantHandler {
     // 3. 创建租户聚合
     const tenant = await this.createTenantAggregate(command);
 
-    // 4. 分配资源配额
-    await this.allocateResourceQuota(tenant);
-
-    // 5. 保存事件
+    // 4. 保存事件
     await this.saveTenantEvents(tenant);
 
-    // 6. 初始化租户配置
-    await this.initializeTenantConfiguration(tenant);
+    // 5. 发布事件到事件总线（异步处理）
+    await this.eventBus.publishAll(tenant.uncommittedEvents);
+
+    // 6. 标记事件为已提交
+    tenant.markEventsAsCommitted();
   }
 
   private async validateCreationPermissions(
@@ -533,55 +488,12 @@ export class CreateTenantHandler {
     );
   }
 
-  private async allocateResourceQuota(tenant: Tenant): Promise<void> {
-    await this.resourceQuotaService.allocateQuota({
-      tenantId: tenant.id,
-      maxUsers: tenant.settings.maxUsers,
-      maxOrganizations: tenant.settings.maxOrganizations,
-      maxStorage: tenant.settings.maxStorage,
-      maxBandwidth: tenant.settings.maxBandwidth,
-    });
-  }
-
   private async saveTenantEvents(tenant: Tenant): Promise<void> {
     await this.eventStore.saveEvents(
       tenant.id,
       tenant.uncommittedEvents,
       tenant.version,
     );
-
-    tenant.markEventsAsCommitted();
-  }
-
-  private async initializeTenantConfiguration(tenant: Tenant): Promise<void> {
-    // 创建默认组织
-    const defaultOrganization = Organization.create(
-      tenant.id,
-      '默认组织',
-      OrganizationType.DEFAULT,
-    );
-
-    // 创建默认部门
-    const defaultDepartment = Department.create(
-      defaultOrganization.id,
-      '默认部门',
-    );
-
-    // 保存默认组织架构
-    await this.eventStore.saveEvents(
-      defaultOrganization.id,
-      defaultOrganization.uncommittedEvents,
-      defaultOrganization.version,
-    );
-
-    await this.eventStore.saveEvents(
-      defaultDepartment.id,
-      defaultDepartment.uncommittedEvents,
-      defaultDepartment.version,
-    );
-
-    defaultOrganization.markEventsAsCommitted();
-    defaultDepartment.markEventsAsCommitted();
   }
 }
 ```
@@ -825,29 +737,58 @@ export class GetUsersHandler {
 
 ## 事件处理实现
 
-### 事件处理器
+### 事件总线服务
+
+```typescript
+// 事件总线服务
+@Injectable()
+export class EventBusService {
+  constructor(
+    private readonly eventStore: IEventStore,
+    private readonly messageQueue: IMessageQueue,
+  ) {}
+
+  async publish(event: IDomainEvent): Promise<void> {
+    // 1. 保存到事件存储
+    await this.eventStore.saveEvent(event);
+
+    // 2. 发布到消息队列
+    await this.messageQueue.publish('domain_events', {
+      eventId: event.eventId,
+      eventType: event.eventType,
+      aggregateId: event.aggregateId,
+      eventData: event.toJSON(),
+      occurredOn: event.occurredOn,
+    });
+  }
+
+  async publishAll(events: IDomainEvent[]): Promise<void> {
+    for (const event of events) {
+      await this.publish(event);
+    }
+  }
+}
+```
+
+### 异步事件处理器
 
 #### 用户事件处理器
 
 ```typescript
-// 用户创建事件处理器
-@EventsHandler(UserCreatedEvent)
-export class UserCreatedHandler {
-  constructor(
-    private readonly userReadRepository: IUserReadRepository,
-    private readonly emailService: EmailService,
-    private readonly auditService: AuditService,
-  ) {}
+// 用户创建事件处理器（异步处理）
+@Processor('domain_events')
+export class UserCreatedProcessor {
+  @Process('UserCreatedEvent')
+  async handleUserCreated(job: Job<UserCreatedEvent>): Promise<void> {
+    const event = job.data;
 
-  async handle(event: UserCreatedEvent): Promise<void> {
-    // 1. 更新读模型
-    await this.updateReadModel(event);
-
-    // 2. 发送欢迎邮件
-    await this.sendWelcomeEmail(event);
-
-    // 3. 记录审计日志
-    await this.logAuditEvent(event);
+    // 并行处理多个后续操作
+    await Promise.allSettled([
+      this.updateReadModel(event),
+      this.sendWelcomeEmail(event),
+      this.logAuditEvent(event),
+      this.createUserPermissions(event),
+    ]);
   }
 
   private async updateReadModel(event: UserCreatedEvent): Promise<void> {
@@ -890,29 +831,33 @@ export class UserCreatedHandler {
     });
   }
 
+  private async createUserPermissions(event: UserCreatedEvent): Promise<void> {
+    await this.permissionService.createDefaultPermissions(
+      event.aggregateId,
+      event.platformId,
+    );
+  }
+
   private getDefaultPermissions(): string[] {
     return ['user:read:own', 'user:update:own', 'platform:service:use'];
   }
 }
 
-// 用户分配到租户事件处理器
-@EventsHandler(UserAssignedToTenantEvent)
-export class UserAssignedToTenantHandler {
-  constructor(
-    private readonly userReadRepository: IUserReadRepository,
-    private readonly tenantReadRepository: ITenantReadRepository,
-    private readonly notificationService: NotificationService,
-  ) {}
+// 用户分配到租户事件处理器（异步处理）
+@Processor('domain_events')
+export class UserAssignedToTenantProcessor {
+  @Process('UserAssignedToTenantEvent')
+  async handleUserAssignedToTenant(
+    job: Job<UserAssignedToTenantEvent>,
+  ): Promise<void> {
+    const event = job.data;
 
-  async handle(event: UserAssignedToTenantEvent): Promise<void> {
-    // 1. 更新用户读模型
-    await this.updateUserReadModel(event);
-
-    // 2. 更新租户读模型
-    await this.updateTenantReadModel(event);
-
-    // 3. 发送通知
-    await this.sendNotifications(event);
+    // 并行处理多个后续操作
+    await Promise.allSettled([
+      this.updateUserReadModel(event),
+      this.updateTenantReadModel(event),
+      this.sendNotifications(event),
+    ]);
   }
 
   private async updateUserReadModel(

@@ -2,8 +2,8 @@
   "name": "@aiofix/department",
   "version": "1.0.0",
   "description": "部门管理模块 - 支持多租户部门架构管理",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/department/src/index.js",
+  "types": "dist/department/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest --config ../../jest.config.js",

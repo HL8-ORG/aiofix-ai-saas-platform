@@ -2,8 +2,8 @@
   "name": "@aiofix/platform",
   "version": "1.0.0",
   "description": "Platform module for AIOFIX SAAS platform",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/platform/src/index.js",
+  "types": "dist/platform/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@aiofix/core": "workspace:*",
     "@aiofix/shared": "workspace:*",
-    "uuid": "^10.0.0"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
