@@ -209,16 +209,8 @@ export abstract class BaseEntity {
    * @protected
    */
   protected validateAuditState(): void {
-    if (!this.createdAt) {
-      throw new InvalidAuditStateError('Created date is required');
-    }
-
     if (!this.createdBy) {
       throw new InvalidAuditStateError('Created by is required');
-    }
-
-    if (!this._updatedAt) {
-      throw new InvalidAuditStateError('Updated date is required');
     }
 
     if (!this._updatedBy) {
@@ -263,7 +255,7 @@ export abstract class BaseEntity {
     try {
       this.validate();
       return true;
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }
@@ -275,7 +267,6 @@ export abstract class BaseEntity {
    * @returns {boolean} 是否相等
    */
   public equals(other: BaseEntity): boolean {
-    if (!other) return false;
     if (this === other) return true;
     if (this.constructor !== other.constructor) return false;
 

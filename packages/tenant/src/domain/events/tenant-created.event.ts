@@ -69,16 +69,12 @@ export class TenantCreatedEvent extends DomainEvent {
    */
   public toJSON(): Record<string, unknown> {
     return {
-      eventId: this.eventId,
-      eventType: this.eventType,
-      aggregateId: this.aggregateId,
-      eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn,
+      ...this.getBaseEventData(),
       tenantId: this.tenantId.toString(),
       name: this.name,
       type: this.type,
-      quota: this.quota,
-      configuration: this.configuration,
+      quota: this.quota.value,
+      configuration: this.configuration.value,
       createdBy: this.createdBy,
     };
   }

@@ -1,6 +1,22 @@
 import { v4 as uuidv4 } from 'uuid';
 
 /**
+ * @interface EventMetadata
+ * @description 事件元数据，用于审计追踪和业务分析
+ */
+export interface EventMetadata {
+  readonly userId?: string; // 操作用户ID
+  readonly tenantId?: string; // 租户ID
+  readonly ipAddress?: string; // IP地址
+  readonly userAgent?: string; // 用户代理
+  readonly correlationId?: string; // 关联ID
+  readonly causationId?: string; // 因果ID
+  readonly timestamp: Date; // 时间戳
+  readonly source: string; // 事件源
+  readonly version: string; // 应用版本
+}
+
+/**
  * @class DomainEvent
  * @description
  * 领域事件基类，描述事件含义、触发条件和影响范围。
@@ -26,6 +42,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @property {Date} occurredOn 事件发生的时间戳
  * @property {string} eventType 事件的类型名称
  * @property {number} eventVersion 事件的版本号
+ * @property {EventMetadata} metadata 事件元数据，用于审计追踪和业务分析
  *
  * @example
  * ```typescript
@@ -82,14 +99,25 @@ export abstract class DomainEvent {
   public readonly eventVersion: number;
 
   /**
+   * 事件元数据
+   * 用于审计追踪和业务分析
+   */
+  public readonly metadata: EventMetadata;
+
+  /**
    * 构造函数
    *
    * @param {string} aggregateId - 聚合根的唯一标识符
    * @param {number} [eventVersion=1] - 事件的版本号，默认为1
+   * @param {EventMetadata} [metadata] - 事件元数据，可选
    *
    * @throws {Error} 当aggregateId为空或无效时抛出错误
    */
-  constructor(aggregateId: string, eventVersion: number = 1) {
+  constructor(
+    aggregateId: string,
+    eventVersion: number = 1,
+    metadata?: Partial<EventMetadata>,
+  ) {
     if (!aggregateId || aggregateId.trim().length === 0) {
       throw new Error('聚合根ID不能为空');
     }
@@ -103,6 +131,12 @@ export abstract class DomainEvent {
     this.occurredOn = new Date();
     this.eventType = this.constructor.name;
     this.eventVersion = eventVersion;
+    this.metadata = {
+      timestamp: new Date(),
+      source: 'domain',
+      version: '1.0.0',
+      ...metadata,
+    };
   }
 
   /**
@@ -127,6 +161,7 @@ export abstract class DomainEvent {
       occurredOn: this.occurredOn.toISOString(),
       eventType: this.eventType,
       eventVersion: this.eventVersion,
+      metadata: this.metadata,
     };
   }
 
@@ -152,6 +187,46 @@ export abstract class DomainEvent {
    */
   public getEventId(): string {
     return this.eventId;
+  }
+
+  /**
+   * 获取事件元数据
+   * @returns {EventMetadata} 事件元数据
+   */
+  public getMetadata(): EventMetadata {
+    return this.metadata;
+  }
+
+  /**
+   * 获取关联ID
+   * @returns {string | undefined} 关联ID
+   */
+  public getCorrelationId(): string | undefined {
+    return this.metadata.correlationId;
+  }
+
+  /**
+   * 获取因果ID
+   * @returns {string | undefined} 因果ID
+   */
+  public getCausationId(): string | undefined {
+    return this.metadata.causationId;
+  }
+
+  /**
+   * 获取租户ID
+   * @returns {string | undefined} 租户ID
+   */
+  public getTenantId(): string | undefined {
+    return this.metadata.tenantId;
+  }
+
+  /**
+   * 获取用户ID
+   * @returns {string | undefined} 用户ID
+   */
+  public getUserId(): string | undefined {
+    return this.metadata.userId;
   }
 
   /**

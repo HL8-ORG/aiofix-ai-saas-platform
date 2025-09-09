@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 
 /**
  * @interface NotifAnalyticsCreatedEventProps
@@ -37,10 +37,7 @@ export interface NotifAnalyticsCreatedEventProps {
  * 3. 更新分析仪表板数据
  * 4. 记录分析创建审计日志
  */
-export class NotifAnalyticsCreatedEvent implements IDomainEvent {
-  public readonly occurredOn: Date = new Date();
-  public readonly eventVersion: number = 1;
-
+export class NotifAnalyticsCreatedEvent extends DomainEvent {
   constructor(
     public readonly analyticsId: string,
     public readonly tenantId: string,
@@ -51,8 +48,12 @@ export class NotifAnalyticsCreatedEvent implements IDomainEvent {
     public readonly organizationId?: string,
     public readonly departmentId?: string,
     public readonly userId?: string,
-    public readonly metadata?: Record<string, unknown>,
   ) {
+    super(analyticsId, 1, {
+      tenantId,
+      userId,
+      source: 'notification-analytics',
+    });
     this.validateEvent();
   }
 
@@ -156,15 +157,6 @@ export class NotifAnalyticsCreatedEvent implements IDomainEvent {
   }
 
   /**
-   * @method getMetadata
-   * @description 获取元数据
-   * @returns {Record<string, unknown> | undefined} 元数据
-   */
-  public getMetadata(): Record<string, unknown> | undefined {
-    return this.metadata;
-  }
-
-  /**
    * @method toJSON
    * @description 将事件转换为JSON格式
    * @returns {Record<string, unknown>} JSON格式的事件数据
@@ -210,7 +202,6 @@ export class NotifAnalyticsCreatedEvent implements IDomainEvent {
       data.organizationId as string | undefined,
       data.departmentId as string | undefined,
       data.userId as string | undefined,
-      data.metadata as Record<string, unknown> | undefined,
     );
 
     // 设置事件时间

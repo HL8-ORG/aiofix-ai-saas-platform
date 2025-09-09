@@ -75,7 +75,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     const aggregate = new NotifAnalyticsAggregate(analytics);
 
     // 发布创建事件
-    aggregate.publishEvent(
+    aggregate.addDomainEvent(
       new NotifAnalyticsCreatedEvent(
         analytics.getId(),
         analytics.getTenantId(),
@@ -175,7 +175,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addMetric(metric);
 
     // 发布更新事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsUpdatedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -196,7 +196,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addMetrics(metrics);
 
     // 发布更新事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsUpdatedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -217,7 +217,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addDimension(dimension);
 
     // 发布更新事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsUpdatedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -241,7 +241,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addDimensions(dimensions);
 
     // 发布更新事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsUpdatedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -262,7 +262,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addReport(report);
 
     // 发布报告生成事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsReportGeneratedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -290,7 +290,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
     this.analytics.addDimensions(dimensions);
 
     // 发布数据处理事件
-    this.publishEvent(
+    this.addDomainEvent(
       new NotifAnalyticsDataProcessedEvent(
         this.analytics.getId(),
         this.analytics.getTenantId(),
@@ -315,7 +315,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
 
     if (success) {
       // 发布更新事件
-      this.publishEvent(
+      this.addDomainEvent(
         new NotifAnalyticsUpdatedEvent(
           this.analytics.getId(),
           this.analytics.getTenantId(),
@@ -339,7 +339,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
 
     if (success) {
       // 发布更新事件
-      this.publishEvent(
+      this.addDomainEvent(
         new NotifAnalyticsUpdatedEvent(
           this.analytics.getId(),
           this.analytics.getTenantId(),
@@ -362,7 +362,7 @@ export class NotifAnalyticsAggregate extends EventSourcedAggregateRoot {
 
     if (clearedCount > 0) {
       // 发布更新事件
-      this.publishEvent(
+      this.addDomainEvent(
         new NotifAnalyticsUpdatedEvent(
           this.analytics.getId(),
           this.analytics.getTenantId(),

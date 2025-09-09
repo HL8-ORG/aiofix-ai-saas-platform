@@ -1,257 +1,264 @@
-import { DomainEvent } from '../domain-event';
+import { DomainEvent, EventMetadata } from '../domain-event';
 
 /**
- * 聚合快照接口
- *
- * 聚合快照用于优化事件溯源性能，通过定期创建快照，
- * 可以避免重放大量历史事件来重建聚合状态。
- *
+ * @interface StoredEvent
+ * @description 存储的事件，包含事件数据和元数据
+ */
+export interface StoredEvent {
+  readonly eventId: string;
+  readonly aggregateId: string;
+  readonly eventType: string;
+  readonly eventVersion: number;
+  readonly eventData: Record<string, unknown>;
+  readonly metadata: EventMetadata;
+  readonly occurredOn: Date;
+  readonly storedAt: Date;
+  readonly streamVersion: number; // 事件流版本号
+}
+
+/**
+ * @interface EventStream
+ * @description 事件流，包含聚合根的所有事件
+ */
+export interface EventStream {
+  readonly aggregateId: string;
+  readonly events: StoredEvent[];
+  readonly fromVersion: number;
+  readonly toVersion: number;
+  readonly hasMore: boolean;
+}
+
+/**
+ * @interface EventStoreQuery
+ * @description 事件存储查询条件
+ */
+export interface EventStoreQuery {
+  readonly aggregateId?: string;
+  readonly eventType?: string;
+  readonly fromDate?: Date;
+  readonly toDate?: Date;
+  readonly fromVersion?: number;
+  readonly toVersion?: number;
+  readonly limit?: number;
+  readonly offset?: number;
+  readonly tenantId?: string;
+  readonly userId?: string;
+}
+
+/**
+ * @interface EventStoreResult
+ * @description 事件存储查询结果
+ */
+export interface EventStoreResult {
+  readonly events: StoredEvent[];
+  readonly totalCount: number;
+  readonly hasMore: boolean;
+  readonly nextOffset?: number;
+}
+
+/**
  * @interface IAggregateSnapshot
- * @author AI开发团队
- * @since 1.0.0
+ * @description 聚合根快照接口
  */
 export interface IAggregateSnapshot {
-  /**
-   * 聚合根的唯一标识符
-   */
   readonly aggregateId: string;
-
-  /**
-   * 快照对应的版本号
-   * 表示快照创建时的聚合版本
-   */
+  readonly aggregateType: string;
   readonly version: number;
-
-  /**
-   * 快照数据
-   * 包含聚合在指定版本时的完整状态
-   */
   readonly data: Record<string, unknown>;
-
-  /**
-   * 快照创建时间
-   */
   readonly createdAt: Date;
 }
 
 /**
- * 事件存储接口
- *
- * 事件存储是事件溯源架构的核心组件，负责事件的持久化和检索。
- * 所有事件存储实现都必须实现此接口，确保事件存储的一致性和可靠性。
- *
- * 事件存储的核心职责：
- * 1. 保存聚合根的事件到持久化存储
- * 2. 根据聚合根ID检索事件历史
- * 3. 管理聚合根的快照
- * 4. 提供事件查询和过滤功能
- * 5. 确保事件的原子性和一致性
- *
  * @interface IEventStore
- * @author AI开发团队
+ * @description
+ * 事件存储接口，负责管理领域事件的持久化、检索和重放功能。
+ *
+ * 事件存储职责：
+ * 1. 持久化领域事件到事件存储数据库
+ * 2. 支持事件的版本控制和并发控制
+ * 3. 提供事件查询和过滤功能
+ * 4. 支持事件重放和快照机制
+ *
+ * 事件溯源特性：
+ * 1. 所有状态变更都通过事件记录
+ * 2. 支持时间旅行和状态重建
+ * 3. 提供完整的审计日志
+ * 4. 支持事件版本管理和迁移
+ *
+ * 多租户支持：
+ * 1. 基于租户ID进行事件隔离
+ * 2. 支持租户级的事件查询
+ * 3. 确保跨租户数据安全
+ * 4. 支持租户级的事件归档
+ *
+ * @example
+ * ```typescript
+ * const eventStore = new EventStore(eventRepository, snapshotRepository);
+ * await eventStore.saveEvents(aggregateId, events);
+ * const events = await eventStore.getEvents(aggregateId, fromVersion);
+ * ```
  * @since 1.0.0
  */
 export interface IEventStore {
   /**
-   * 保存聚合根的事件
+   * @method saveEvents
+   * @description 保存聚合根的事件到事件存储
+   * @param {string} aggregateId 聚合根ID
+   * @param {DomainEvent[]} events 领域事件列表
+   * @param {number} expectedVersion 期望的版本号，用于乐观并发控制
+   * @param {EventMetadata} [metadata] 事件元数据，可选
+   * @returns {Promise<void>}
+   * @throws {ConcurrencyError} 当版本冲突时抛出
+   * @throws {ValidationError} 当事件无效时抛出
    *
-   * 将聚合根的未提交事件保存到事件存储中。
-   * 使用乐观锁机制确保并发安全。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   * @param {DomainEvent[]} events - 要保存的事件列表
-   * @param {number} expectedVersion - 期望的版本号（乐观锁）
-   *
-   * @returns {Promise<void>} 保存操作的Promise
-   *
-   * @throws {ConcurrencyError} 当版本号不匹配时抛出并发错误
-   * @throws {EventStoreError} 当保存失败时抛出事件存储错误
+   * 保存流程：
+   * 1. 验证事件的有效性和完整性
+   * 2. 检查聚合根版本一致性
+   * 3. 应用租户级数据隔离
+   * 4. 持久化事件到存储
+   * 5. 更新聚合根版本号
    */
   saveEvents(
     aggregateId: string,
     events: DomainEvent[],
     expectedVersion: number,
+    metadata?: EventMetadata,
   ): Promise<void>;
 
   /**
-   * 获取聚合根的事件历史
-   *
-   * 根据聚合根ID获取其完整的事件历史。
-   * 事件按版本号升序排列。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   * @param {number} [fromVersion] - 起始版本号（可选）
-   *
-   * @returns {Promise<DomainEvent[]>} 事件历史列表
-   *
-   * @throws {EventStoreError} 当检索失败时抛出事件存储错误
+   * @method getEvents
+   * @description 获取聚合根的事件历史
+   * @param {string} aggregateId 聚合根ID
+   * @param {number} fromVersion 起始版本号
+   * @param {number} toVersion 结束版本号，可选
+   * @returns {Promise<DomainEvent[]>} 事件列表
    */
-  getEvents(aggregateId: string, fromVersion?: number): Promise<DomainEvent[]>;
+  getEvents(
+    aggregateId: string,
+    fromVersion?: number,
+    toVersion?: number,
+  ): Promise<DomainEvent[]>;
 
   /**
-   * 根据事件类型获取事件
-   *
-   * 根据事件类型和可选的时间范围获取事件列表。
-   * 用于事件处理和投影更新。
-   *
-   * @param {string} eventType - 事件类型名称
-   * @param {Date} [fromDate] - 起始时间（可选）
-   *
-   * @returns {Promise<DomainEvent[]>} 匹配的事件列表
-   *
-   * @throws {EventStoreError} 当检索失败时抛出事件存储错误
+   * @method getEventStream
+   * @description 获取事件流
+   * @param {string} aggregateId 聚合根ID
+   * @param {number} fromVersion 起始版本号
+   * @param {number} limit 限制数量
+   * @returns {Promise<EventStream>} 事件流
    */
-  getEventsByType(eventType: string, fromDate?: Date): Promise<DomainEvent[]>;
+  getEventStream(
+    aggregateId: string,
+    fromVersion?: number,
+    limit?: number,
+  ): Promise<EventStream>;
 
   /**
-   * 获取聚合根的最新快照
-   *
-   * 获取指定聚合根的最新快照，用于优化聚合重建性能。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   *
-   * @returns {Promise<IAggregateSnapshot | null>} 快照对象或null
-   *
-   * @throws {EventStoreError} 当检索失败时抛出事件存储错误
+   * @method queryEvents
+   * @description 查询事件
+   * @param {EventStoreQuery} query 查询条件
+   * @returns {Promise<EventStoreResult>} 查询结果
+   */
+  queryEvents(query: EventStoreQuery): Promise<EventStoreResult>;
+
+  /**
+   * @method getEventsByType
+   * @description 根据事件类型获取事件
+   * @param {string} eventType 事件类型
+   * @param {Date} fromDate 开始日期
+   * @param {Date} toDate 结束日期
+   * @param {number} limit 限制数量
+   * @returns {Promise<DomainEvent[]>} 事件列表
+   */
+  getEventsByType(
+    eventType: string,
+    fromDate?: Date,
+    toDate?: Date,
+    limit?: number,
+  ): Promise<DomainEvent[]>;
+
+  /**
+   * @method createSnapshot
+   * @description 为聚合根创建快照
+   * @param {string} aggregateId 聚合根ID
+   * @param {any} aggregateState 聚合根状态
+   * @param {number} version 版本号
+   * @returns {Promise<void>}
+   */
+  createSnapshot(
+    aggregateId: string,
+    aggregateState: any,
+    version: number,
+  ): Promise<void>;
+
+  /**
+   * @method getSnapshot
+   * @description 获取聚合根的最新快照
+   * @param {string} aggregateId 聚合根ID
+   * @returns {Promise<IAggregateSnapshot | null>} 快照或null
    */
   getSnapshot(aggregateId: string): Promise<IAggregateSnapshot | null>;
 
   /**
-   * 保存聚合根的快照
-   *
-   * 将聚合根的快照保存到事件存储中，用于性能优化。
-   *
-   * @param {IAggregateSnapshot} snapshot - 要保存的快照
-   *
-   * @returns {Promise<void>} 保存操作的Promise
-   *
-   * @throws {EventStoreError} 当保存失败时抛出事件存储错误
+   * @method deleteSnapshot
+   * @description 删除聚合根的快照
+   * @param {string} aggregateId 聚合根ID
+   * @returns {Promise<void>}
    */
-  saveSnapshot(snapshot: IAggregateSnapshot): Promise<void>;
+  deleteSnapshot(aggregateId: string): Promise<void>;
 
   /**
-   * 检查聚合根是否存在
-   *
-   * 检查指定ID的聚合根是否在事件存储中存在。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   *
-   * @returns {Promise<boolean>} 聚合根是否存在
-   *
-   * @throws {EventStoreError} 当检查失败时抛出事件存储错误
+   * @method getAggregateVersion
+   * @description 获取聚合根的当前版本号
+   * @param {string} aggregateId 聚合根ID
+   * @returns {Promise<number>} 版本号
    */
-  exists(aggregateId: string): Promise<boolean>;
+  getAggregateVersion(aggregateId: string): Promise<number>;
 
   /**
-   * 获取聚合根的当前版本号
-   *
-   * 获取指定聚合根的当前版本号，用于乐观锁控制。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   *
-   * @returns {Promise<number>} 当前版本号
-   *
-   * @throws {EventStoreError} 当检索失败时抛出事件存储错误
+   * @method eventExists
+   * @description 检查事件是否存在
+   * @param {string} eventId 事件ID
+   * @returns {Promise<boolean>} 是否存在
    */
-  getVersion(aggregateId: string): Promise<number>;
+  eventExists(eventId: string): Promise<boolean>;
 
   /**
-   * 删除聚合根的所有事件
-   *
-   * 删除指定聚合根的所有事件和快照。
-   * 注意：此操作不可逆，请谨慎使用。
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   *
-   * @returns {Promise<void>} 删除操作的Promise
-   *
-   * @throws {EventStoreError} 当删除失败时抛出事件存储错误
+   * @method getEventById
+   * @description 根据事件ID获取事件
+   * @param {string} eventId 事件ID
+   * @returns {Promise<DomainEvent | null>} 事件或null
    */
-  deleteAggregate(aggregateId: string): Promise<void>;
+  getEventById(eventId: string): Promise<DomainEvent | null>;
+
+  /**
+   * @method archiveEvents
+   * @description 归档旧事件
+   * @param {Date} beforeDate 归档此日期之前的事件
+   * @returns {Promise<number>} 归档的事件数量
+   */
+  archiveEvents(beforeDate: Date): Promise<number>;
+
+  /**
+   * @method getEventStatistics
+   * @description 获取事件统计信息
+   * @param {Date} fromDate 开始日期
+   * @param {Date} toDate 结束日期
+   * @returns {Promise<EventStatistics>} 统计信息
+   */
+  getEventStatistics(fromDate: Date, toDate: Date): Promise<EventStatistics>;
 }
 
 /**
- * 并发错误
- *
- * 当乐观锁检查失败时抛出此错误，表示聚合根已被其他操作修改。
- *
- * @class ConcurrencyError
- * @extends {Error}
- * @author AI开发团队
- * @since 1.0.0
+ * @interface EventStatistics
+ * @description 事件统计信息
  */
-export class ConcurrencyError extends Error {
-  /**
-   * 聚合根的唯一标识符
-   */
-  public readonly aggregateId: string;
-
-  /**
-   * 期望的版本号
-   */
-  public readonly expectedVersion: number;
-
-  /**
-   * 实际的版本号
-   */
-  public readonly actualVersion: number;
-
-  /**
-   * 构造函数
-   *
-   * @param {string} aggregateId - 聚合根的唯一标识符
-   * @param {number} expectedVersion - 期望的版本号
-   * @param {number} actualVersion - 实际的版本号
-   */
-  constructor(
-    aggregateId: string,
-    expectedVersion: number,
-    actualVersion: number,
-  ) {
-    super(
-      `聚合根 ${aggregateId} 的版本号不匹配。期望版本: ${expectedVersion}, 实际版本: ${actualVersion}`,
-    );
-    this.name = 'ConcurrencyError';
-    this.aggregateId = aggregateId;
-    this.expectedVersion = expectedVersion;
-    this.actualVersion = actualVersion;
-  }
-}
-
-/**
- * 事件存储错误
- *
- * 当事件存储操作失败时抛出此错误。
- *
- * @class EventStoreError
- * @extends {Error}
- * @author AI开发团队
- * @since 1.0.0
- */
-export class EventStoreError extends Error {
-  /**
-   * 错误代码
-   */
-  public readonly code: string;
-
-  /**
-   * 构造函数
-   *
-   * @param {string} message - 错误消息
-   * @param {string} [code='EVENT_STORE_ERROR'] - 错误代码
-   * @param {Error} [cause] - 原始错误（可选）
-   */
-  constructor(
-    message: string,
-    code: string = 'EVENT_STORE_ERROR',
-    cause?: Error,
-  ) {
-    super(message);
-    this.name = 'EventStoreError';
-    this.code = code;
-
-    if (cause) {
-      (this as Record<string, unknown>).cause = cause;
-    }
-  }
+export interface EventStatistics {
+  readonly totalEvents: number;
+  readonly eventsByType: Record<string, number>;
+  readonly eventsByTenant: Record<string, number>;
+  readonly eventsByUser: Record<string, number>;
+  readonly averageEventsPerDay: number;
+  readonly peakEventsPerHour: number;
+  readonly storageSize: number; // bytes
 }

@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 
 /**
  * @interface NotifAnalyticsDataProcessedEventProps
@@ -38,10 +38,7 @@ export interface NotifAnalyticsDataProcessedEventProps {
  * 3. 更新分析仪表板数据
  * 4. 记录数据处理审计日志
  */
-export class NotifAnalyticsDataProcessedEvent implements IDomainEvent {
-  public readonly occurredOn: Date = new Date();
-  public readonly eventVersion: number = 1;
-
+export class NotifAnalyticsDataProcessedEvent extends DomainEvent {
   constructor(
     public readonly analyticsId: string,
     public readonly tenantId: string,
@@ -52,8 +49,12 @@ export class NotifAnalyticsDataProcessedEvent implements IDomainEvent {
     public readonly organizationId?: string,
     public readonly departmentId?: string,
     public readonly userId?: string,
-    public readonly metadata?: Record<string, unknown>,
   ) {
+    super(analyticsId, 1, {
+      tenantId,
+      userId,
+      source: 'notification-analytics',
+    });
     this.validateEvent();
   }
 
@@ -161,9 +162,6 @@ export class NotifAnalyticsDataProcessedEvent implements IDomainEvent {
    * @description 获取元数据
    * @returns {Record<string, unknown> | undefined} 元数据
    */
-  public getMetadata(): Record<string, unknown> | undefined {
-    return this.metadata;
-  }
 
   /**
    * @method getTotalDataCount
@@ -220,7 +218,6 @@ export class NotifAnalyticsDataProcessedEvent implements IDomainEvent {
       data.organizationId as string | undefined,
       data.departmentId as string | undefined,
       data.userId as string | undefined,
-      data.metadata as Record<string, unknown> | undefined,
     );
 
     // 设置事件时间

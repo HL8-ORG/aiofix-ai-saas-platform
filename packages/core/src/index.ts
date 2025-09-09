@@ -22,3 +22,6 @@ export { DomainEvent } from './domain/domain-event';
 // 通用值对象
 export { ValueObject } from './domain/value-object';
 export { generateUUID, validateUUID } from './domain/utils/uuid';
+
+// 事件驱动架构接口
+export * from './domain/interfaces';

@@ -53,6 +53,15 @@ export class NotifAnalyticsEntity extends BaseEntity {
   }
 
   /**
+   * @method getEntityId
+   * @description 获取实体ID
+   * @returns {string} 实体ID
+   */
+  public getEntityId(): string {
+    return this.props.id;
+  }
+
+  /**
    * @method create
    * @description 创建通知分析实体实例
    * @param {Omit<NotifAnalyticsProps, 'createdAt' | 'updatedAt'>} props 实体属性

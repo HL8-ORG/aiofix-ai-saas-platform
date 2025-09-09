@@ -119,11 +119,7 @@ export class TenantQuotaExceededEvent extends DomainEvent {
    */
   public toJSON(): Record<string, unknown> {
     return {
-      eventId: this.eventId,
-      eventType: this.eventType,
-      aggregateId: this.aggregateId,
-      eventVersion: this.eventVersion,
-      occurredOn: this.occurredOn,
+      ...this.getBaseEventData(),
       tenantId: this.tenantId.toString(),
       quotaType: this.quotaType,
       quotaLimit: this.quotaLimit,
