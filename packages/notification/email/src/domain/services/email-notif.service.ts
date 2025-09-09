@@ -1,14 +1,15 @@
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
-import { NotifType } from '@aiofix/core/src/domain/value-objects/notif-type.vo';
-import { NotifPriority } from '@aiofix/core/src/domain/value-objects/notif-priority.vo';
-import { EmailAddress } from '../value-objects/email-address.vo';
+import { TenantId, UserId, Email } from '@aiofix/shared';
 import {
   EmailProvider,
   EmailProviderValidator,
 } from '../value-objects/email-provider.vo';
 import { EmailContent } from '../value-objects/email-content.vo';
+import {
+  EmailPriority,
+  EmailPriorityType,
+} from '../value-objects/email-priority.vo';
 import { TemplateId } from '../value-objects/template-id.vo';
+import { NotifType } from '../value-objects/notif-type.vo';
 
 /**
  * @class EmailNotifService
@@ -91,10 +92,10 @@ export class EmailNotifService {
     type: NotifType,
     isUrgent: boolean = false,
     metadata: Record<string, unknown> = {},
-  ): NotifPriority {
+  ): EmailPriority {
     // 紧急邮件直接设为最高优先级
     if (isUrgent) {
-      return NotifPriority.CRITICAL;
+      return new EmailPriority(EmailPriorityType.URGENT);
     }
 
     // 根据通知类型确定基础优先级
@@ -141,13 +142,10 @@ export class EmailNotifService {
   public shouldSendEmail(
     userId: UserId,
     type: NotifType,
-    priority: NotifPriority,
+    priority: EmailPriority,
   ): boolean {
     // 高优先级邮件总是发送
-    if (
-      priority === NotifPriority.CRITICAL ||
-      priority === NotifPriority.URGENT
-    ) {
+    if (priority.isUrgent() || priority.isHigh()) {
       return true;
     }
 
@@ -170,14 +168,11 @@ export class EmailNotifService {
    */
   public selectEmailProvider(
     tenantId: TenantId,
-    priority: NotifPriority,
+    priority: EmailPriority,
     type: NotifType,
   ): EmailProvider {
     // 高优先级邮件使用云服务提供商
-    if (
-      priority === NotifPriority.CRITICAL ||
-      priority === NotifPriority.URGENT
-    ) {
+    if (priority.isUrgent() || priority.isHigh()) {
       return EmailProvider.SENDGRID;
     }
 
@@ -287,23 +282,23 @@ export class EmailNotifService {
    * @returns {NotifPriority} 基础优先级
    * @private
    */
-  private getBasePriorityByType(type: NotifType): NotifPriority {
-    const priorityMap: Record<NotifType, NotifPriority> = {
-      [NotifType.SYSTEM]: NotifPriority.HIGH,
-      [NotifType.PLATFORM_MANAGEMENT]: NotifPriority.HIGH,
-      [NotifType.TENANT_MANAGEMENT]: NotifPriority.NORMAL,
-      [NotifType.USER_MANAGEMENT]: NotifPriority.NORMAL,
-      [NotifType.ORGANIZATION_MANAGEMENT]: NotifPriority.NORMAL,
-      [NotifType.DEPARTMENT_MANAGEMENT]: NotifPriority.NORMAL,
-      [NotifType.ROLE_MANAGEMENT]: NotifPriority.NORMAL,
-      [NotifType.PERMISSION_MANAGEMENT]: NotifPriority.HIGH,
-      [NotifType.BUSINESS]: NotifPriority.NORMAL,
-      [NotifType.REMINDER]: NotifPriority.LOW,
-      [NotifType.ALERT]: NotifPriority.URGENT,
-      [NotifType.INFO]: NotifPriority.LOW,
+  private getBasePriorityByType(type: NotifType): EmailPriority {
+    const priorityMap: Record<NotifType, EmailPriorityType> = {
+      [NotifType.SYSTEM]: EmailPriorityType.HIGH,
+      [NotifType.PLATFORM_MANAGEMENT]: EmailPriorityType.HIGH,
+      [NotifType.TENANT_MANAGEMENT]: EmailPriorityType.NORMAL,
+      [NotifType.USER_MANAGEMENT]: EmailPriorityType.NORMAL,
+      [NotifType.ORGANIZATION_MANAGEMENT]: EmailPriorityType.NORMAL,
+      [NotifType.DEPARTMENT_MANAGEMENT]: EmailPriorityType.NORMAL,
+      [NotifType.ROLE_MANAGEMENT]: EmailPriorityType.NORMAL,
+      [NotifType.PERMISSION_MANAGEMENT]: EmailPriorityType.HIGH,
+      [NotifType.BUSINESS]: EmailPriorityType.NORMAL,
+      [NotifType.REMINDER]: EmailPriorityType.LOW,
+      [NotifType.ALERT]: EmailPriorityType.URGENT,
+      [NotifType.INFO]: EmailPriorityType.LOW,
     };
 
-    return priorityMap[type] ?? NotifPriority.NORMAL;
+    return new EmailPriority(priorityMap[type] ?? EmailPriorityType.NORMAL);
   }
 
   /**
@@ -315,9 +310,9 @@ export class EmailNotifService {
    * @private
    */
   private adjustPriorityByMetadata(
-    basePriority: NotifPriority,
+    basePriority: EmailPriority,
     metadata: Record<string, unknown>,
-  ): NotifPriority {
+  ): EmailPriority {
     // 检查是否有紧急标记
     if (metadata.isUrgent === true) {
       return this.upgradePriority(basePriority);
@@ -338,19 +333,18 @@ export class EmailNotifService {
    * @returns {NotifPriority} 升级后的优先级
    * @private
    */
-  private upgradePriority(priority: NotifPriority): NotifPriority {
+  private upgradePriority(priority: EmailPriority): EmailPriority {
     const priorityOrder = [
-      NotifPriority.LOW,
-      NotifPriority.NORMAL,
-      NotifPriority.HIGH,
-      NotifPriority.URGENT,
-      NotifPriority.CRITICAL,
+      EmailPriorityType.LOW,
+      EmailPriorityType.NORMAL,
+      EmailPriorityType.HIGH,
+      EmailPriorityType.URGENT,
     ];
 
-    const currentIndex = priorityOrder.indexOf(priority);
+    const currentIndex = priorityOrder.indexOf(priority.value);
     const nextIndex = Math.min(currentIndex + 1, priorityOrder.length - 1);
 
-    return priorityOrder[nextIndex];
+    return new EmailPriority(priorityOrder[nextIndex]);
   }
 
   /**

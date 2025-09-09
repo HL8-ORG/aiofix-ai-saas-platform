@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { PhoneNumber } from '../value-objects/phone-number.vo';
+import { DomainEvent } from '@aiofix/core';
+import { NotifId, TenantId, UserId, PhoneNumber } from '@aiofix/shared';
 import { SmsContent } from '../value-objects/sms-content.vo';
 import { SmsProvider } from '../value-objects/sms-provider.vo';
 
@@ -26,20 +26,24 @@ import { SmsProvider } from '../value-objects/sms-provider.vo';
  * - 记录短信通知创建审计日志
  *
  * @class SmsNotifCreatedEvent
- * @implements IDomainEvent
+ * @extends DomainEvent
  */
-export class SmsNotifCreatedEvent implements IDomainEvent {
-  public readonly occurredOn: Date = new Date();
-
+export class SmsNotifCreatedEvent extends DomainEvent {
   constructor(
-    public readonly smsNotifId: string,
-    public readonly tenantId: string,
-    public readonly userId: string,
+    public readonly smsNotifId: NotifId,
+    public readonly tenantId: TenantId,
+    public readonly userId: UserId,
     public readonly phoneNumber: PhoneNumber,
     public readonly content: SmsContent,
     public readonly provider: SmsProvider,
     public readonly createdBy: string,
-  ) {}
+  ) {
+    super(smsNotifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: userId.value,
+      source: 'sms-notification',
+    });
+  }
 
   /**
    * 获取事件类型
@@ -51,42 +55,16 @@ export class SmsNotifCreatedEvent implements IDomainEvent {
   }
 
   /**
-   * 获取事件ID
-   *
-   * @returns {string} 事件ID
-   */
-  getEventId(): string {
-    return `${this.getEventType()}-${this.smsNotifId}-${this.occurredOn.getTime()}`;
-  }
-
-  /**
-   * 获取聚合根ID
-   *
-   * @returns {string} 聚合根ID
-   */
-  getAggregateId(): string {
-    return this.smsNotifId;
-  }
-
-  /**
-   * 获取事件版本
-   *
-   * @returns {number} 事件版本
-   */
-  getEventVersion(): number {
-    return 1;
-  }
-
-  /**
    * 获取事件数据
    *
    * @returns {object} 事件数据
    */
-  getEventData(): object {
+  toJSON(): Record<string, unknown> {
     return {
-      smsNotifId: this.smsNotifId,
-      tenantId: this.tenantId,
-      userId: this.userId,
+      ...this.getBaseEventData(),
+      smsNotifId: this.smsNotifId.value,
+      tenantId: this.tenantId.value,
+      userId: this.userId.value,
       phoneNumber: {
         number: this.phoneNumber.getNumber(),
         countryCode: this.phoneNumber.getCountryCode(),
@@ -114,25 +92,15 @@ export class SmsNotifCreatedEvent implements IDomainEvent {
         isActive: this.provider.isAvailable(),
       },
       createdBy: this.createdBy,
-      occurredOn: this.occurredOn,
     };
   }
 
   /**
-   * 获取事件元数据
+   * 获取事件字符串表示
    *
-   * @returns {object} 事件元数据
+   * @returns {string} 事件字符串表示
    */
-  getEventMetadata(): object {
-    return {
-      eventType: this.getEventType(),
-      eventId: this.getEventId(),
-      aggregateId: this.getAggregateId(),
-      eventVersion: this.getEventVersion(),
-      occurredOn: this.occurredOn,
-      tenantId: this.tenantId,
-      userId: this.userId,
-      createdBy: this.createdBy,
-    };
+  toString(): string {
+    return `SmsNotifCreatedEvent(smsNotifId=${this.smsNotifId.value}, tenantId=${this.tenantId.value}, userId=${this.userId.value})`;
   }
 }

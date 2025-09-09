@@ -1,5 +1,4 @@
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
+import { TenantId, UserId } from '@aiofix/shared';
 import {
   TemplateType,
   TemplateTypeValidator,

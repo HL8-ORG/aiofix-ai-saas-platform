@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 import { ChannelPreference } from '../value-objects/channel-preference.vo';
 import { TimePreference } from '../value-objects/time-preference.vo';
 import { ContentPreference } from '../value-objects/content-preference.vo';
@@ -33,7 +33,7 @@ import { FrequencyPreference } from '../value-objects/frequency-preference.vo';
  * @property {string} createdBy 创建者
  * @property {Date} occurredOn 事件发生时间
  */
-export class NotifPreferencesCreatedEvent implements IDomainEvent {
+export class NotifPreferencesCreatedEvent extends DomainEvent {
   public readonly occurredOn: Date = new Date();
 
   constructor(
@@ -44,7 +44,13 @@ export class NotifPreferencesCreatedEvent implements IDomainEvent {
     public readonly contentPreferences: ContentPreference[],
     public readonly frequencyPreferences: FrequencyPreference[],
     public readonly createdBy: string,
-  ) {}
+  ) {
+    super(userId, 1, {
+      tenantId: tenantId,
+      userId: createdBy,
+      source: 'notification-preferences',
+    });
+  }
 
   /**
    * 获取事件类型标识
@@ -79,20 +85,6 @@ export class NotifPreferencesCreatedEvent implements IDomainEvent {
   }
 
   /**
-   * 获取事件元数据
-   * @returns {Record<string, unknown>} 事件元数据
-   */
-  getMetadata(): Record<string, unknown> {
-    return {
-      userId: this.userId,
-      tenantId: this.tenantId,
-      createdBy: this.createdBy,
-      eventType: this.getEventType(),
-      eventVersion: this.getEventVersion(),
-    };
-  }
-
-  /**
    * 获取事件数据
    * @returns {Record<string, unknown>} 事件数据
    */
@@ -106,6 +98,18 @@ export class NotifPreferencesCreatedEvent implements IDomainEvent {
       frequencyPreferences: this.frequencyPreferences.map(p => p.getSummary()),
       createdBy: this.createdBy,
       occurredOn: this.occurredOn,
+    };
+  }
+
+  /**
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
+   */
+  toJSON(): Record<string, unknown> {
+    return {
+      ...this.getBaseEventData(),
+      ...this.getData(),
     };
   }
 }

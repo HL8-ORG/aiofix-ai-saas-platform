@@ -144,6 +144,42 @@ export class ChannelPreference {
   }
 
   /**
+   * @method isNotificationTypeAllowed
+   * @description 检查是否允许指定类型的通知
+   * @param {string} notificationType 通知类型
+   * @returns {boolean} 是否允许
+   */
+  isNotificationTypeAllowed(notificationType: string): boolean {
+    // 如果渠道未启用，则不允许任何通知
+    if (!this.enabled) {
+      return false;
+    }
+
+    // 检查配置中是否有特定的类型限制
+    if (this.config.allowedTypes && Array.isArray(this.config.allowedTypes)) {
+      return this.config.allowedTypes.includes(notificationType);
+    }
+
+    // 默认允许所有类型
+    return true;
+  }
+
+  /**
+   * @method getPriorityNumber
+   * @description 获取优先级数值
+   * @returns {number} 优先级数值
+   */
+  getPriorityNumber(): number {
+    const priorityMap: Record<string, number> = {
+      low: 1,
+      medium: 2,
+      high: 3,
+      urgent: 4,
+    };
+    return priorityMap[this.priority] || 1;
+  }
+
+  /**
    * @method getSummary
    * @description 获取渠道偏好摘要
    * @returns {object} 渠道偏好摘要

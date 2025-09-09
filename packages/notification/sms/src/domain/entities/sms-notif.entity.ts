@@ -1,8 +1,8 @@
 import { BaseEntity } from '@aiofix/core';
-import { PhoneNumber } from '../value-objects/phone-number.vo';
-import { SmsStatus, SmsStatusType } from '../value-objects/sms-status.vo';
+import { PhoneNumber } from '@aiofix/shared';
 import { SmsContent } from '../value-objects/sms-content.vo';
 import { SmsProvider, SmsProviderType } from '../value-objects/sms-provider.vo';
+import { SmsStatus, SmsStatusType } from '../value-objects/sms-status.vo';
 
 /**
  * 短信通知实体
@@ -30,13 +30,13 @@ import { SmsProvider, SmsProviderType } from '../value-objects/sms-provider.vo';
  * @extends BaseEntity
  */
 export class SmsNotifEntity extends BaseEntity {
-  private readonly statusValidator = new SmsStatusValidator();
+  // 使用共享模块中的NotifStatus，不需要本地验证器
 
   constructor(
     public readonly id: string,
     public readonly tenantId: string,
     public readonly userId: string,
-    private _phoneNumber: PhoneNumber,
+    private readonly _phoneNumber: PhoneNumber,
     private _content: SmsContent,
     private _provider: SmsProvider,
     private _status: SmsStatus,
@@ -45,11 +45,29 @@ export class SmsNotifEntity extends BaseEntity {
     private _deliveredAt?: Date,
     private _failureReason?: string,
     private _retryCount: number = 0,
-    private _maxRetries: number = 3,
+    private readonly _maxRetries: number = 3,
     createdBy: string = 'system',
   ) {
     super(createdBy);
     this.validate();
+  }
+
+  /**
+   * @method getEntityId
+   * @description 获取实体ID，实现BaseEntity的抽象方法
+   * @returns {string} 实体ID
+   */
+  public getEntityId(): string {
+    return this.id;
+  }
+
+  /**
+   * @method getTenantId
+   * @description 获取租户ID，实现BaseEntity的抽象方法
+   * @returns {string} 租户ID
+   */
+  public getTenantId(): string {
+    return this.tenantId;
   }
 
   /**
@@ -222,7 +240,7 @@ export class SmsNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsFailed(reason: string): void {
-    this._status = this._status.transitionTo(SmsStatusType.FAILED, reason);
+    this._status = this._status.transitionTo(SmsStatusType.FAILED);
     this._failureReason = reason;
   }
 
@@ -233,10 +251,7 @@ export class SmsNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsPermanentlyFailed(reason: string): void {
-    this._status = this._status.transitionTo(
-      SmsStatusType.PERMANENTLY_FAILED,
-      reason,
-    );
+    this._status = this._status.transitionTo(SmsStatusType.PERMANENTLY_FAILED);
     this._failureReason = reason;
   }
 
@@ -257,7 +272,7 @@ export class SmsNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public cancel(reason: string): void {
-    this._status = this._status.transitionTo(SmsStatusType.CANCELLED, reason);
+    this._status = this._status.transitionTo(SmsStatusType.CANCELLED);
     this._failureReason = reason;
   }
 
@@ -336,7 +351,7 @@ export class SmsNotifEntity extends BaseEntity {
    * @throws {InvalidSmsNotifError} 当实体状态无效时抛出
    * @private
    */
-  private validate(): void {
+  protected validate(): void {
     if (!this.id || this.id.trim().length === 0) {
       throw new InvalidSmsNotifError('短信通知ID不能为空');
     }
@@ -382,7 +397,7 @@ export class SmsNotifEntity extends BaseEntity {
 /**
  * 短信状态验证器
  */
-class SmsStatusValidator {
+class NotifStatusValidator {
   /**
    * 验证状态转换
    *

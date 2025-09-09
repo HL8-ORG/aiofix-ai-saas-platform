@@ -32,10 +32,10 @@ export { DepartmentDescription } from './department-description.vo';
 
 // 状态值对象
 export {
-  NotificationStatus,
-  NotificationStatusType,
+  NotifStatus,
+  NotifStatusType,
   InvalidStatusTransitionError,
-} from './notification-status.vo';
+} from './notif-status.vo';
 
 // 配置值对象基类
 export { BaseSettings, InvalidSettingsError } from './base-settings.vo';

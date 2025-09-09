@@ -1,206 +1,278 @@
 /**
  * @file database.config.spec.ts
- * @description 数据库配置单元测试
- *
- * 测试数据库配置的验证逻辑、默认值和环境变量映射。
+ * @description 数据库配置服务单元测试
  */
 
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
-import {
-  DatabaseConfig,
-  DatabasePoolConfig,
-  MikroOrmConfig,
-  DatabaseLoggingConfig,
-} from './database.config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseConfig } from './database.config';
 
 describe('DatabaseConfig', () => {
-  describe('DatabasePoolConfig', () => {
-    let config: DatabasePoolConfig;
+  let service: DatabaseConfig;
+  let configService: ConfigService;
 
-    beforeEach(() => {
-      config = new DatabasePoolConfig();
-    });
+  beforeEach(async () => {
+    const mockConfigService = {
+      get: jest.fn().mockReturnValue(undefined),
+    };
 
-    it('应该创建默认配置', () => {
-      expect(config.min).toBe(2);
-      expect(config.max).toBe(20);
-      expect(config.acquireTimeoutMillis).toBe(60000);
-      expect(config.createTimeoutMillis).toBe(30000);
-      expect(config.destroyTimeoutMillis).toBe(5000);
-      expect(config.idleTimeoutMillis).toBe(30000);
-      expect(config.reapIntervalMillis).toBe(1000);
-      expect(config.createRetryIntervalMillis).toBe(200);
-    });
+    const mockLogger = {
+      error: jest.fn(),
+      info: jest.fn(),
+    };
 
-    it('应该验证数字字段', async () => {
-      const invalidConfig = plainToClass(DatabasePoolConfig, {
-        min: 'invalid',
-        max: -1,
-      });
-
-      const errors = await validate(invalidConfig);
-      expect(errors.length).toBeGreaterThan(0);
-      // 只检查 min 字段，因为 max 字段可能没有验证器
-      expect(errors.some(e => e.property === 'min')).toBe(true);
-    });
-
-    it('应该接受有效配置', async () => {
-      const validConfig = plainToClass(DatabasePoolConfig, {
-        min: 5,
-        max: 30,
-        acquireTimeoutMillis: 120000,
-      });
-
-      const errors = await validate(validConfig);
-      expect(errors.length).toBe(0);
-      expect(validConfig.min).toBe(5);
-      expect(validConfig.max).toBe(30);
-      expect(validConfig.acquireTimeoutMillis).toBe(120000);
-    });
+    service = new DatabaseConfig(mockConfigService as any, mockLogger as any);
+    configService = mockConfigService as any;
   });
 
-  describe('MikroOrmConfig', () => {
-    let config: MikroOrmConfig;
+  describe('getPostgreSQLConfig', () => {
+    it('should return default PostgreSQL configuration', () => {
+      // 模拟环境变量未设置
+      jest.spyOn(configService, 'get').mockReturnValue(undefined);
 
-    beforeEach(() => {
-      config = new MikroOrmConfig();
-    });
+      const config = service.getPostgresConfig();
 
-    it('应该创建默认配置', () => {
-      expect(config.debug).toBe(false);
-      expect(config.migrations.path).toBe(
-        'src/migrations/*.migration{.ts,.js}',
-      );
-      expect(config.migrations.tableName).toBe('mikro_orm_migrations');
-      expect(config.entities).toEqual(['src/**/*.entity{.ts,.js}']);
-    });
-
-    it('应该验证可选字段', async () => {
-      const validConfig = plainToClass(MikroOrmConfig, {
-        debug: true,
-        logger: 'console',
-        migrations: {
-          path: 'custom/migrations/*.ts',
-          tableName: 'custom_migrations',
+      expect(config).toEqual({
+        host: 'localhost',
+        port: 5432,
+        username: 'aiofix_user',
+        password: 'aiofix_password',
+        database: 'aiofix_platform',
+        ssl: false,
+        pool: {
+          min: 2,
+          max: 10,
+          acquireTimeoutMillis: 30000,
+          createTimeoutMillis: 30000,
+          destroyTimeoutMillis: 5000,
+          idleTimeoutMillis: 30000,
+          reapIntervalMillis: 1000,
+          createRetryIntervalMillis: 200,
         },
-        entities: ['custom/**/*.entity.ts'],
+        tenantDatabases: {
+          'tenant-1': 'aiofix_tenant_1',
+          'tenant-2': 'aiofix_tenant_2',
+          'tenant-3': 'aiofix_tenant_3',
+        },
+        synchronize: false,
+        logging: false,
+        cache: {
+          duration: 30000,
+        },
+      });
+    });
+
+    it('should return configured PostgreSQL configuration', () => {
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        const configs: Record<string, string> = {
+          POSTGRES_HOST: 'custom-host',
+          POSTGRES_PORT: '5433',
+          POSTGRES_USER: 'custom_user',
+          POSTGRES_PASSWORD: 'custom_password',
+          POSTGRES_DB: 'custom_database',
+          POSTGRES_SSL: 'true',
+          POSTGRES_POOL_MIN: '5',
+          POSTGRES_POOL_MAX: '20',
+        };
+        return configs[key];
       });
 
-      const errors = await validate(validConfig);
-      // 由于嵌套对象验证可能有问题，我们只检查基本字段
-      expect(validConfig.debug).toBe(true);
-      expect(validConfig.logger).toBe('console');
-      expect(validConfig.migrations.path).toBe('custom/migrations/*.ts');
-      expect(validConfig.migrations.tableName).toBe('custom_migrations');
-      expect(validConfig.entities).toEqual(['custom/**/*.entity.ts']);
-    });
-  });
+      const config = service.getPostgresConfig();
 
-  describe('DatabaseLoggingConfig', () => {
-    let config: DatabaseLoggingConfig;
-
-    beforeEach(() => {
-      config = new DatabaseLoggingConfig();
-    });
-
-    it('应该创建默认配置', () => {
-      expect(config.enabled).toBe(false);
-      expect(config.level).toBe('error');
-      expect(config.slowQueryThreshold).toBe(1000);
-    });
-
-    it('应该验证配置字段', async () => {
-      const validConfig = plainToClass(DatabaseLoggingConfig, {
-        enabled: true,
-        level: 'debug',
-        slowQueryThreshold: 500,
-      });
-
-      const errors = await validate(validConfig);
-      expect(errors.length).toBe(0);
-      expect(validConfig.enabled).toBe(true);
-      expect(validConfig.level).toBe('debug');
-      expect(validConfig.slowQueryThreshold).toBe(500);
-    });
-  });
-
-  describe('DatabaseConfig', () => {
-    let config: DatabaseConfig;
-
-    beforeEach(() => {
-      config = new DatabaseConfig();
-    });
-
-    it('应该创建默认配置', () => {
-      expect(config.type).toBe('postgresql');
-      expect(config.host).toBe('localhost');
-      expect(config.port).toBe(5432);
-      expect(config.username).toBe('postgres');
-      expect(config.password).toBe('password');
-      expect(config.database).toBe('aiofix_iam');
-      expect(config.schema).toBe('public');
-      expect(config.ssl).toBe(false);
-      expect(config.pool).toBeDefined();
-      expect(config.mikroOrm).toBeDefined();
-      expect(config.logging).toBeDefined();
-    });
-
-    it('应该验证必需字段', async () => {
-      const invalidConfig = plainToClass(DatabaseConfig, {
-        host: null as unknown,
-        port: 'invalid' as unknown,
-        username: null as unknown,
-        database: null as unknown,
-      });
-
-      const errors = await validate(invalidConfig);
-      expect(errors.length).toBeGreaterThan(0);
-      // 检查验证错误
-      expect(errors.length).toBeGreaterThan(0);
-    });
-
-    it('应该接受有效配置', async () => {
-      const validConfig = plainToClass(DatabaseConfig, {
-        type: 'postgresql',
-        host: 'db.example.com',
+      expect(config).toEqual({
+        host: 'custom-host',
         port: 5433,
-        username: 'admin',
-        password: 'secure_password',
-        database: 'production_db',
-        schema: 'app_schema',
-        ssl: { rejectUnauthorized: false },
+        username: 'custom_user',
+        password: 'custom_password',
+        database: 'custom_database',
+        ssl: false,
         pool: {
           min: 5,
-          max: 50,
+          max: 20,
+          acquireTimeoutMillis: 30000,
+          createTimeoutMillis: 30000,
+          destroyTimeoutMillis: 5000,
+          idleTimeoutMillis: 30000,
+          reapIntervalMillis: 1000,
+          createRetryIntervalMillis: 200,
+        },
+        tenantDatabases: {
+          'tenant-1': 'aiofix_tenant_1',
+          'tenant-2': 'aiofix_tenant_2',
+          'tenant-3': 'aiofix_tenant_3',
+        },
+        synchronize: false,
+        logging: false,
+        cache: {
+          duration: 30000,
         },
       });
-
-      // 由于嵌套对象验证可能有问题，我们只检查基本字段
-      expect(validConfig.host).toBe('db.example.com');
-      expect(validConfig.port).toBe(5433);
-      expect(validConfig.username).toBe('admin');
-      expect(validConfig.password).toBe('secure_password');
-      expect(validConfig.database).toBe('production_db');
-      expect(validConfig.schema).toBe('app_schema');
-      expect(validConfig.ssl).toEqual({ rejectUnauthorized: false });
-      expect(validConfig.pool.min).toBe(5);
-      expect(validConfig.pool.max).toBe(50);
     });
 
-    it('应该验证嵌套对象', async () => {
-      const invalidConfig = plainToClass(DatabaseConfig, {
-        pool: {
-          min: 'invalid',
-          max: -1,
-        },
-        mikroOrm: {
-          debug: 'invalid',
-        },
+    it('should handle SSL configuration as object', () => {
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        if (key === 'NODE_ENV') {
+          return 'production';
+        }
+        return undefined;
       });
 
-      const errors = await validate(invalidConfig);
-      expect(errors.length).toBeGreaterThan(0);
+      const config = service.getPostgresConfig();
+
+      expect(config.ssl).toEqual({ rejectUnauthorized: false });
+    });
+  });
+
+  describe('getMongoDBConfig', () => {
+    it('should return default MongoDB configuration', () => {
+      jest.spyOn(configService, 'get').mockReturnValue(undefined);
+
+      const config = service.getMongoDBConfig();
+
+      expect(config).toEqual({
+        uri: 'mongodb://aiofix_admin:aiofix_password@localhost:27017/aiofix_events?authSource=admin',
+        databases: {
+          events: 'aiofix_events',
+          notifications: 'aiofix_notifications',
+        },
+        options: {
+          maxPoolSize: 10,
+          minPoolSize: 2,
+          maxIdleTimeMS: 30000,
+          serverSelectionTimeoutMS: 5000,
+          socketTimeoutMS: 45000,
+          bufferMaxEntries: 0,
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        },
+        eventStore: {
+          collection: 'domain_events',
+          snapshotCollection: 'aggregate_snapshots',
+          maxEventsPerSnapshot: 100,
+        },
+        notifications: {
+          collection: 'notifications',
+          indexes: [
+            { keys: { id: 1 }, options: { unique: true } },
+            { keys: { type: 1, status: 1 } },
+            { keys: { tenantId: 1, userId: 1 } },
+            { keys: { createdAt: 1 } },
+          ],
+        },
+      });
+    });
+
+    it('should return configured MongoDB configuration', () => {
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        const configs: Record<string, string> = {
+          MONGODB_URI:
+            'mongodb://mongo_user:mongo_password@mongo-host:27018/mongo_database?authSource=admin',
+          MONGODB_EVENTS_DB: 'custom_events',
+          MONGODB_NOTIFICATIONS_DB: 'custom_notifications',
+        };
+        return configs[key];
+      });
+
+      const config = service.getMongoDBConfig();
+
+      expect(config).toEqual({
+        uri: 'mongodb://mongo_user:mongo_password@mongo-host:27018/mongo_database?authSource=admin',
+        databases: {
+          events: 'custom_events',
+          notifications: 'custom_notifications',
+        },
+        options: {
+          maxPoolSize: 10,
+          minPoolSize: 2,
+          maxIdleTimeMS: 30000,
+          serverSelectionTimeoutMS: 5000,
+          socketTimeoutMS: 45000,
+          bufferMaxEntries: 0,
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        },
+        eventStore: {
+          collection: 'domain_events',
+          snapshotCollection: 'aggregate_snapshots',
+          maxEventsPerSnapshot: 100,
+        },
+        notifications: {
+          collection: 'notifications',
+          indexes: [
+            { keys: { id: 1 }, options: { unique: true } },
+            { keys: { type: 1, status: 1 } },
+            { keys: { tenantId: 1, userId: 1 } },
+            { keys: { createdAt: 1 } },
+          ],
+        },
+      });
+    });
+  });
+
+  describe('getTenantPostgresConfig', () => {
+    it('should return tenant-specific PostgreSQL config', () => {
+      const config = service.getTenantPostgresConfig('tenant-1');
+
+      expect(config).toHaveProperty('database');
+      expect(config.database).toBe('aiofix_tenant_1');
+    });
+
+    it('should return default tenant config for unknown tenant', () => {
+      const config = service.getTenantPostgresConfig('unknown-tenant');
+
+      expect(config).toHaveProperty('database');
+      expect(config.database).toBe('aiofix_tenant_unknown-tenant');
+    });
+  });
+
+  describe('validateConfig', () => {
+    it('should validate correct configuration', () => {
+      // Mock configService to return valid values
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        const configs: Record<string, string> = {
+          POSTGRES_HOST: 'localhost',
+          POSTGRES_DB: 'test_db',
+          POSTGRES_USER: 'test_user',
+          POSTGRES_PASSWORD: 'test_password',
+          MONGODB_URI: 'mongodb://localhost:27017/test_db',
+        };
+        return configs[key];
+      });
+
+      const isValid = service.validateConfig();
+      expect(isValid).toBe(true);
+    });
+
+    it('should reject invalid PostgreSQL config', () => {
+      // Mock configService to return invalid values
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        const configs: Record<string, string> = {
+          POSTGRES_HOST: '', // 无效的主机
+          POSTGRES_DB: 'test_db',
+          POSTGRES_USER: 'test_user',
+          MONGODB_URI: 'mongodb://localhost:27017/test_db',
+        };
+        return configs[key];
+      });
+
+      const isValid = service.validateConfig();
+      expect(isValid).toBe(false);
+    });
+
+    it('should reject invalid MongoDB config', () => {
+      // Mock configService to return invalid values
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        const configs: Record<string, string> = {
+          POSTGRES_HOST: 'localhost',
+          POSTGRES_DB: 'test_db',
+          POSTGRES_USER: 'test_user',
+          MONGODB_URI: '', // 无效的URI
+        };
+        return configs[key];
+      });
+
+      const isValid = service.validateConfig();
+      expect(isValid).toBe(false);
     });
   });
 });

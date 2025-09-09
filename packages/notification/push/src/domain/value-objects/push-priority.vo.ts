@@ -45,7 +45,7 @@ export class PushPriority extends ValueObject<{
    * @throws {InvalidPushPriorityError} 当优先级值无效时抛出
    */
   constructor(value: PushPriorityLevel) {
-    const weight = this.getPriorityWeight(value);
+    const weight = PushPriority.getPriorityWeightStatic(value);
     super({ value, weight });
   }
 
@@ -237,6 +237,25 @@ export class PushPriority extends ValueObject<{
     };
 
     return platformPriorityMap[this.value.value][platform] || 'normal';
+  }
+
+  /**
+   * @method getPriorityWeightStatic
+   * @description 获取优先级权重（静态方法）
+   * @param {PushPriorityLevel} priority 优先级级别
+   * @returns {number} 优先级权重
+   * @static
+   */
+  static getPriorityWeightStatic(priority: PushPriorityLevel): number {
+    const weightMap: Record<PushPriorityLevel, number> = {
+      [PushPriorityLevel.CRITICAL]: 100,
+      [PushPriorityLevel.HIGH]: 80,
+      [PushPriorityLevel.NORMAL]: 60,
+      [PushPriorityLevel.LOW]: 40,
+      [PushPriorityLevel.BACKGROUND]: 20,
+    };
+
+    return weightMap[priority];
   }
 
   /**

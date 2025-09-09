@@ -1,8 +1,7 @@
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
+import { DomainEvent } from '@aiofix/core';
 import { TemplateId } from '../value-objects/template-id.vo';
 import { TemplateType } from '../value-objects/template-type.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
+import { TenantId, UserId } from '@aiofix/shared';
 
 /**
  * @class TemplatePublishedEvent
@@ -51,11 +50,7 @@ import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
  * ```
  * @since 1.0.0
  */
-export class TemplatePublishedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'TemplatePublished';
-
+export class TemplatePublishedEvent extends DomainEvent {
   constructor(
     public readonly templateId: TemplateId,
     public readonly tenantId: TenantId,
@@ -64,28 +59,12 @@ export class TemplatePublishedEvent implements IDomainEvent {
     public readonly displayName: string,
     public readonly version: number,
     public readonly publishedBy: UserId,
-    public readonly occurredOn: Date = new Date(),
   ) {
-    this.eventId = this.generateEventId();
-    this.occurredOn = occurredOn;
-  }
-
-  /**
-   * @method getEventId
-   * @description 获取事件ID
-   * @returns {string} 事件ID
-   */
-  public getEventId(): string {
-    return this.eventId;
-  }
-
-  /**
-   * @method getEventType
-   * @description 获取事件类型
-   * @returns {string} 事件类型
-   */
-  public getEventType(): string {
-    return this.eventType;
+    super(templateId.value, 1, {
+      tenantId: tenantId.value,
+      userId: publishedBy.value,
+      source: 'template-notification',
+    });
   }
 
   /**
@@ -120,25 +99,18 @@ export class TemplatePublishedEvent implements IDomainEvent {
       displayName: this.displayName,
       version: this.version,
       publishedBy: this.publishedBy.value,
-      occurredOn: this.occurredOn,
     };
   }
 
   /**
-   * @method generateEventId
-   * @description 生成事件ID
-   * @returns {string} 事件ID
-   * @private
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
    */
-  private generateEventId(): string {
-    // 简化的UUID v4生成器
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
+  toJSON(): Record<string, unknown> {
+    return {
+      ...this.getBaseEventData(),
+      ...this.getEventData(),
+    };
   }
 }

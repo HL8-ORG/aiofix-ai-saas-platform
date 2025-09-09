@@ -1,12 +1,9 @@
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
-import { NotifId } from '@aiofix/core/src/domain/value-objects/notif-id.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
-import { NotifPriority } from '@aiofix/core/src/domain/value-objects/notif-priority.vo';
-import { EmailAddress } from '../value-objects/email-address.vo';
+import { DomainEvent } from '@aiofix/core';
+import { NotifId, TenantId, UserId, Email, NotifStatus } from '@aiofix/shared';
 import { EmailContent } from '../value-objects/email-content.vo';
 import { EmailProvider } from '../value-objects/email-provider.vo';
 import { TemplateId } from '../value-objects/template-id.vo';
+import { EmailPriority } from '../value-objects/email-priority.vo';
 
 /**
  * @class EmailNotifCreatedEvent
@@ -33,11 +30,11 @@ import { TemplateId } from '../value-objects/template-id.vo';
  * @property {NotifId} notifId 邮件通知ID
  * @property {TenantId} tenantId 租户ID
  * @property {UserId} recipientId 收件人用户ID
- * @property {EmailAddress} recipientEmail 收件人邮箱地址
+ * @property {Email} recipientEmail 收件人邮箱地址
  * @property {EmailContent} content 邮件内容
  * @property {TemplateId} templateId 邮件模板ID
  * @property {EmailProvider} provider 邮件服务提供商
- * @property {NotifPriority} priority 通知优先级
+ * @property {EmailPriority} priority 邮件优先级
  * @property {Record<string, unknown>} metadata 元数据
  * @property {Date} occurredOn 事件发生时间
  *
@@ -51,77 +48,40 @@ import { TemplateId } from '../value-objects/template-id.vo';
  *   emailContent,
  *   templateId,
  *   EmailProvider.SENDGRID,
- *   NotifPriority.HIGH,
+ *   new EmailPriority(EmailPriorityType.HIGH),
  *   { source: 'system' }
  * );
  * eventBus.publish(event);
  * ```
  * @since 1.0.0
  */
-export class EmailNotifCreatedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'EmailNotifCreated';
-
+export class EmailNotifCreatedEvent extends DomainEvent {
   constructor(
     public readonly notifId: NotifId,
     public readonly tenantId: TenantId,
     public readonly recipientId: UserId,
-    public readonly recipientEmail: EmailAddress,
+    public readonly recipientEmail: Email,
     public readonly content: EmailContent,
     public readonly templateId: TemplateId,
     public readonly provider: EmailProvider,
-    public readonly priority: NotifPriority,
-    public readonly metadata: Record<string, unknown>,
-    public readonly occurredOn: Date = new Date(),
+    public readonly priority: EmailPriority,
+    public readonly notifMetadata: Record<string, unknown>,
   ) {
-    this.eventId = this.generateEventId();
-    this.occurredOn = occurredOn;
+    super(notifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: recipientId.value,
+      source: 'email-notification',
+    });
   }
 
   /**
-   * @method getEventId
-   * @description 获取事件ID
-   * @returns {string} 事件ID
+   * @method toJSON
+   * @description 将事件转换为JSON格式
+   * @returns {object} 事件的JSON表示
    */
-  public getEventId(): string {
-    return this.eventId;
-  }
-
-  /**
-   * @method getEventType
-   * @description 获取事件类型
-   * @returns {string} 事件类型
-   */
-  public getEventType(): string {
-    return this.eventType;
-  }
-
-  /**
-   * @method getAggregateId
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
-   */
-  public getAggregateId(): string {
-    return this.notifId.value;
-  }
-
-  /**
-   * @method getTenantId
-   * @description 获取租户ID
-   * @returns {string} 租户ID
-   */
-  public getTenantId(): string {
-    return this.tenantId.value;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {object} 事件数据
-   */
-  public getEventData(): object {
+  toJSON(): Record<string, unknown> {
     return {
+      ...this.getBaseEventData(),
       notifId: this.notifId.value,
       tenantId: this.tenantId.value,
       recipientId: this.recipientId.value,
@@ -133,27 +93,8 @@ export class EmailNotifCreatedEvent implements IDomainEvent {
       },
       templateId: this.templateId.value,
       provider: this.provider,
-      priority: this.priority,
-      metadata: this.metadata,
-      occurredOn: this.occurredOn,
+      priority: this.priority.value,
+      metadata: this.notifMetadata,
     };
-  }
-
-  /**
-   * @method generateEventId
-   * @description 生成事件ID
-   * @returns {string} 事件ID
-   * @private
-   */
-  private generateEventId(): string {
-    // 简化的UUID v4生成器
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
   }
 }

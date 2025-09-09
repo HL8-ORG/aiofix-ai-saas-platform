@@ -1,15 +1,13 @@
-import { EventSourcedAggregateRoot } from '@aiofix/core/src/domain/base/event-sourced-aggregate-root';
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
-import { NotifId } from '@aiofix/core/src/domain/value-objects/notif-id.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
-import { NotifType } from '@aiofix/core/src/domain/value-objects/notif-type.vo';
-import { NotifPriority } from '@aiofix/core/src/domain/value-objects/notif-priority.vo';
-import { EmailAddress } from '../value-objects/email-address.vo';
-import { EmailStatus } from '../value-objects/email-status.vo';
+import { EventSourcedAggregateRoot } from '@aiofix/core';
+import { NotifId, TenantId, UserId, Email } from '@aiofix/shared';
+import { EmailStatus, EmailStatusType } from '../value-objects/email-status.vo';
 import { EmailProvider } from '../value-objects/email-provider.vo';
 import { TemplateId } from '../value-objects/template-id.vo';
 import { EmailContent } from '../value-objects/email-content.vo';
+import {
+  EmailPriority,
+  EmailPriorityType,
+} from '../value-objects/email-priority.vo';
 import { EmailNotifEntity } from '../entities/email-notif.entity';
 import { EmailNotifCreatedEvent } from '../events/email-notif-created.event';
 import { EmailNotifSendingEvent } from '../events/email-notif-sending.event';
@@ -72,11 +70,11 @@ export class EmailNotif extends EventSourcedAggregateRoot {
    * @description 创建邮件通知聚合根的静态工厂方法
    * @param {TenantId} tenantId 租户ID
    * @param {UserId} recipientId 收件人用户ID
-   * @param {EmailAddress} recipientEmail 收件人邮箱地址
+   * @param {Email} recipientEmail 收件人邮箱地址
    * @param {EmailContent} content 邮件内容
    * @param {TemplateId} templateId 邮件模板ID
    * @param {EmailProvider} provider 邮件服务提供商
-   * @param {NotifPriority} priority 通知优先级
+   * @param {EmailPriority} priority 邮件优先级
    * @param {Record<string, unknown>} metadata 元数据
    * @param {string} createdBy 创建者
    * @returns {EmailNotif} 邮件通知聚合根
@@ -85,11 +83,11 @@ export class EmailNotif extends EventSourcedAggregateRoot {
   public static create(
     tenantId: TenantId,
     recipientId: UserId,
-    recipientEmail: EmailAddress,
+    recipientEmail: Email,
     content: EmailContent,
     templateId: TemplateId,
     provider: EmailProvider,
-    priority: NotifPriority = NotifPriority.NORMAL,
+    priority: EmailPriority = new EmailPriority(EmailPriorityType.NORMAL),
     metadata: Record<string, unknown> = {},
     createdBy: string = 'system',
   ): EmailNotif {
@@ -105,7 +103,7 @@ export class EmailNotif extends EventSourcedAggregateRoot {
       content,
       templateId,
       provider,
-      EmailStatus.PENDING,
+      new EmailStatus(EmailStatusType.PENDING),
       0, // retryCount
       3, // maxRetries
       undefined, // sentAt
@@ -130,7 +128,6 @@ export class EmailNotif extends EventSourcedAggregateRoot {
         provider,
         priority,
         metadata,
-        new Date(),
       ),
     );
 
@@ -154,7 +151,6 @@ export class EmailNotif extends EventSourcedAggregateRoot {
         this.emailNotif.recipientId,
         this.emailNotif.recipientEmail,
         this.emailNotif.provider,
-        new Date(),
       ),
     );
   }
@@ -177,7 +173,6 @@ export class EmailNotif extends EventSourcedAggregateRoot {
         this.emailNotif.recipientEmail,
         this.emailNotif.provider,
         this.emailNotif.getSentAt()!,
-        new Date(),
       ),
     );
   }
@@ -217,7 +212,6 @@ export class EmailNotif extends EventSourcedAggregateRoot {
           this.emailNotif.provider,
           errorMessage,
           this.emailNotif.getRetryCount(),
-          new Date(),
         ),
       );
     } else {
@@ -231,7 +225,6 @@ export class EmailNotif extends EventSourcedAggregateRoot {
           this.emailNotif.provider,
           errorMessage,
           this.emailNotif.getRetryCount(),
-          new Date(),
         ),
       );
     }
@@ -390,7 +383,7 @@ export class EmailNotif extends EventSourcedAggregateRoot {
     return this.emailNotif.recipientId;
   }
 
-  public get recipientEmail(): EmailAddress {
+  public get recipientEmail(): Email {
     return this.emailNotif.recipientEmail;
   }
 

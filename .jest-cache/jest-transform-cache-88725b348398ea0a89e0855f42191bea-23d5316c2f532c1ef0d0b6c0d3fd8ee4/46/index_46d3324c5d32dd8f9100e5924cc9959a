@@ -1,0 +1,377 @@
+ca56890ecfb409ed6b726774e57f54bb
+"use strict";
+
+/* istanbul ignore next */
+function cov_1e8ff1aci8() {
+  var path = "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/config/src/config/index.ts";
+  var hash = "dd1966930cf33775dc9fca4af8fcb11cc2d65389";
+  var global = new Function("return this")();
+  var gcv = "__coverage__";
+  var coverageData = {
+    path: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/config/src/config/index.ts",
+    statementMap: {
+      "0": {
+        start: {
+          line: 2,
+          column: 22
+        },
+        end: {
+          line: 4,
+          column: 1
+        }
+      },
+      "1": {
+        start: {
+          line: 3,
+          column: 4
+        },
+        end: {
+          line: 3,
+          column: 62
+        }
+      },
+      "2": {
+        start: {
+          line: 5,
+          column: 0
+        },
+        end: {
+          line: 5,
+          column: 62
+        }
+      },
+      "3": {
+        start: {
+          line: 6,
+          column: 14
+        },
+        end: {
+          line: 6,
+          column: 47
+        }
+      },
+      "4": {
+        start: {
+          line: 7,
+          column: 19
+        },
+        end: {
+          line: 7,
+          column: 57
+        }
+      },
+      "5": {
+        start: {
+          line: 8,
+          column: 16
+        },
+        end: {
+          line: 8,
+          column: 51
+        }
+      },
+      "6": {
+        start: {
+          line: 9,
+          column: 14
+        },
+        end: {
+          line: 9,
+          column: 47
+        }
+      },
+      "7": {
+        start: {
+          line: 10,
+          column: 16
+        },
+        end: {
+          line: 10,
+          column: 51
+        }
+      },
+      "8": {
+        start: {
+          line: 11,
+          column: 18
+        },
+        end: {
+          line: 11,
+          column: 55
+        }
+      },
+      "9": {
+        start: {
+          line: 12,
+          column: 18
+        },
+        end: {
+          line: 12,
+          column: 55
+        }
+      },
+      "10": {
+        start: {
+          line: 33,
+          column: 0
+        },
+        end: {
+          line: 33,
+          column: 141
+        }
+      }
+    },
+    fnMap: {
+      "0": {
+        name: "(anonymous_0)",
+        decl: {
+          start: {
+            line: 2,
+            column: 56
+          },
+          end: {
+            line: 2,
+            column: 57
+          }
+        },
+        loc: {
+          start: {
+            line: 2,
+            column: 71
+          },
+          end: {
+            line: 4,
+            column: 1
+          }
+        },
+        line: 2
+      }
+    },
+    branchMap: {
+      "0": {
+        loc: {
+          start: {
+            line: 2,
+            column: 22
+          },
+          end: {
+            line: 4,
+            column: 1
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 2,
+            column: 23
+          },
+          end: {
+            line: 2,
+            column: 27
+          }
+        }, {
+          start: {
+            line: 2,
+            column: 31
+          },
+          end: {
+            line: 2,
+            column: 51
+          }
+        }, {
+          start: {
+            line: 2,
+            column: 56
+          },
+          end: {
+            line: 4,
+            column: 1
+          }
+        }],
+        line: 2
+      },
+      "1": {
+        loc: {
+          start: {
+            line: 3,
+            column: 11
+          },
+          end: {
+            line: 3,
+            column: 61
+          }
+        },
+        type: "cond-expr",
+        locations: [{
+          start: {
+            line: 3,
+            column: 37
+          },
+          end: {
+            line: 3,
+            column: 40
+          }
+        }, {
+          start: {
+            line: 3,
+            column: 43
+          },
+          end: {
+            line: 3,
+            column: 61
+          }
+        }],
+        line: 3
+      },
+      "2": {
+        loc: {
+          start: {
+            line: 3,
+            column: 12
+          },
+          end: {
+            line: 3,
+            column: 33
+          }
+        },
+        type: "binary-expr",
+        locations: [{
+          start: {
+            line: 3,
+            column: 12
+          },
+          end: {
+            line: 3,
+            column: 15
+          }
+        }, {
+          start: {
+            line: 3,
+            column: 19
+          },
+          end: {
+            line: 3,
+            column: 33
+          }
+        }],
+        line: 3
+      }
+    },
+    s: {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0
+    },
+    f: {
+      "0": 0
+    },
+    b: {
+      "0": [0, 0, 0],
+      "1": [0, 0],
+      "2": [0, 0]
+    },
+    inputSourceMap: {
+      file: "/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/config/src/config/index.ts",
+      mappings: ";;;;;AAAA,gDAAwB;AACxB,0DAAkC;AAClC,oDAA4B;AAC5B,gDAAwB;AACxB,oDAA4B;AAC5B,wDAAgC;AAChC,wDAAgC;AAEhC;;;;;;;;;;;;;;;;;;;GAmBG;AACH,kBAAe,CAAC,aAAG,EAAE,kBAAQ,EAAE,eAAK,EAAE,aAAG,EAAE,eAAK,EAAE,iBAAO,EAAE,iBAAO,CAAC,CAAC",
+      names: [],
+      sources: ["/home/arligle/V1/Aiofix/aiofix-ai-saas-platform/packages/config/src/config/index.ts"],
+      sourcesContent: ["import app from './app';\nimport database from './database';\nimport redis from './redis';\nimport jwt from './jwt';\nimport email from './email';\nimport logging from './logging';\nimport setting from './setting';\n\n/**\n * @fileoverview\n * \u914D\u7F6E\u6A21\u5757\u5BFC\u51FA\u6587\u4EF6\n *\n * @description\n * \u5BFC\u51FA\u6240\u6709\u914D\u7F6E\u6A21\u5757\uFF0C\u4F9BNestJS ConfigModule\u4F7F\u7528\u3002\n * \u6BCF\u4E2A\u914D\u7F6E\u6A21\u5757\u90FD\u4F7F\u7528registerAs\u65B9\u6CD5\u6CE8\u518C\uFF0C\u63D0\u4F9B\u7C7B\u578B\u5B89\u5168\u7684\u914D\u7F6E\u8BBF\u95EE\u3002\n *\n * \u4E3B\u8981\u539F\u7406\u4E0E\u673A\u5236\u5982\u4E0B\uFF1A\n * 1. \u5BFC\u5165\u6240\u6709\u914D\u7F6E\u6A21\u5757\n * 2. \u7EDF\u4E00\u5BFC\u51FA\u914D\u7F6E\u6570\u7EC4\n * 3. \u652F\u6301NestJS ConfigModule\u7684load\u9009\u9879\n * 4. \u63D0\u4F9B\u6A21\u5757\u5316\u7684\u914D\u7F6E\u7BA1\u7406\n *\n * \u529F\u80FD\u4E0E\u4E1A\u52A1\u89C4\u5219\uFF1A\n * 1. \u914D\u7F6E\u6A21\u5757\u805A\u5408\n * 2. \u7C7B\u578B\u5B89\u5168\u4FDD\u8BC1\n * 3. \u6A21\u5757\u5316\u914D\u7F6E\u7BA1\u7406\n * 4. \u914D\u7F6E\u9A8C\u8BC1\u652F\u6301\n */\nexport default [app, database, redis, jwt, email, logging, setting];\n"],
+      version: 3
+    },
+    _coverageSchema: "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    hash: "dd1966930cf33775dc9fca4af8fcb11cc2d65389"
+  };
+  var coverage = global[gcv] || (global[gcv] = {});
+  if (!coverage[path] || coverage[path].hash !== hash) {
+    coverage[path] = coverageData;
+  }
+  var actualCoverage = coverage[path];
+  {
+    // @ts-ignore
+    cov_1e8ff1aci8 = function () {
+      return actualCoverage;
+    };
+  }
+  return actualCoverage;
+}
+cov_1e8ff1aci8();
+var __importDefault =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[0]++,
+/* istanbul ignore next */
+(cov_1e8ff1aci8().b[0][0]++, this) &&
+/* istanbul ignore next */
+(cov_1e8ff1aci8().b[0][1]++, this.__importDefault) ||
+/* istanbul ignore next */
+(cov_1e8ff1aci8().b[0][2]++, function (mod) {
+  /* istanbul ignore next */
+  cov_1e8ff1aci8().f[0]++;
+  cov_1e8ff1aci8().s[1]++;
+  return /* istanbul ignore next */(cov_1e8ff1aci8().b[2][0]++, mod) &&
+  /* istanbul ignore next */
+  (cov_1e8ff1aci8().b[2][1]++, mod.__esModule) ?
+  /* istanbul ignore next */
+  (cov_1e8ff1aci8().b[1][0]++, mod) :
+  /* istanbul ignore next */
+  (cov_1e8ff1aci8().b[1][1]++, {
+    "default": mod
+  });
+}));
+/* istanbul ignore next */
+cov_1e8ff1aci8().s[2]++;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+const app_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[3]++, __importDefault(require("./app")));
+const database_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[4]++, __importDefault(require("./database")));
+const redis_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[5]++, __importDefault(require("./redis")));
+const jwt_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[6]++, __importDefault(require("./jwt")));
+const email_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[7]++, __importDefault(require("./email")));
+const logging_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[8]++, __importDefault(require("./logging")));
+const setting_1 =
+/* istanbul ignore next */
+(cov_1e8ff1aci8().s[9]++, __importDefault(require("./setting")));
+/**
+ * @fileoverview
+ * 配置模块导出文件
+ *
+ * @description
+ * 导出所有配置模块，供NestJS ConfigModule使用。
+ * 每个配置模块都使用registerAs方法注册，提供类型安全的配置访问。
+ *
+ * 主要原理与机制如下：
+ * 1. 导入所有配置模块
+ * 2. 统一导出配置数组
+ * 3. 支持NestJS ConfigModule的load选项
+ * 4. 提供模块化的配置管理
+ *
+ * 功能与业务规则：
+ * 1. 配置模块聚合
+ * 2. 类型安全保证
+ * 3. 模块化配置管理
+ * 4. 配置验证支持
+ */
+/* istanbul ignore next */
+cov_1e8ff1aci8().s[10]++;
+exports.default = [app_1.default, database_1.default, redis_1.default, jwt_1.default, email_1.default, logging_1.default, setting_1.default];
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJhcHBfMSIsImNvdl8xZThmZjFhY2k4IiwicyIsIl9faW1wb3J0RGVmYXVsdCIsInJlcXVpcmUiLCJkYXRhYmFzZV8xIiwicmVkaXNfMSIsImp3dF8xIiwiZW1haWxfMSIsImxvZ2dpbmdfMSIsInNldHRpbmdfMSIsImV4cG9ydHMiLCJkZWZhdWx0Il0sInNvdXJjZXMiOlsiL2hvbWUvYXJsaWdsZS9WMS9BaW9maXgvYWlvZml4LWFpLXNhYXMtcGxhdGZvcm0vcGFja2FnZXMvY29uZmlnL3NyYy9jb25maWcvaW5kZXgudHMiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IGFwcCBmcm9tICcuL2FwcCc7XG5pbXBvcnQgZGF0YWJhc2UgZnJvbSAnLi9kYXRhYmFzZSc7XG5pbXBvcnQgcmVkaXMgZnJvbSAnLi9yZWRpcyc7XG5pbXBvcnQgand0IGZyb20gJy4vand0JztcbmltcG9ydCBlbWFpbCBmcm9tICcuL2VtYWlsJztcbmltcG9ydCBsb2dnaW5nIGZyb20gJy4vbG9nZ2luZyc7XG5pbXBvcnQgc2V0dGluZyBmcm9tICcuL3NldHRpbmcnO1xuXG4vKipcbiAqIEBmaWxlb3ZlcnZpZXdcbiAqIOmFjee9ruaooeWdl+WvvOWHuuaWh+S7tlxuICpcbiAqIEBkZXNjcmlwdGlvblxuICog5a+85Ye65omA5pyJ6YWN572u5qih5Z2X77yM5L6bTmVzdEpTIENvbmZpZ01vZHVsZeS9v+eUqOOAglxuICog5q+P5Liq6YWN572u5qih5Z2X6YO95L2/55SocmVnaXN0ZXJBc+aWueazleazqOWGjO+8jOaPkOS+m+exu+Wei+WuieWFqOeahOmFjee9ruiuv+mXruOAglxuICpcbiAqIOS4u+imgeWOn+eQhuS4juacuuWItuWmguS4i++8mlxuICogMS4g5a+85YWl5omA5pyJ6YWN572u5qih5Z2XXG4gKiAyLiDnu5/kuIDlr7zlh7rphY3nva7mlbDnu4RcbiAqIDMuIOaUr+aMgU5lc3RKUyBDb25maWdNb2R1bGXnmoRsb2Fk6YCJ6aG5XG4gKiA0LiDmj5DkvpvmqKHlnZfljJbnmoTphY3nva7nrqHnkIZcbiAqXG4gKiDlip/og73kuI7kuJrliqHop4TliJnvvJpcbiAqIDEuIOmFjee9ruaooeWdl+iBmuWQiFxuICogMi4g57G75Z6L5a6J5YWo5L+d6K+BXG4gKiAzLiDmqKHlnZfljJbphY3nva7nrqHnkIZcbiAqIDQuIOmFjee9rumqjOivgeaUr+aMgVxuICovXG5leHBvcnQgZGVmYXVsdCBbYXBwLCBkYXRhYmFzZSwgcmVkaXMsIGp3dCwgZW1haWwsIGxvZ2dpbmcsIHNldHRpbmddO1xuIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUEsTUFBQUEsS0FBQTtBQUFBO0FBQUEsQ0FBQUMsY0FBQSxHQUFBQyxDQUFBLE9BQUFDLGVBQUEsQ0FBQUMsT0FBQTtBQUNBLE1BQUFDLFVBQUE7QUFBQTtBQUFBLENBQUFKLGNBQUEsR0FBQUMsQ0FBQSxPQUFBQyxlQUFBLENBQUFDLE9BQUE7QUFDQSxNQUFBRSxPQUFBO0FBQUE7QUFBQSxDQUFBTCxjQUFBLEdBQUFDLENBQUEsT0FBQUMsZUFBQSxDQUFBQyxPQUFBO0FBQ0EsTUFBQUcsS0FBQTtBQUFBO0FBQUEsQ0FBQU4sY0FBQSxHQUFBQyxDQUFBLE9BQUFDLGVBQUEsQ0FBQUMsT0FBQTtBQUNBLE1BQUFJLE9BQUE7QUFBQTtBQUFBLENBQUFQLGNBQUEsR0FBQUMsQ0FBQSxPQUFBQyxlQUFBLENBQUFDLE9BQUE7QUFDQSxNQUFBSyxTQUFBO0FBQUE7QUFBQSxDQUFBUixjQUFBLEdBQUFDLENBQUEsT0FBQUMsZUFBQSxDQUFBQyxPQUFBO0FBQ0EsTUFBQU0sU0FBQTtBQUFBO0FBQUEsQ0FBQVQsY0FBQSxHQUFBQyxDQUFBLE9BQUFDLGVBQUEsQ0FBQUMsT0FBQTtBQUVBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQUFBO0FBQUFILGNBQUEsR0FBQUMsQ0FBQTtBQW9CQVMsT0FBQSxDQUFBQyxPQUFBLEdBQWUsQ0FBQ1osS0FBQSxDQUFBWSxPQUFHLEVBQUVQLFVBQUEsQ0FBQU8sT0FBUSxFQUFFTixPQUFBLENBQUFNLE9BQUssRUFBRUwsS0FBQSxDQUFBSyxPQUFHLEVBQUVKLE9BQUEsQ0FBQUksT0FBSyxFQUFFSCxTQUFBLENBQUFHLE9BQU8sRUFBRUYsU0FBQSxDQUFBRSxPQUFPLENBQUMiLCJpZ25vcmVMaXN0IjpbXX0=

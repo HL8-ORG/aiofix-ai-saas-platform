@@ -252,6 +252,54 @@ export class ContentPreference {
   }
 
   /**
+   * @method isContentTypeAllowed
+   * @description 检查是否允许指定的内容类型
+   * @param {string} contentType 内容类型
+   * @returns {boolean} 是否允许
+   */
+  isContentTypeAllowed(contentType: string): boolean {
+    return this.interestedTypes.includes(contentType);
+  }
+
+  /**
+   * @method hasConflict
+   * @description 检查与其他内容偏好是否有冲突
+   * @param {ContentPreference} other 其他内容偏好
+   * @returns {boolean} 是否有冲突
+   */
+  hasConflict(other: ContentPreference): boolean {
+    // 检查语言冲突
+    if (this.language !== other.language) {
+      return true;
+    }
+
+    // 检查内容长度偏好冲突
+    if (this.contentLength !== other.contentLength) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @method get type
+   * @description 获取偏好类型
+   * @returns {string} 偏好类型
+   */
+  get type(): string {
+    return 'content';
+  }
+
+  /**
+   * @method get allowedTypes
+   * @description 获取允许的类型列表
+   * @returns {string[]} 允许的类型列表
+   */
+  get allowedTypes(): string[] {
+    return this.interestedTypes;
+  }
+
+  /**
    * @method getSummary
    * @description 获取内容偏好摘要
    * @returns {object} 内容偏好摘要

@@ -7,8 +7,7 @@ import {
 } from '../value-objects/template-status.vo';
 import { TemplateVariable } from '../value-objects/template-variable.vo';
 import { TemplateContent } from '../value-objects/template-content.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
+import { TenantId, UserId } from '@aiofix/shared';
 
 /**
  * @class EmailTemplateEntity
@@ -93,8 +92,7 @@ export class EmailTemplateEntity extends BaseEntity {
       TemplateStatus.PUBLISHED,
     );
     this.status = TemplateStatus.PUBLISHED;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -106,8 +104,7 @@ export class EmailTemplateEntity extends BaseEntity {
   public unpublish(): void {
     this.statusValidator.validateTransition(this.status, TemplateStatus.DRAFT);
     this.status = TemplateStatus.DRAFT;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -122,8 +119,7 @@ export class EmailTemplateEntity extends BaseEntity {
       TemplateStatus.ARCHIVED,
     );
     this.status = TemplateStatus.ARCHIVED;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -138,8 +134,7 @@ export class EmailTemplateEntity extends BaseEntity {
       TemplateStatus.DELETED,
     );
     this.status = TemplateStatus.DELETED;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -164,8 +159,7 @@ export class EmailTemplateEntity extends BaseEntity {
     }
 
     // 更新内容（这里需要重新创建实体，因为内容是不可变的）
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
     this.version++;
   }
 
@@ -303,7 +297,7 @@ export class EmailTemplateEntity extends BaseEntity {
    * @throws {InvalidEmailTemplateDataError} 当实体数据无效时抛出
    * @private
    */
-  private validate(): void {
+  protected validate(): void {
     if (!this.id) {
       throw new InvalidEmailTemplateDataError('模板ID不能为空');
     }
@@ -357,11 +351,11 @@ export class EmailTemplateEntity extends BaseEntity {
    * @param {EmailTemplateEntity} other 另一个实体
    * @returns {boolean} 是否相等
    */
-  public equals(other: EmailTemplateEntity): boolean {
+  public equals(other: BaseEntity): boolean {
     if (!other) {
       return false;
     }
-    return this.id.equals(other.id);
+    return this.getEntityId() === other.getEntityId();
   }
 
   /**
@@ -369,7 +363,7 @@ export class EmailTemplateEntity extends BaseEntity {
    * @description 克隆实体
    * @returns {EmailTemplateEntity} 克隆的实体
    */
-  public clone(): EmailTemplateEntity {
+  public clone(): BaseEntity {
     return new EmailTemplateEntity(
       this.id,
       this.tenantId,
@@ -423,10 +417,9 @@ export class EmailTemplateEntity extends BaseEntity {
       description: this.description,
       metadata: this.metadata,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      updatedAt: this.getUpdatedAt(),
       createdBy: this.createdBy,
-      updatedBy: this.updatedBy,
-      version: this.version,
+      updatedBy: this.getUpdatedBy(),
     };
   }
 }

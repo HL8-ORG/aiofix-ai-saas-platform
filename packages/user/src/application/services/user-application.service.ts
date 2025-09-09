@@ -1,7 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserCommand } from '../commands/create-user.command';
 import { GetUsersQuery } from '../queries/get-users.query';
-import { UserAggregate } from '../../domain/aggregates/user.aggregate';
+import { AssignUserToTenantCommand } from '../commands/assign-user-to-tenant.command';
+import {
+  CreateUserUseCase,
+  AssignUserToTenantUseCase,
+  GetUsersUseCase,
+} from '../use-cases';
+import { EventBusService } from '@aiofix/core';
+import {
+  UserCreatedEvent,
+  UserAssignedToTenantEvent,
+  UserProfileUpdatedEvent,
+  UserPasswordUpdatedEvent,
+  UserPreferencesUpdatedEvent,
+  UserStatusChangedEvent,
+} from '../../domain/events';
 
 /**
  * @class UserApplicationService
@@ -39,7 +53,11 @@ import { UserAggregate } from '../../domain/aggregates/user.aggregate';
  */
 @Injectable()
 export class UserApplicationService {
-  constructor() {} // private readonly eventBus: IEventBus, // private readonly tenantRepository: ITenantRepository, // private readonly userRepository: IUserRepository,
+  constructor(
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly assignUserToTenantUseCase: AssignUserToTenantUseCase,
+    private readonly getUsersUseCase: GetUsersUseCase,
+  ) {}
 
   /**
    * @method createUser
@@ -51,52 +69,7 @@ export class UserApplicationService {
    * @throws {TenantNotFoundError} 当租户不存在时抛出
    */
   async createUser(command: CreateUserCommand): Promise<any> {
-    // 事务边界开始
-    // return await this.userRepository.transaction(async () => {
-    // 1. 验证租户存在性
-    // const tenant = await this.tenantRepository.findById(command.tenantId);
-    // if (!tenant) {
-    //   throw new TenantNotFoundError(command.tenantId);
-    // }
-
-    // 2. 检查邮箱唯一性
-    // const existingUser = await this.userRepository.findByEmail(command.email, command.tenantId);
-    // if (existingUser) {
-    //   throw new DuplicateEmailError(command.email);
-    // }
-
-    // 3. 创建用户聚合根
-    const valueObjects = await command.toValueObjects();
-    const userAggregate = new UserAggregate(
-      valueObjects.id,
-      valueObjects.email,
-      valueObjects.password,
-      valueObjects.profile,
-      valueObjects.preferences,
-      command.tenantId,
-      'platform', // platformId - 暂时使用固定值
-    );
-
-    // 4. 保存到数据库
-    // await this.userRepository.save(userAggregate);
-
-    // 5. 发布领域事件
-    // await this.eventBus.publish(new UserCreatedEvent(
-    //   userAggregate.id,
-    //   userAggregate.email.value,
-    //   command.tenantId
-    // ));
-
-    // 6. 返回创建结果
-    return {
-      id: userAggregate.id,
-      email: userAggregate.email.value,
-      firstName: userAggregate.profile.value.firstName,
-      lastName: userAggregate.profile.value.lastName,
-      status: userAggregate.status,
-      createdAt: userAggregate.createdAt,
-    };
-    // });
+    return await this.createUserUseCase.execute(command);
   }
 
   /**
@@ -108,67 +81,18 @@ export class UserApplicationService {
    * @throws {InsufficientPermissionError} 当权限不足时抛出
    */
   async getUsers(query: GetUsersQuery): Promise<any> {
-    // 1. 验证查询权限
-    // await this.validateQueryPermission(query.requestedBy, query.tenantId);
-
-    // 2. 构建查询条件
-    // const filters = this.buildUserFilters(query);
-
-    // 3. 执行查询
-    // const result = await this.userRepository.findUsers(filters, {
-    //   page: query.page,
-    //   limit: query.limit,
-    //   sortBy: query.sortBy,
-    //   sortOrder: query.sortOrder,
-    // });
-
-    // 4. 返回结果
-    return {
-      data: [],
-      total: 0,
-      page: query.page,
-      limit: query.limit,
-      totalPages: 0,
-    };
+    return await this.getUsersUseCase.execute(query);
   }
 
   /**
-   * @method validateQueryPermission
-   * @description 验证查询权限
-   * @param {string} requestedBy 请求者ID
-   * @param {string} tenantId 租户ID
+   * @method assignUserToTenant
+   * @description 分配用户到租户
+   * @param {AssignUserToTenantCommand} command 分配命令
    * @returns {Promise<void>}
-   * @throws {InsufficientPermissionError} 当权限不足时抛出
-   * @private
+   * @throws {UserNotFoundError} 当用户不存在时抛出
+   * @throws {TenantNotFoundError} 当租户不存在时抛出
    */
-  private async validateQueryPermission(
-    requestedBy: string,
-    tenantId: string,
-  ): Promise<void> {
-    // const hasPermission = await this.permissionService.hasPermission(
-    //   requestedBy,
-    //   'user:read',
-    //   tenantId,
-    // );
-    // if (!hasPermission) {
-    //   throw new InsufficientPermissionError('user:read');
-    // }
-  }
-
-  /**
-   * @method buildUserFilters
-   * @description 构建用户查询过滤器
-   * @param {GetUsersQuery} query 查询对象
-   * @returns {UserFilters} 用户过滤器
-   * @private
-   */
-  private buildUserFilters(query: GetUsersQuery): any {
-    return {
-      tenantId: query.tenantId,
-      organizationId: query.organizationId,
-      departmentId: query.departmentId,
-      status: query.status,
-      searchTerm: query.searchTerm,
-    };
+  async assignUserToTenant(command: AssignUserToTenantCommand): Promise<void> {
+    return await this.assignUserToTenantUseCase.execute(command);
   }
 }

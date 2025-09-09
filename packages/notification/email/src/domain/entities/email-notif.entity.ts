@@ -1,8 +1,8 @@
 import { BaseEntity } from '@aiofix/core';
 import { NotifId, TenantId, UserId, Email } from '@aiofix/shared';
-import { EmailAddress } from '../value-objects/email-address.vo';
 import {
   EmailStatus,
+  EmailStatusType,
   EmailStatusValidator,
 } from '../value-objects/email-status.vo';
 import { EmailProvider } from '../value-objects/email-provider.vo';
@@ -33,7 +33,7 @@ import { EmailContent } from '../value-objects/email-content.vo';
  * @property {NotifId} id 邮件通知唯一标识符，不可变更
  * @property {TenantId} tenantId 租户ID，用于多租户数据隔离
  * @property {UserId} recipientId 收件人用户ID
- * @property {EmailAddress} recipientEmail 收件人邮箱地址
+ * @property {Email} recipientEmail 收件人邮箱地址
  * @property {EmailContent} content 邮件内容（主题、HTML、纯文本）
  * @property {TemplateId} templateId 邮件模板ID
  * @property {EmailProvider} provider 邮件服务提供商
@@ -68,11 +68,11 @@ export class EmailNotifEntity extends BaseEntity {
     public readonly id: NotifId,
     public readonly tenantId: TenantId,
     public readonly recipientId: UserId,
-    public readonly recipientEmail: EmailAddress,
+    public readonly recipientEmail: Email,
     public readonly content: EmailContent,
     public readonly templateId: TemplateId,
     public readonly provider: EmailProvider,
-    private status: EmailStatus = EmailStatus.PENDING,
+    private status: EmailStatus = new EmailStatus(EmailStatusType.PENDING),
     private retryCount: number = 0,
     private readonly maxRetries: number = 3,
     private sentAt?: Date,
@@ -92,10 +92,12 @@ export class EmailNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsSending(): void {
-    this.statusValidator.validateTransition(this.status, EmailStatus.SENDING);
-    this.status = EmailStatus.SENDING;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.statusValidator.validateTransition(
+      this.status.value,
+      EmailStatusType.SENDING,
+    );
+    this.status = new EmailStatus(EmailStatusType.SENDING);
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -105,11 +107,13 @@ export class EmailNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsSent(): void {
-    this.statusValidator.validateTransition(this.status, EmailStatus.SENT);
-    this.status = EmailStatus.SENT;
+    this.statusValidator.validateTransition(
+      this.status.value,
+      EmailStatusType.SENT,
+    );
+    this.status = new EmailStatus(EmailStatusType.SENT);
     this.sentAt = new Date();
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -119,11 +123,13 @@ export class EmailNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsDelivered(): void {
-    this.statusValidator.validateTransition(this.status, EmailStatus.DELIVERED);
-    this.status = EmailStatus.DELIVERED;
+    this.statusValidator.validateTransition(
+      this.status.value,
+      EmailStatusType.DELIVERED,
+    );
+    this.status = new EmailStatus(EmailStatusType.DELIVERED);
     this.deliveredAt = new Date();
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -134,12 +140,14 @@ export class EmailNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   public markAsFailed(errorMessage: string): void {
-    this.statusValidator.validateTransition(this.status, EmailStatus.FAILED);
-    this.status = EmailStatus.FAILED;
+    this.statusValidator.validateTransition(
+      this.status.value,
+      EmailStatusType.FAILED,
+    );
+    this.status = new EmailStatus(EmailStatusType.FAILED);
     this.retryCount++;
     this.errorMessage = errorMessage;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -151,13 +159,12 @@ export class EmailNotifEntity extends BaseEntity {
    */
   public markAsPermanentlyFailed(errorMessage: string): void {
     this.statusValidator.validateTransition(
-      this.status,
-      EmailStatus.PERMANENTLY_FAILED,
+      this.status.value,
+      EmailStatusType.PERMANENTLY_FAILED,
     );
-    this.status = EmailStatus.PERMANENTLY_FAILED;
+    this.status = new EmailStatus(EmailStatusType.PERMANENTLY_FAILED);
     this.errorMessage = errorMessage;
-    this.updatedAt = new Date();
-    this.updatedBy = 'system';
+    this.updateAuditInfo('system');
   }
 
   /**
@@ -166,9 +173,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否可以重试
    */
   public canRetry(): boolean {
-    return (
-      this.status === EmailStatus.FAILED && this.retryCount < this.maxRetries
-    );
+    return this.status.isFailed() && this.retryCount < this.maxRetries;
   }
 
   /**
@@ -177,7 +182,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为待发送状态
    */
   public isPending(): boolean {
-    return this.status === EmailStatus.PENDING;
+    return this.status.isPending();
   }
 
   /**
@@ -186,7 +191,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为发送中状态
    */
   public isSending(): boolean {
-    return this.status === EmailStatus.SENDING;
+    return this.status.isSending();
   }
 
   /**
@@ -195,7 +200,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为已发送状态
    */
   public isSent(): boolean {
-    return this.status === EmailStatus.SENT;
+    return this.status.isSent();
   }
 
   /**
@@ -204,7 +209,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为已送达状态
    */
   public isDelivered(): boolean {
-    return this.status === EmailStatus.DELIVERED;
+    return this.status.isDelivered();
   }
 
   /**
@@ -213,7 +218,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为发送失败状态
    */
   public isFailed(): boolean {
-    return this.status === EmailStatus.FAILED;
+    return this.status.isFailed();
   }
 
   /**
@@ -222,7 +227,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为永久失败状态
    */
   public isPermanentlyFailed(): boolean {
-    return this.status === EmailStatus.PERMANENTLY_FAILED;
+    return this.status.isPermanentlyFailed();
   }
 
   /**
@@ -231,7 +236,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为终态
    */
   public isFinal(): boolean {
-    return this.statusValidator.isFinal(this.status);
+    return this.status.isFinal();
   }
 
   /**
@@ -313,7 +318,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @throws {InvalidEmailNotifDataError} 当实体数据无效时抛出
    * @private
    */
-  private validate(): void {
+  protected validate(): void {
     if (!this.id) {
       throw new InvalidEmailNotifDataError('邮件通知ID不能为空');
     }
@@ -361,11 +366,11 @@ export class EmailNotifEntity extends BaseEntity {
    * @param {EmailNotifEntity} other 另一个实体
    * @returns {boolean} 是否相等
    */
-  public equals(other: EmailNotifEntity): boolean {
-    if (!other) {
+  public equals(other: BaseEntity): boolean {
+    if (!other || !(other instanceof EmailNotifEntity)) {
       return false;
     }
-    return this.id.equals(other.id);
+    return this.id.equals((other as EmailNotifEntity).id);
   }
 
   /**
@@ -373,7 +378,7 @@ export class EmailNotifEntity extends BaseEntity {
    * @description 克隆实体
    * @returns {EmailNotifEntity} 克隆的实体
    */
-  public clone(): EmailNotifEntity {
+  public clone(): BaseEntity {
     return new EmailNotifEntity(
       this.id,
       this.tenantId,
@@ -389,7 +394,7 @@ export class EmailNotifEntity extends BaseEntity {
       this.deliveredAt,
       this.errorMessage,
       { ...this.metadata },
-      this.createdBy,
+      this.getCreatedBy(),
     );
   }
 
@@ -418,11 +423,11 @@ export class EmailNotifEntity extends BaseEntity {
       deliveredAt: this.deliveredAt,
       errorMessage: this.errorMessage,
       metadata: this.metadata,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      createdBy: this.createdBy,
-      updatedBy: this.updatedBy,
-      version: this.version,
+      createdAt: this.getCreatedAt(),
+      updatedAt: this.getUpdatedAt(),
+      createdBy: this.getCreatedBy(),
+      updatedBy: this.getUpdatedBy(),
+      version: this.getVersion(),
     };
   }
 }

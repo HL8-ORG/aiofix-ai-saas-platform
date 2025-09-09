@@ -69,7 +69,7 @@ export interface DatabaseConfig {
     createRetryIntervalMillis: number;
   };
   /** 其他配置选项 */
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 /**
@@ -131,7 +131,7 @@ export interface QueryOptions {
   /** 是否使用事务 */
   transaction?: boolean;
   /** 查询参数 */
-  params?: any[];
+  params?: unknown[];
   /** 查询标签 */
   tag?: string;
   /** 是否记录查询 */
@@ -205,7 +205,7 @@ export interface IDatabaseAdapter {
    */
   query(
     sql: string,
-    params?: any[],
+    params?: unknown[],
     options?: QueryOptions,
   ): Promise<QueryResult>;
 
@@ -219,7 +219,7 @@ export interface IDatabaseAdapter {
    */
   execute(
     sql: string,
-    params?: any[],
+    params?: unknown[],
     options?: QueryOptions,
   ): Promise<QueryResult>;
 
@@ -269,6 +269,53 @@ export interface IDatabaseAdapter {
    * @returns {Promise<boolean>} 测试结果
    */
   ping(): Promise<boolean>;
+
+  /**
+   * @method setTenantContext
+   * @description 设置租户上下文
+   * @param tenantId 租户ID
+   */
+  setTenantContext(tenantId: string): void;
+
+  /**
+   * @method getTenantContext
+   * @description 获取租户上下文
+   * @returns {string | undefined} 租户ID
+   */
+  getTenantContext(): string | undefined;
+
+  /**
+   * @method setDefaultSchema
+   * @description 设置默认模式
+   * @param schemaName 模式名称
+   */
+  setDefaultSchema(schemaName: string): void;
+
+  /**
+   * @method getDefaultSchema
+   * @description 获取默认模式
+   * @returns {string | undefined} 模式名称
+   */
+  getDefaultSchema(): string | undefined;
+
+  /**
+   * @method enableRowLevelSecurity
+   * @description 启用行级安全
+   */
+  enableRowLevelSecurity(): void;
+
+  /**
+   * @method disableRowLevelSecurity
+   * @description 禁用行级安全
+   */
+  disableRowLevelSecurity(): void;
+
+  /**
+   * @method isRowLevelSecurityEnabled
+   * @description 检查行级安全是否启用
+   * @returns {boolean} 是否启用
+   */
+  isRowLevelSecurityEnabled(): boolean;
 }
 
 /**

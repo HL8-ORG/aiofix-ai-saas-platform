@@ -15,7 +15,8 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@aiofix/core": "workspace:*"
+    "@aiofix/core": "workspace:*",
+    "@aiofix/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

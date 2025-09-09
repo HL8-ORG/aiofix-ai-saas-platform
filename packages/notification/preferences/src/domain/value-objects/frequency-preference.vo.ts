@@ -197,6 +197,51 @@ export class FrequencyPreference {
   }
 
   /**
+   * @method isNotificationTypeAllowed
+   * @description 检查是否允许指定类型的通知
+   * @param {string} notificationType 通知类型
+   * @returns {boolean} 是否允许
+   */
+  isNotificationTypeAllowed(notificationType: string): boolean {
+    // 紧急通知总是允许的
+    if (notificationType === 'emergency' && this.emergencyException) {
+      return true;
+    }
+
+    // 基于频率类型判断
+    return this.frequencyType !== 'none';
+  }
+
+  /**
+   * @method hasConflict
+   * @description 检查与其他频率偏好是否有冲突
+   * @param {FrequencyPreference} other 其他频率偏好
+   * @returns {boolean} 是否有冲突
+   */
+  hasConflict(other: FrequencyPreference): boolean {
+    // 检查频率类型冲突
+    if (this.frequencyType !== other.frequencyType) {
+      return true;
+    }
+
+    // 检查最大频率冲突
+    if (this.maxFrequency !== other.maxFrequency) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @method get type
+   * @description 获取偏好类型
+   * @returns {string} 偏好类型
+   */
+  get type(): string {
+    return 'frequency';
+  }
+
+  /**
    * @method getSummary
    * @description 获取频率偏好摘要
    * @returns {object} 频率偏好摘要

@@ -6,11 +6,8 @@ export { EmailNotifEntity } from './entities/email-notif.entity';
 
 // 值对象导出
 export {
-  EmailAddress,
-  InvalidEmailAddressError,
-} from './value-objects/email-address.vo';
-export {
   EmailStatus,
+  EmailStatusType,
   EmailStatusValidator,
   InvalidEmailStatusError,
   InvalidStatusTransitionError,
@@ -29,9 +26,12 @@ export {
   EmailContent,
   InvalidEmailContentError,
 } from './value-objects/email-content.vo';
-export { NotifId, InvalidNotifIdError } from './value-objects/notif-id.vo';
-export { TenantId, InvalidTenantIdError } from './value-objects/tenant-id.vo';
-export { UserId, InvalidUserIdError } from './value-objects/user-id.vo';
+export {
+  EmailPriority,
+  EmailPriorityType,
+  InvalidEmailPriorityError,
+} from './value-objects/email-priority.vo';
+export { NotifType } from './value-objects/notif-type.vo';
 
 // 领域事件导出
 export { EmailNotifCreatedEvent } from './events/email-notif-created.event';

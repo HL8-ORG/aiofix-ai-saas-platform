@@ -8,11 +8,25 @@ alwaysApply: true
 
 **遵循代码即文档的思想，应当保证代码与注释的一致性和规范性。**
 
-项目背景：
+## 项目背景
 
-- 这是一个现代化的SAAS平台项目，支持多租户架构
-- 采用DDD + Clean Architecture + CQRS + 事件溯源 + 事件驱动架构
-- 技术栈：NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis + Bull + nestjs-cls
+- **项目名称**: Aiofix AI SAAS平台
+- **架构模式**: Clean Architecture + DDD + CQRS + Event Sourcing + Event-Driven Architecture
+- **多租户支持**: 支持数据库级、Schema级、表级三种隔离策略
+- **技术栈**: NestJS + TypeScript + Fastify + MikroORM + PostgreSQL + MongoDB + Redis + BullMQ + nestjs-cls
+
+## 架构设计参考
+
+本项目的代码注释规范基于以下技术设计文档：
+
+- **[01-架构概述](../docs/technical-design-documents/01-architecture-overview.md)** - 项目整体架构设计
+- **[02-Clean Architecture分层设计](../docs/technical-design-documents/02-clean-architecture-layers.md)** - 四层架构详细设计
+- **[03-Entities层设计](../docs/technical-design-documents/03-entities-layer.md)** - 领域实体、聚合根、值对象设计
+- **[04-Use Cases层设计](../docs/technical-design-documents/04-use-cases-layer.md)** - 应用用例、命令查询设计
+- **[05-Interface Adapters层设计](../docs/technical-design-documents/05-interface-adapters-layer.md)** - 控制器、DTO、仓储实现设计
+- **[06-Frameworks & Drivers层设计](../docs/technical-design-documents/06-frameworks-drivers-layer.md)** - 数据库、消息队列、Web框架设计
+- **[13-事件溯源设计](../docs/technical-design-documents/13-event-sourcing-design.md)** - 事件溯源模式设计
+- **[14-适配器模式设计](../docs/technical-design-documents/14-adapter-pattern-design.md)** - 数据库适配器、多租户支持设计
 
 ## **代码注释规则**
 
@@ -115,19 +129,61 @@ async function bootstrap() {
 bootstrap();
 ````
 
-特别说明：
+## 特别说明
 
-- **功能描述应体现架构设计的要求**：
+### 功能描述应体现架构设计的要求
+
+#### Clean Architecture四层架构要求
+
+- **Entities层（实体层）**：
+  - 聚合根应当描述业务方法、事件发布、不变性约束和事件溯源支持
   - 领域实体应当描述身份标识、状态管理和生命周期
-  - 聚合根应当描述业务方法、事件发布和不变性约束
   - 值对象应当描述不变性约束、相等性判断和业务概念封装
-  - 应用用例应当描述业务流程、协调逻辑和事务边界
-  - 领域事件应当描述事件含义、触发条件和影响范围
+  - 领域事件应当描述事件含义、触发条件、影响范围和事件溯源信息
   - 领域服务应当描述跨聚合的业务逻辑和无状态操作
-  - 异步事件处理器应当描述事件处理流程、重试机制和错误处理
+  - 仓储接口应当描述数据访问抽象和业务规则
+
+- **Use Cases层（用例层）**：
+  - 应用用例应当描述业务流程、协调逻辑、事务边界和事件发布
+  - 命令处理器应当描述命令验证、业务规则检查、聚合操作和事件发布
+  - 查询处理器应当描述查询优化、数据隔离、权限过滤和缓存策略
+  - 应用服务应当描述用例编排、依赖协调和异常处理
+
+- **Interface Adapters层（接口适配器层）**：
+  - 控制器应当描述HTTP请求处理、数据验证、权限控制和响应格式化
+  - DTO应当描述数据传输结构、验证规则和API文档支持
+  - 仓储实现应当描述数据持久化、查询优化和多租户隔离
+  - 外部服务适配器应当描述服务集成、错误处理和重试机制
+
+- **Frameworks & Drivers层（框架驱动层）**：
+  - 数据库适配器应当描述连接管理、查询执行、事务支持和多租户隔离
+  - 消息队列服务应当描述消息发布、消费、重试机制和可靠性保证
+  - 事件存储应当描述事件持久化、版本控制、快照机制和事件重放
+  - 事件投射器应当描述读模型更新、事件处理和投影状态管理
+
+#### 事件驱动架构要求
+
+- **事件溯源支持**：
+  - 聚合根必须继承EventSourcedAggregateRoot并实现事件应用方法
+  - 事件必须包含完整的业务信息和元数据
+  - 事件存储必须支持版本控制和并发控制
+  - 事件投射器必须支持幂等性和错误恢复
+
+- **异步事件处理**：
+  - 事件处理器应当描述事件处理流程、重试机制和错误处理
   - 消息队列服务应当描述消息发布、消费和可靠性保证
   - 事件总线服务应当描述事件存储、消息队列集成和异步处理
-- **SAAS平台特殊要求**: 所有涉及数据隔离、权限控制、多租户的代码必须详细说明其隔离策略和访问控制机制。
+
+#### 多租户架构要求
+
+- **数据隔离策略**：
+  - 所有涉及数据隔离的代码必须详细说明其隔离策略（数据库级、Schema级、表级）
+  - 租户感知组件必须描述租户上下文管理和隔离条件应用
+  - 权限控制组件必须描述访问控制机制和数据过滤策略
+
+- **配置驱动支持**：
+  - 适配器工厂必须描述隔离策略的动态切换和配置管理
+  - 隔离配置服务必须描述策略配置、租户管理和配置验证
 
 ## **架构组件注释示例**
 
@@ -189,50 +245,163 @@ export class UserEntity {
 /**
  * @class UserAggregate
  * @description
- * 用户聚合根，负责管理用户相关的业务方法、事件发布和不变性约束。
+ * 用户聚合根，负责管理用户相关的业务方法、事件发布、不变性约束和事件溯源支持。
  *
  * 业务方法与事件发布：
  * 1. 提供用户创建、更新、删除等业务方法
  * 2. 在状态变更时发布相应的领域事件
  * 3. 确保业务操作的事务一致性
+ * 4. 支持事件溯源的状态重建
  *
  * 不变性约束：
  * 1. 用户邮箱在租户内必须唯一
  * 2. 用户不能同时属于多个租户
  * 3. 用户删除前必须清理所有关联数据
+ * 4. 事件版本必须连续递增
+ *
+ * 事件溯源支持：
+ * 1. 继承EventSourcedAggregateRoot基类
+ * 2. 实现事件应用方法进行状态重建
+ * 3. 支持从事件历史重建聚合状态
+ * 4. 提供快照机制优化性能
  *
  * @property {UserEntity} user 用户实体
  * @property {TenantId} tenantId 所属租户ID
  * @property {DomainEvent[]} uncommittedEvents 未提交的领域事件
+ * @property {number} version 聚合版本号，用于乐观并发控制
  *
  * @example
  * ```typescript
- * const userAggregate = new UserAggregate();
- * await userAggregate.createUser('user@example.com', tenantId);
+ * // 创建用户聚合根
+ * const userAggregate = UserAggregate.create(
+ *   userId, email, password, profile, preferences
+ * );
  * // 自动发布 UserCreatedEvent
+ *
+ * // 从事件历史重建聚合根
+ * const events = await eventStore.getEvents(userId);
+ * const rebuiltAggregate = UserAggregate.fromEvents(events);
  * ```
  * @since 1.0.0
  */
-export class UserAggregate {
-  private uncommittedEvents: DomainEvent[] = [];
-
-  constructor(
+export class UserAggregate extends EventSourcedAggregateRoot {
+  private constructor(
     private user: UserEntity,
     private tenantId: TenantId,
-  ) {}
+  ) {
+    super();
+  }
 
   /**
-   * @method createUser
-   * @description 创建新用户，发布用户创建事件
-   * @param {string} email 用户邮箱
-   * @param {TenantId} tenantId 租户ID
-   * @returns {Promise<void>}
+   * @method create
+   * @description 创建新用户聚合根，发布用户创建事件
+   * @param {UserId} id 用户ID
+   * @param {Email} email 用户邮箱
+   * @param {Password} password 用户密码
+   * @param {UserProfile} profile 用户资料
+   * @param {UserPreferences} preferences 用户偏好
+   * @returns {UserAggregate} 创建的用户聚合根
    * @throws {DuplicateEmailError} 当邮箱已存在时抛出
    * @throws {InvalidTenantError} 当租户不存在时抛出
+   *
+   * 创建流程：
+   * 1. 验证业务规则和约束
+   * 2. 创建用户实体
+   * 3. 发布用户创建事件
+   * 4. 返回聚合根实例
    */
-  async createUser(email: string, tenantId: TenantId): Promise<void> {
-    // 业务逻辑实现
-    this.publishEvent(new UserCreatedEvent(this.user.id, email, tenantId));
+  static create(
+    id: UserId,
+    email: Email,
+    password: Password,
+    profile: UserProfile,
+    preferences: UserPreferences,
+  ): UserAggregate {
+    const userEntity = new UserEntity(
+      id,
+      email,
+      password,
+      profile,
+      preferences,
+    );
+    const aggregate = new UserAggregate(userEntity, profile.tenantId);
+
+    // 发布领域事件 - 事件溯源的核心
+    aggregate.addDomainEvent(
+      new UserCreatedEvent(id, email, profile.tenantId, profile, new Date()),
+    );
+
+    return aggregate;
+  }
+
+  /**
+   * @method fromEvents
+   * @description 从事件历史重建用户聚合根
+   * @param {IDomainEvent[]} events 事件历史列表
+   * @returns {UserAggregate} 重建的聚合根
+   * @throws {AggregateCorruptionError} 当事件数据损坏时抛出
+   *
+   * 重建流程：
+   * 1. 创建空的聚合根实例
+   * 2. 按顺序应用所有事件
+   * 3. 验证重建结果的完整性
+   * 4. 返回重建的聚合根
+   */
+  static fromEvents(events: IDomainEvent[]): UserAggregate {
+    const aggregate = new UserAggregate(null as any, null as any);
+
+    for (const event of events) {
+      aggregate.applyEvent(event);
+    }
+
+    return aggregate;
+  }
+
+  /**
+   * @method applyEvent
+   * @description 应用领域事件到聚合根，用于事件溯源状态重建
+   * @param {IDomainEvent} event 领域事件
+   * @returns {void}
+   * @private
+   *
+   * 事件应用：
+   * 1. 根据事件类型调用相应的应用方法
+   * 2. 更新聚合根的内部状态
+   * 3. 维护聚合根的版本号
+   * 4. 确保状态变更的一致性
+   */
+  private applyEvent(event: IDomainEvent): void {
+    switch (event.eventType) {
+      case 'UserCreated':
+        this.applyUserCreatedEvent(event as UserCreatedEvent);
+        break;
+      case 'UserUpdated':
+        this.applyUserUpdatedEvent(event as UserUpdatedEvent);
+        break;
+      case 'UserDeleted':
+        this.applyUserDeletedEvent(event as UserDeletedEvent);
+        break;
+    }
+
+    this.version++;
+  }
+
+  /**
+   * @method applyUserCreatedEvent
+   * @description 应用用户创建事件
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {void}
+   * @private
+   */
+  private applyUserCreatedEvent(event: UserCreatedEvent): void {
+    this.user = new UserEntity(
+      event.userId,
+      event.email,
+      event.password,
+      event.profile,
+      event.preferences,
+    );
+    this.tenantId = event.tenantId;
   }
 }
 ````
@@ -1223,7 +1392,177 @@ export class UserAggregateRebuilder {
 }
 ````
 
-### 14. 事件投影 (Event Projection) 示例
+### 14. 事件投射器 (Event Projector) 示例
+
+````typescript
+/**
+ * @class UserReadModelProjector
+ * @description
+ * 用户读模型事件投射器，负责将领域事件投射到读模型视图。
+ *
+ * 投射器职责：
+ * 1. 监听和处理用户相关的领域事件
+ * 2. 维护用户相关的读模型视图
+ * 3. 支持投射的增量更新
+ * 4. 处理投射的异常和恢复
+ *
+ * 读模型维护：
+ * 1. 用户列表视图
+ * 2. 用户统计视图
+ * 3. 用户权限视图
+ * 4. 用户活动视图
+ *
+ * 投射特性：
+ * 1. 支持投射的幂等性
+ * 2. 处理重复事件
+ * 3. 支持投射的重新构建
+ * 4. 提供投射状态查询
+ *
+ * 多租户支持：
+ * 1. 基于租户ID进行数据隔离
+ * 2. 支持租户级的读模型更新
+ * 3. 确保跨租户数据安全
+ * 4. 支持租户级的投射统计
+ *
+ * @param {IUserReadRepository} userReadRepository 用户读模型仓储
+ * @param {IUserStatisticsRepository} statisticsRepository 统计仓储
+ * @param {IUserPermissionRepository} permissionRepository 权限仓储
+ * @param {IProjectionStateRepository} projectionStateRepository 投射状态仓储
+ * @param {ITenantContext} tenantContext 租户上下文
+ *
+ * @example
+ * ```typescript
+ * const projector = new UserReadModelProjector(
+ *   userReadRepo, statisticsRepo, permissionRepo, projectionStateRepo, tenantContext
+ * );
+ * await projector.handle(userCreatedEvent);
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class UserReadModelProjector {
+  constructor(
+    private readonly userReadRepository: IUserReadRepository,
+    private readonly statisticsRepository: IUserStatisticsRepository,
+    private readonly permissionRepository: IUserPermissionRepository,
+    private readonly projectionStateRepository: IProjectionStateRepository,
+    private readonly tenantContext: ITenantContext,
+  ) {}
+
+  /**
+   * @method handle
+   * @description 处理用户相关事件，更新读模型视图
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<void>}
+   * @throws {ProjectionError} 当投射处理失败时抛出
+   *
+   * 处理流程：
+   * 1. 检查事件是否已处理（幂等性）
+   * 2. 根据事件类型更新相应视图
+   * 3. 记录投射处理状态
+   * 4. 处理投射异常
+   */
+  async handle(event: IDomainEvent): Promise<void> {
+    try {
+      // 1. 检查事件是否已处理（幂等性）
+      if (await this.isEventProcessed(event)) {
+        return;
+      }
+
+      // 2. 根据事件类型处理
+      switch (event.eventType) {
+        case 'UserCreated':
+          await this.handleUserCreated(event as UserCreatedEvent);
+          break;
+        case 'UserUpdated':
+          await this.handleUserUpdated(event as UserUpdatedEvent);
+          break;
+        case 'UserDeleted':
+          await this.handleUserDeleted(event as UserDeletedEvent);
+          break;
+        default:
+          // 忽略不相关的事件
+          break;
+      }
+
+      // 3. 记录事件处理状态
+      await this.recordEventProcessed(event);
+    } catch (error) {
+      // 记录投射处理失败
+      await this.recordProjectionError(event, error);
+      throw new ProjectionError(
+        `Failed to process event ${event.eventType}: ${error.message}`,
+      );
+    }
+  }
+
+  /**
+   * @method handleUserCreated
+   * @description 处理用户创建事件
+   * @param {UserCreatedEvent} event 用户创建事件
+   * @returns {Promise<void>}
+   * @private
+   *
+   * 处理流程：
+   * 1. 更新用户列表视图
+   * 2. 更新用户统计信息
+   * 3. 创建默认权限
+   * 4. 应用租户级数据隔离
+   */
+  private async handleUserCreated(event: UserCreatedEvent): Promise<void> {
+    const tenantId = this.tenantContext.getCurrentTenantId();
+
+    // 更新用户列表视图
+    await this.userReadRepository.addUser({
+      id: event.userId,
+      email: event.email,
+      tenantId: event.tenantId,
+      createdAt: event.occurredOn,
+      status: 'ACTIVE',
+    });
+
+    // 更新用户统计
+    await this.statisticsRepository.incrementUserCount(tenantId);
+
+    // 创建默认权限
+    await this.permissionRepository.createDefaultPermissions(
+      event.userId,
+      tenantId,
+    );
+  }
+
+  /**
+   * @method isEventProcessed
+   * @description 检查事件是否已处理
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<boolean>} 是否已处理
+   * @private
+   */
+  private async isEventProcessed(event: IDomainEvent): Promise<boolean> {
+    return await this.projectionStateRepository.isEventProcessed(
+      'UserReadModelProjector',
+      event.getEventId(),
+    );
+  }
+
+  /**
+   * @method recordEventProcessed
+   * @description 记录事件处理状态
+   * @param {IDomainEvent} event 领域事件
+   * @returns {Promise<void>}
+   * @private
+   */
+  private async recordEventProcessed(event: IDomainEvent): Promise<void> {
+    await this.projectionStateRepository.recordEventProcessed(
+      'UserReadModelProjector',
+      event.getEventId(),
+      event.occurredOn,
+    );
+  }
+}
+````
+
+### 15. 事件投影 (Event Projection) 示例
 
 ````typescript
 /**
@@ -1376,148 +1715,1380 @@ export class UserProjection {
 }
 ````
 
-### 15. 仓储实现 (Repository Implementation) 示例
+### 16. 数据库适配器 (Database Adapter) 示例
 
 ````typescript
 /**
- * @class UserRepository
- * @description
- * 用户仓储实现，负责用户聚合根的数据持久化和检索操作。
+ * @class PostgreSQLAdapter
+ * @description PostgreSQL数据库适配器，提供统一的数据库操作接口。
  *
- * 仓储职责：
- * 1. 实现用户聚合根的持久化存储
- * 2. 提供基于ID和查询条件的检索功能
- * 3. 管理数据访问的事务边界
- * 4. 实现多租户数据隔离策略
+ * 适配器职责：
+ * 1. 实现PostgreSQL数据库的连接管理
+ * 2. 提供统一的查询和事务接口
+ * 3. 支持连接池和性能监控
+ * 4. 实现多租户数据隔离支持
  *
- * 数据隔离实现：
- * 1. 基于租户ID进行数据隔离
- * 2. 支持组织级和部门级的数据过滤
- * 3. 确保跨租户数据安全访问
- * 4. 实现软删除和审计日志
+ * 多租户支持：
+ * 1. 支持租户上下文设置
+ * 2. 支持Schema级隔离
+ * 3. 支持行级安全策略
+ * 4. 提供租户级连接管理
  *
- * 性能优化：
- * 1. 使用数据库索引优化查询性能
- * 2. 实现查询结果缓存机制
- * 3. 支持分页和批量操作
- * 4. 避免N+1查询问题
+ * 性能监控：
+ * 1. 查询性能统计
+ * 2. 连接池状态监控
+ * 3. 健康检查机制
+ * 4. 事件通知系统
  *
- * @param {EntityManager} entityManager MikroORM实体管理器
- * @param {ITenantContext} tenantContext 租户上下文
- * @param {ICacheService} cacheService 缓存服务
+ * 隔离策略支持：
+ * 1. 数据库级隔离：每个租户使用独立的数据库
+ * 2. Schema级隔离：每个租户使用独立的Schema
+ * 3. 表级隔离：所有租户共享数据库，通过tenant_id字段隔离
+ *
+ * @param {DatabaseConfig} config 数据库配置
+ * @param {string} name 适配器名称
+ * @param {EventEmitter2} eventEmitter 事件发射器
+ * @param {PinoLoggerService} logger 日志服务
  *
  * @example
  * ```typescript
- * const userRepo = new UserRepository(entityManager, tenantContext, cacheService);
- * const user = await userRepo.findById('user-123');
- * await userRepo.save(userAggregate);
+ * const adapter = new PostgreSQLAdapter(config, 'main-db', eventEmitter, logger);
+ * await adapter.connect();
+ * const result = await adapter.query('SELECT * FROM users WHERE id = $1', ['user-123']);
  * ```
  * @since 1.0.0
  */
-export class UserRepository implements IUserRepository {
+@Injectable()
+export class PostgreSQLAdapter implements IDatabaseAdapter {
+  public readonly name: string;
+  public readonly type: string = 'postgresql';
+  public readonly eventEmitter: EventEmitter2;
+  public readonly config: DatabaseConfig;
+
+  private tenantId?: string;
+  private defaultSchema?: string;
+  private rlsEnabled: boolean = false;
+  private pool: Pool;
+  private knexInstance: Knex;
+  private isConnectedFlag = false;
+  private stats: DatabaseStats;
+
   constructor(
-    private readonly entityManager: EntityManager,
-    private readonly tenantContext: ITenantContext,
-    private readonly cacheService: ICacheService,
-  ) {}
+    @Inject('DATABASE_CONFIG') config: DatabaseConfig,
+    @Inject('DATABASE_NAME') name: string,
+    eventEmitter: EventEmitter2,
+    logger: PinoLoggerService,
+  ) {
+    this.config = config;
+    this.name = name;
+    this.eventEmitter = eventEmitter;
+    this.logger = logger;
+    this.stats = this.initializeStats();
+    this.initializePool();
+    this.initializeKnex();
+  }
 
   /**
-   * @method findById
-   * @description 根据ID查找用户聚合根
-   * @param {string} id 用户ID
-   * @returns {Promise<UserAggregate | null>} 用户聚合根或null
-   * @throws {DataAccessError} 当数据访问失败时抛出
+   * @method connect
+   * @description 连接到PostgreSQL数据库
+   * @returns {Promise<void>} 连接结果
+   * @throws {DatabaseConnectionError} 当连接失败时抛出
+   *
+   * 连接流程：
+   * 1. 初始化连接池
+   * 2. 测试数据库连接
+   * 3. 设置连接状态
+   * 4. 发射连接事件
+   */
+  async connect(): Promise<void> {
+    try {
+      this.logger.info(
+        `Connecting to PostgreSQL database: ${this.config.database}`,
+        LogContext.DATABASE,
+        { adapter: this.name, host: this.config.host, port: this.config.port },
+      );
+
+      // 测试连接池连接
+      const client = await this.pool.connect();
+      await client.query('SELECT 1');
+      client.release();
+
+      this.isConnectedFlag = true;
+
+      this.emitEvent('connected', {
+        adapter: this.name,
+        database: this.config.database,
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      this.isConnectedFlag = false;
+      this.logger.error(
+        `Failed to connect to PostgreSQL database: ${this.config.database}`,
+        LogContext.DATABASE,
+        { adapter: this.name, error: (error as Error).message },
+        error as Error,
+      );
+
+      this.emitEvent('connection_error', {
+        adapter: this.name,
+        error: (error as Error).message,
+        timestamp: new Date(),
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * @method query
+   * @description 执行查询
+   * @param {string} sql SQL语句
+   * @param {unknown[]} params 查询参数
+   * @param {QueryOptions} options 查询选项
+   * @returns {Promise<QueryResult>} 查询结果
+   * @throws {QueryExecutionError} 当查询执行失败时抛出
    *
    * 查询流程：
-   * 1. 检查缓存中是否有结果
-   * 2. 从数据库查询用户实体
-   * 3. 应用租户级数据隔离
-   * 4. 重建用户聚合根
-   * 5. 缓存查询结果
+   * 1. 记录查询开始时间
+   * 2. 执行SQL查询
+   * 3. 更新统计信息
+   * 4. 发射查询事件
    */
-  async findById(id: string): Promise<UserAggregate | null> {
-    const tenantId = this.tenantContext.getCurrentTenantId();
-    const cacheKey = `user:${tenantId}:${id}`;
+  async query(
+    sql: string,
+    params: unknown[] = [],
+    options: QueryOptions = {},
+  ): Promise<QueryResult> {
+    const startTime = Date.now();
+    this.stats.totalQueries++;
 
-    // 1. 检查缓存
-    const cachedUser = await this.cacheService.get<UserAggregate>(cacheKey);
-    if (cachedUser) {
-      return cachedUser;
+    try {
+      if (options.logQuery) {
+        this.logger.debug(`Executing query: ${sql}`, LogContext.DATABASE, {
+          adapter: this.name,
+          params,
+          tag: options.tag,
+        });
+      }
+
+      const queryConfig = {
+        text: sql,
+        values: params,
+        name: options.tag ?? 'unnamed',
+      };
+
+      const result = await this.pool.query(queryConfig);
+      const responseTime = Date.now() - startTime;
+
+      this.updateStats(responseTime, true);
+
+      this.emitEvent('query_executed', {
+        adapter: this.name,
+        sql,
+        params,
+        responseTime,
+        rowCount: result.rowCount,
+        timestamp: new Date(),
+      });
+
+      return result;
+    } catch (error) {
+      const responseTime = Date.now() - startTime;
+      this.updateStats(responseTime, false);
+
+      this.logger.error(
+        `Query failed: ${sql}`,
+        LogContext.DATABASE,
+        {
+          adapter: this.name,
+          params,
+          responseTime,
+          error: (error as Error).message,
+        },
+        error as Error,
+      );
+
+      this.emitEvent('query_error', {
+        adapter: this.name,
+        sql,
+        params,
+        error: (error as Error).message,
+        responseTime,
+        timestamp: new Date(),
+      });
+
+      throw error;
     }
-
-    // 2. 从数据库查询
-    const userEntity = await this.entityManager.findOne(UserEntity, {
-      id,
-      tenantId,
-      deletedAt: null, // 软删除过滤
-    });
-
-    if (!userEntity) {
-      return null;
-    }
-
-    // 3. 重建聚合根
-    const userAggregate = this.rebuildAggregate(userEntity);
-
-    // 4. 缓存结果
-    await this.cacheService.set(cacheKey, userAggregate, 300);
-
-    return userAggregate;
   }
 
   /**
-   * @method save
-   * @description 保存用户聚合根到数据库
-   * @param {UserAggregate} userAggregate 用户聚合根
-   * @returns {Promise<void>}
-   * @throws {DataAccessError} 当数据保存失败时抛出
-   * @throws {ConcurrencyError} 当并发冲突时抛出
-   *
-   * 保存流程：
-   * 1. 验证聚合根的有效性
-   * 2. 检查并发版本冲突
-   * 3. 保存实体到数据库
-   * 4. 发布未提交的事件
-   * 5. 更新缓存
+   * @method setTenantContext
+   * @description 设置租户上下文
+   * @param {string} tenantId 租户ID
    */
-  async save(userAggregate: UserAggregate): Promise<void> {
-    const tenantId = this.tenantContext.getCurrentTenantId();
-    const user = userAggregate.getUser();
-
-    // 1. 验证聚合根
-    if (!userAggregate.isValid()) {
-      throw new ValidationError('Invalid user aggregate');
-    }
-
-    // 2. 检查并发冲突
-    await this.checkConcurrencyConflict(user.id, userAggregate.getVersion());
-
-    // 3. 保存到数据库
-    const userEntity = this.mapAggregateToEntity(userAggregate, tenantId);
-    await this.entityManager.persistAndFlush(userEntity);
-
-    // 4. 发布事件
-    await this.publishUncommittedEvents(userAggregate);
-
-    // 5. 更新缓存
-    const cacheKey = `user:${tenantId}:${user.id}`;
-    await this.cacheService.set(cacheKey, userAggregate, 300);
+  setTenantContext(tenantId: string): void {
+    this.tenantId = tenantId;
   }
 
   /**
-   * @method transaction
-   * @description 在事务中执行操作
-   * @param {Function} callback 事务回调函数
-   * @returns {Promise<T>} 事务执行结果
-   * @template T 返回类型
+   * @method getTenantContext
+   * @description 获取租户上下文
+   * @returns {string | undefined} 租户ID
    */
-  async transaction<T>(callback: () => Promise<T>): Promise<T> {
-    return await this.entityManager.transactional(callback);
+  getTenantContext(): string | undefined {
+    return this.tenantId;
+  }
+
+  /**
+   * @method setDefaultSchema
+   * @description 设置默认Schema
+   * @param {string} schemaName Schema名称
+   */
+  setDefaultSchema(schemaName: string): void {
+    this.defaultSchema = schemaName;
+  }
+
+  /**
+   * @method getDefaultSchema
+   * @description 获取默认Schema
+   * @returns {string | undefined} Schema名称
+   */
+  getDefaultSchema(): string | undefined {
+    return this.defaultSchema;
+  }
+
+  /**
+   * @method enableRowLevelSecurity
+   * @description 启用行级安全策略
+   */
+  enableRowLevelSecurity(): void {
+    this.rlsEnabled = true;
+  }
+
+  /**
+   * @method disableRowLevelSecurity
+   * @description 禁用行级安全策略
+   */
+  disableRowLevelSecurity(): void {
+    this.rlsEnabled = false;
+  }
+
+  /**
+   * @method isRowLevelSecurityEnabled
+   * @description 检查是否启用了行级安全策略
+   * @returns {boolean} 是否启用RLS
+   */
+  isRowLevelSecurityEnabled(): boolean {
+    return this.rlsEnabled;
   }
 }
 ````
 
-### 16. 数据访问对象 (Data Access Object) 示例
+### 17. 租户感知仓储 (Tenant-Aware Repository) 示例
+
+````typescript
+/**
+ * @class TenantAwareRepository
+ * @description 租户感知的仓储基类，根据隔离策略配置自动处理租户数据隔离。
+ *
+ * 仓储职责：
+ * 1. 提供统一的数据访问接口
+ * 2. 根据隔离策略自动处理租户数据隔离
+ * 3. 支持多种隔离策略（数据库级、Schema级、表级）
+ * 4. 提供租户特定的仓储实例创建
+ *
+ * 隔离策略支持：
+ * 1. 数据库级隔离：每个租户使用独立的数据库
+ * 2. Schema级隔离：每个租户使用独立的Schema
+ * 3. 表级隔离：所有租户共享数据库，通过tenant_id字段隔离
+ *
+ * 多租户功能：
+ * 1. 自动添加租户隔离条件
+ * 2. 支持租户上下文切换
+ * 3. 提供租户特定的数据操作
+ * 4. 确保数据隔离的安全性
+ *
+ * @template T 实体类型
+ * @param {DatabaseAdapterFactory} adapterFactory 数据库适配器工厂
+ * @param {IsolationConfigService} isolationConfig 隔离配置服务
+ * @param {string} [tenantId] 租户ID，可选
+ *
+ * @example
+ * ```typescript
+ * class UserRepository extends TenantAwareRepository<User> {
+ *   protected getTableName(): string {
+ *     return 'users';
+ *   }
+ * }
+ *
+ * const userRepo = new UserRepository(adapterFactory, isolationConfig, 'tenant-123');
+ * const users = await userRepo.findAll();
+ * ```
+ * @since 1.0.0
+ */
+export abstract class TenantAwareRepository<T> {
+  protected adapter: IDatabaseAdapter;
+
+  constructor(
+    protected readonly adapterFactory: DatabaseAdapterFactory,
+    protected readonly isolationConfig: IsolationConfigService,
+    protected readonly tenantId?: string,
+  ) {
+    this.adapter = this.adapterFactory.createAdapter(tenantId);
+  }
+
+  /**
+   * @method findAll
+   * @description 查找所有记录，自动应用租户隔离条件
+   * @param {object} [options] 查询选项
+   * @returns {Promise<T[]>} 记录列表
+   *
+   * 查询流程：
+   * 1. 构建基础查询语句
+   * 2. 根据隔离策略添加租户条件
+   * 3. 添加排序和分页条件
+   * 4. 执行查询并返回结果
+   */
+  async findAll(options?: {
+    limit?: number;
+    offset?: number;
+    orderBy?: string;
+  }): Promise<T[]> {
+    let query = `SELECT * FROM ${this.getTableName()}`;
+
+    // 根据隔离策略添加条件
+    query = this.addIsolationConditions(query);
+
+    // 添加排序
+    if (options?.orderBy) {
+      query += ` ORDER BY ${options.orderBy}`;
+    }
+
+    // 添加分页
+    if (options?.limit) {
+      query += ` LIMIT ${options.limit}`;
+      if (options?.offset) {
+        query += ` OFFSET ${options.offset}`;
+      }
+    }
+
+    const result = await this.adapter.query(query);
+    return result.rows;
+  }
+
+  /**
+   * @method findById
+   * @description 根据ID查找记录，自动应用租户隔离条件
+   * @param {string} id 记录ID
+   * @returns {Promise<T | null>} 记录或null
+   */
+  async findById(id: string): Promise<T | null> {
+    let query = `SELECT * FROM ${this.getTableName()} WHERE id = $1`;
+
+    // 根据隔离策略添加条件
+    query = this.addIsolationConditions(query);
+
+    const result = await this.adapter.query(query, [id]);
+    return result.rows[0] || null;
+  }
+
+  /**
+   * @method create
+   * @description 创建新记录，自动添加租户信息
+   * @param {Partial<T>} data 记录数据
+   * @returns {Promise<T>} 创建的记录
+   *
+   * 创建流程：
+   * 1. 获取当前租户ID
+   * 2. 为表级隔离添加tenant_id字段
+   * 3. 构建INSERT语句
+   * 4. 执行插入并返回结果
+   */
+  async create(data: Partial<T>): Promise<T> {
+    const tenantId = this.tenantId || this.isolationConfig.getDefaultTenantId();
+
+    // 为表级隔离添加tenant_id
+    if (this.isolationConfig.isTableLevel()) {
+      const tenantIdField = this.isolationConfig.getTenantIdField();
+      (data as any)[tenantIdField] = tenantId;
+    }
+
+    const fields = Object.keys(data);
+    const values = Object.values(data);
+    const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+
+    const query = `
+      INSERT INTO ${this.getTableName()} (${fields.join(', ')})
+      VALUES (${placeholders})
+      RETURNING *
+    `;
+
+    const result = await this.adapter.query(query, values);
+    return result.rows[0];
+  }
+
+  /**
+   * @method addIsolationConditions
+   * @description 根据隔离策略添加隔离条件
+   * @param {string} query 原始查询
+   * @returns {string} 修改后的查询
+   * @protected
+   *
+   * 隔离条件添加：
+   * 1. 表级隔离：添加WHERE tenant_id = 'tenant-id'条件
+   * 2. Schema级隔离：通过适配器处理，不修改查询
+   * 3. 数据库级隔离：通过适配器处理，不修改查询
+   */
+  protected addIsolationConditions(query: string): string {
+    if (!this.tenantId) {
+      return query;
+    }
+
+    const strategy = this.isolationConfig.getStrategy();
+
+    switch (strategy) {
+      case IsolationStrategy.TABLE_LEVEL:
+        if (this.isolationConfig.shouldAutoAddTenantCondition()) {
+          const tenantIdField = this.isolationConfig.getTenantIdField();
+          if (!query.toLowerCase().includes('where')) {
+            return `${query} WHERE ${tenantIdField} = '${this.tenantId}'`;
+          } else {
+            return `${query} AND ${tenantIdField} = '${this.tenantId}'`;
+          }
+        }
+        break;
+
+      case IsolationStrategy.SCHEMA_LEVEL:
+        // Schema级隔离通过适配器处理，这里不需要修改查询
+        break;
+
+      case IsolationStrategy.DATABASE_LEVEL:
+        // 数据库级隔离通过适配器处理，这里不需要修改查询
+        break;
+    }
+
+    return query;
+  }
+
+  /**
+   * @method getTableName
+   * @description 获取表名（子类必须实现）
+   * @returns {string} 表名
+   * @abstract
+   */
+  protected abstract getTableName(): string;
+
+  /**
+   * @method setTenantId
+   * @description 设置租户ID并重新创建适配器
+   * @param {string} tenantId 租户ID
+   */
+  setTenantId(tenantId: string): void {
+    (this as any).tenantId = tenantId;
+    this.adapter = this.adapterFactory.createAdapter(tenantId);
+  }
+
+  /**
+   * @method createTenantSpecificRepository
+   * @description 创建特定租户的仓储实例
+   * @param {string} tenantId 租户ID
+   * @returns {TenantAwareRepository<T>} 新的仓储实例
+   */
+  createTenantSpecificRepository(tenantId: string): TenantAwareRepository<T> {
+    const RepositoryClass = this.constructor as new (
+      adapterFactory: DatabaseAdapterFactory,
+      isolationConfig: IsolationConfigService,
+      tenantId?: string,
+    ) => TenantAwareRepository<T>;
+
+    return new RepositoryClass(
+      this.adapterFactory,
+      this.isolationConfig,
+      tenantId,
+    );
+  }
+}
+````
+
+### 18. 数据库适配器工厂 (Database Adapter Factory) 示例
+
+````typescript
+/**
+ * @class DatabaseAdapterFactory
+ * @description 数据库适配器工厂，负责根据隔离策略动态创建数据库适配器。
+ *
+ * 工厂职责：
+ * 1. 根据隔离策略创建相应的数据库适配器
+ * 2. 管理适配器的配置和连接
+ * 3. 支持多种隔离策略的动态切换
+ * 4. 提供统一的适配器创建接口
+ *
+ * 隔离策略支持：
+ * 1. 数据库级隔离：为每个租户创建独立的数据库连接
+ * 2. Schema级隔离：为每个租户创建独立的Schema连接
+ * 3. 表级隔离：所有租户共享数据库连接，通过tenant_id隔离
+ *
+ * 配置管理：
+ * 1. 动态读取隔离策略配置
+ * 2. 根据策略生成相应的连接配置
+ * 3. 支持租户特定的配置覆盖
+ * 4. 提供配置验证和错误处理
+ *
+ * @param {IsolationConfigService} isolationConfig 隔离配置服务
+ *
+ * @example
+ * ```typescript
+ * const factory = new DatabaseAdapterFactory(isolationConfig);
+ * const adapter = factory.createAdapter('tenant-123');
+ * await adapter.connect();
+ * ```
+ * @since 1.0.0
+ */
+export class DatabaseAdapterFactory {
+  constructor(private readonly isolationConfig: IsolationConfigService) {}
+
+  /**
+   * @method createAdapter
+   * @description 根据隔离策略创建数据库适配器
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {IDatabaseAdapter} 数据库适配器实例
+   * @throws {UnsupportedIsolationStrategyError} 当隔离策略不支持时抛出
+   *
+   * 创建流程：
+   * 1. 获取当前隔离策略
+   * 2. 根据策略生成连接配置
+   * 3. 创建相应的适配器实例
+   * 4. 返回配置好的适配器
+   */
+  createAdapter(tenantId?: string): IDatabaseAdapter {
+    const strategy = this.isolationConfig.getStrategy();
+    const connectionConfig = this.isolationConfig.getConnectionConfig(tenantId);
+
+    switch (strategy) {
+      case IsolationStrategy.DATABASE_LEVEL:
+        return this.createDatabaseLevelAdapter(connectionConfig);
+      case IsolationStrategy.SCHEMA_LEVEL:
+        return this.createSchemaLevelAdapter(connectionConfig);
+      case IsolationStrategy.TABLE_LEVEL:
+        return this.createTableLevelAdapter(connectionConfig);
+      default:
+        throw new Error(`Unsupported isolation strategy: ${String(strategy)}`);
+    }
+  }
+
+  /**
+   * @method createDatabaseLevelAdapter
+   * @description 创建数据库级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * 数据库级隔离特点：
+   * 1. 每个租户使用独立的数据库
+   * 2. 完全的数据隔离
+   * 3. 需要为每个租户创建数据库
+   * 4. 连接配置包含租户特定的数据库名
+   */
+  private createDatabaseLevelAdapter(connectionConfig: {
+    database: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    return new PostgreSQLAdapter(
+      config,
+      `db-${connectionConfig.tenantId}`,
+      this.eventEmitter,
+      this.logger,
+    );
+  }
+
+  /**
+   * @method createSchemaLevelAdapter
+   * @description 创建Schema级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * Schema级隔离特点：
+   * 1. 每个租户使用独立的Schema
+   * 2. 共享数据库实例
+   * 3. 通过Schema名称进行隔离
+   * 4. 连接配置包含租户特定的Schema名
+   */
+  private createSchemaLevelAdapter(connectionConfig: {
+    database: string;
+    schema?: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      schema: connectionConfig.schema,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    const adapter = new PostgreSQLAdapter(
+      config,
+      `schema-${connectionConfig.tenantId}`,
+      this.eventEmitter,
+      this.logger,
+    );
+
+    // 设置默认Schema
+    if (connectionConfig.schema) {
+      adapter.setDefaultSchema(connectionConfig.schema);
+    }
+
+    return adapter;
+  }
+
+  /**
+   * @method createTableLevelAdapter
+   * @description 创建表级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * 表级隔离特点：
+   * 1. 所有租户共享数据库和Schema
+   * 2. 通过tenant_id字段进行隔离
+   * 3. 支持行级安全策略
+   * 4. 连接配置使用默认数据库
+   */
+  private createTableLevelAdapter(connectionConfig: {
+    database: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    const adapter = new PostgreSQLAdapter(
+      config,
+      'table-level',
+      this.eventEmitter,
+      this.logger,
+    );
+
+    // 设置租户上下文
+    if (connectionConfig.tenantId) {
+      adapter.setTenantContext(connectionConfig.tenantId);
+    }
+
+    // 启用行级安全策略
+    if (this.isolationConfig.isRowLevelSecurityEnabled()) {
+      adapter.enableRowLevelSecurity();
+    }
+
+    return adapter;
+  }
+}
+````
+
+### 19. 数据库适配器 (Database Adapter) 示例
+
+````typescript
+/**
+ * @class PostgreSQLAdapter
+ * @description PostgreSQL数据库适配器，提供统一的数据库操作接口。
+ *
+ * 适配器职责：
+ * 1. 实现PostgreSQL数据库的连接管理
+ * 2. 提供统一的查询和事务接口
+ * 3. 支持连接池和性能监控
+ * 4. 实现多租户数据隔离支持
+ *
+ * 多租户支持：
+ * 1. 支持租户上下文设置
+ * 2. 支持Schema级隔离
+ * 3. 支持行级安全策略
+ * 4. 提供租户级连接管理
+ *
+ * 性能监控：
+ * 1. 查询性能统计
+ * 2. 连接池状态监控
+ * 3. 健康检查机制
+ * 4. 事件通知系统
+ *
+ * @param {DatabaseConfig} config 数据库配置
+ * @param {string} name 适配器名称
+ * @param {EventEmitter2} eventEmitter 事件发射器
+ * @param {PinoLoggerService} logger 日志服务
+ *
+ * @example
+ * ```typescript
+ * const adapter = new PostgreSQLAdapter(config, 'main-db', eventEmitter, logger);
+ * await adapter.connect();
+ * const result = await adapter.query('SELECT * FROM users WHERE id = $1', ['user-123']);
+ * ```
+ * @since 1.0.0
+ */
+@Injectable()
+export class PostgreSQLAdapter implements IDatabaseAdapter {
+  public readonly name: string;
+  public readonly type: string = 'postgresql';
+  public readonly eventEmitter: EventEmitter2;
+  public readonly config: DatabaseConfig;
+
+  private tenantId?: string;
+  private defaultSchema?: string;
+  private rlsEnabled: boolean = false;
+  private pool: Pool;
+  private knexInstance: Knex;
+  private isConnectedFlag = false;
+  private stats: DatabaseStats;
+
+  constructor(
+    @Inject('DATABASE_CONFIG') config: DatabaseConfig,
+    @Inject('DATABASE_NAME') name: string,
+    eventEmitter: EventEmitter2,
+    logger: PinoLoggerService,
+  ) {
+    this.config = config;
+    this.name = name;
+    this.eventEmitter = eventEmitter;
+    this.logger = logger;
+    this.stats = this.initializeStats();
+    this.initializePool();
+    this.initializeKnex();
+  }
+
+  /**
+   * @method connect
+   * @description 连接到PostgreSQL数据库
+   * @returns {Promise<void>} 连接结果
+   * @throws {DatabaseConnectionError} 当连接失败时抛出
+   *
+   * 连接流程：
+   * 1. 初始化连接池
+   * 2. 测试数据库连接
+   * 3. 设置连接状态
+   * 4. 发射连接事件
+   */
+  async connect(): Promise<void> {
+    try {
+      this.logger.info(
+        `Connecting to PostgreSQL database: ${this.config.database}`,
+        LogContext.DATABASE,
+        { adapter: this.name, host: this.config.host, port: this.config.port },
+      );
+
+      // 测试连接池连接
+      const client = await this.pool.connect();
+      await client.query('SELECT 1');
+      client.release();
+
+      this.isConnectedFlag = true;
+
+      this.emitEvent('connected', {
+        adapter: this.name,
+        database: this.config.database,
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      this.isConnectedFlag = false;
+      this.logger.error(
+        `Failed to connect to PostgreSQL database: ${this.config.database}`,
+        LogContext.DATABASE,
+        { adapter: this.name, error: (error as Error).message },
+        error as Error,
+      );
+
+      this.emitEvent('connection_error', {
+        adapter: this.name,
+        error: (error as Error).message,
+        timestamp: new Date(),
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * @method query
+   * @description 执行查询
+   * @param {string} sql SQL语句
+   * @param {unknown[]} params 查询参数
+   * @param {QueryOptions} options 查询选项
+   * @returns {Promise<QueryResult>} 查询结果
+   * @throws {QueryExecutionError} 当查询执行失败时抛出
+   *
+   * 查询流程：
+   * 1. 记录查询开始时间
+   * 2. 执行SQL查询
+   * 3. 更新统计信息
+   * 4. 发射查询事件
+   */
+  async query(
+    sql: string,
+    params: unknown[] = [],
+    options: QueryOptions = {},
+  ): Promise<QueryResult> {
+    const startTime = Date.now();
+    this.stats.totalQueries++;
+
+    try {
+      if (options.logQuery) {
+        this.logger.debug(`Executing query: ${sql}`, LogContext.DATABASE, {
+          adapter: this.name,
+          params,
+          tag: options.tag,
+        });
+      }
+
+      const queryConfig = {
+        text: sql,
+        values: params,
+        name: options.tag ?? 'unnamed',
+      };
+
+      const result = await this.pool.query(queryConfig);
+      const responseTime = Date.now() - startTime;
+
+      this.updateStats(responseTime, true);
+
+      this.emitEvent('query_executed', {
+        adapter: this.name,
+        sql,
+        params,
+        responseTime,
+        rowCount: result.rowCount,
+        timestamp: new Date(),
+      });
+
+      return result;
+    } catch (error) {
+      const responseTime = Date.now() - startTime;
+      this.updateStats(responseTime, false);
+
+      this.logger.error(
+        `Query failed: ${sql}`,
+        LogContext.DATABASE,
+        {
+          adapter: this.name,
+          params,
+          responseTime,
+          error: (error as Error).message,
+        },
+        error as Error,
+      );
+
+      this.emitEvent('query_error', {
+        adapter: this.name,
+        sql,
+        params,
+        error: (error as Error).message,
+        responseTime,
+        timestamp: new Date(),
+      });
+
+      throw error;
+    }
+  }
+
+  /**
+   * @method setTenantContext
+   * @description 设置租户上下文
+   * @param {string} tenantId 租户ID
+   */
+  setTenantContext(tenantId: string): void {
+    this.tenantId = tenantId;
+  }
+
+  /**
+   * @method getTenantContext
+   * @description 获取租户上下文
+   * @returns {string | undefined} 租户ID
+   */
+  getTenantContext(): string | undefined {
+    return this.tenantId;
+  }
+
+  /**
+   * @method setDefaultSchema
+   * @description 设置默认Schema
+   * @param {string} schemaName Schema名称
+   */
+  setDefaultSchema(schemaName: string): void {
+    this.defaultSchema = schemaName;
+  }
+
+  /**
+   * @method getDefaultSchema
+   * @description 获取默认Schema
+   * @returns {string | undefined} Schema名称
+   */
+  getDefaultSchema(): string | undefined {
+    return this.defaultSchema;
+  }
+
+  /**
+   * @method enableRowLevelSecurity
+   * @description 启用行级安全策略
+   */
+  enableRowLevelSecurity(): void {
+    this.rlsEnabled = true;
+  }
+
+  /**
+   * @method disableRowLevelSecurity
+   * @description 禁用行级安全策略
+   */
+  disableRowLevelSecurity(): void {
+    this.rlsEnabled = false;
+  }
+
+  /**
+   * @method isRowLevelSecurityEnabled
+   * @description 检查是否启用了行级安全策略
+   * @returns {boolean} 是否启用RLS
+   */
+  isRowLevelSecurityEnabled(): boolean {
+    return this.rlsEnabled;
+  }
+}
+````
+
+### 16. 租户感知仓储 (Tenant-Aware Repository) 示例
+
+````typescript
+/**
+ * @class TenantAwareRepository
+ * @description 租户感知的仓储基类，根据隔离策略配置自动处理租户数据隔离。
+ *
+ * 仓储职责：
+ * 1. 提供统一的数据访问接口
+ * 2. 根据隔离策略自动处理租户数据隔离
+ * 3. 支持多种隔离策略（数据库级、Schema级、表级）
+ * 4. 提供租户特定的仓储实例创建
+ *
+ * 隔离策略支持：
+ * 1. 数据库级隔离：每个租户使用独立的数据库
+ * 2. Schema级隔离：每个租户使用独立的Schema
+ * 3. 表级隔离：所有租户共享数据库，通过tenant_id字段隔离
+ *
+ * 多租户功能：
+ * 1. 自动添加租户隔离条件
+ * 2. 支持租户上下文切换
+ * 3. 提供租户特定的数据操作
+ * 4. 确保数据隔离的安全性
+ *
+ * @template T 实体类型
+ * @param {DatabaseAdapterFactory} adapterFactory 数据库适配器工厂
+ * @param {IsolationConfigService} isolationConfig 隔离配置服务
+ * @param {string} [tenantId] 租户ID，可选
+ *
+ * @example
+ * ```typescript
+ * class UserRepository extends TenantAwareRepository<User> {
+ *   protected getTableName(): string {
+ *     return 'users';
+ *   }
+ * }
+ *
+ * const userRepo = new UserRepository(adapterFactory, isolationConfig, 'tenant-123');
+ * const users = await userRepo.findAll();
+ * ```
+ * @since 1.0.0
+ */
+export abstract class TenantAwareRepository<T> {
+  protected adapter: IDatabaseAdapter;
+
+  constructor(
+    protected readonly adapterFactory: DatabaseAdapterFactory,
+    protected readonly isolationConfig: IsolationConfigService,
+    protected readonly tenantId?: string,
+  ) {
+    this.adapter = this.adapterFactory.createAdapter(tenantId);
+  }
+
+  /**
+   * @method findAll
+   * @description 查找所有记录，自动应用租户隔离条件
+   * @param {object} [options] 查询选项
+   * @returns {Promise<T[]>} 记录列表
+   *
+   * 查询流程：
+   * 1. 构建基础查询语句
+   * 2. 根据隔离策略添加租户条件
+   * 3. 添加排序和分页条件
+   * 4. 执行查询并返回结果
+   */
+  async findAll(options?: {
+    limit?: number;
+    offset?: number;
+    orderBy?: string;
+  }): Promise<T[]> {
+    let query = `SELECT * FROM ${this.getTableName()}`;
+
+    // 根据隔离策略添加条件
+    query = this.addIsolationConditions(query);
+
+    // 添加排序
+    if (options?.orderBy) {
+      query += ` ORDER BY ${options.orderBy}`;
+    }
+
+    // 添加分页
+    if (options?.limit) {
+      query += ` LIMIT ${options.limit}`;
+      if (options?.offset) {
+        query += ` OFFSET ${options.offset}`;
+      }
+    }
+
+    const result = await this.adapter.query(query);
+    return result.rows;
+  }
+
+  /**
+   * @method findById
+   * @description 根据ID查找记录，自动应用租户隔离条件
+   * @param {string} id 记录ID
+   * @returns {Promise<T | null>} 记录或null
+   */
+  async findById(id: string): Promise<T | null> {
+    let query = `SELECT * FROM ${this.getTableName()} WHERE id = $1`;
+
+    // 根据隔离策略添加条件
+    query = this.addIsolationConditions(query);
+
+    const result = await this.adapter.query(query, [id]);
+    return result.rows[0] || null;
+  }
+
+  /**
+   * @method create
+   * @description 创建新记录，自动添加租户信息
+   * @param {Partial<T>} data 记录数据
+   * @returns {Promise<T>} 创建的记录
+   *
+   * 创建流程：
+   * 1. 获取当前租户ID
+   * 2. 为表级隔离添加tenant_id字段
+   * 3. 构建INSERT语句
+   * 4. 执行插入并返回结果
+   */
+  async create(data: Partial<T>): Promise<T> {
+    const tenantId = this.tenantId || this.isolationConfig.getDefaultTenantId();
+
+    // 为表级隔离添加tenant_id
+    if (this.isolationConfig.isTableLevel()) {
+      const tenantIdField = this.isolationConfig.getTenantIdField();
+      (data as any)[tenantIdField] = tenantId;
+    }
+
+    const fields = Object.keys(data);
+    const values = Object.values(data);
+    const placeholders = fields.map((_, index) => `$${index + 1}`).join(', ');
+
+    const query = `
+      INSERT INTO ${this.getTableName()} (${fields.join(', ')})
+      VALUES (${placeholders})
+      RETURNING *
+    `;
+
+    const result = await this.adapter.query(query, values);
+    return result.rows[0];
+  }
+
+  /**
+   * @method addIsolationConditions
+   * @description 根据隔离策略添加隔离条件
+   * @param {string} query 原始查询
+   * @returns {string} 修改后的查询
+   * @protected
+   *
+   * 隔离条件添加：
+   * 1. 表级隔离：添加WHERE tenant_id = 'tenant-id'条件
+   * 2. Schema级隔离：通过适配器处理，不修改查询
+   * 3. 数据库级隔离：通过适配器处理，不修改查询
+   */
+  protected addIsolationConditions(query: string): string {
+    if (!this.tenantId) {
+      return query;
+    }
+
+    const strategy = this.isolationConfig.getStrategy();
+
+    switch (strategy) {
+      case IsolationStrategy.TABLE_LEVEL:
+        if (this.isolationConfig.shouldAutoAddTenantCondition()) {
+          const tenantIdField = this.isolationConfig.getTenantIdField();
+          if (!query.toLowerCase().includes('where')) {
+            return `${query} WHERE ${tenantIdField} = '${this.tenantId}'`;
+          } else {
+            return `${query} AND ${tenantIdField} = '${this.tenantId}'`;
+          }
+        }
+        break;
+
+      case IsolationStrategy.SCHEMA_LEVEL:
+        // Schema级隔离通过适配器处理，这里不需要修改查询
+        break;
+
+      case IsolationStrategy.DATABASE_LEVEL:
+        // 数据库级隔离通过适配器处理，这里不需要修改查询
+        break;
+    }
+
+    return query;
+  }
+
+  /**
+   * @method getTableName
+   * @description 获取表名（子类必须实现）
+   * @returns {string} 表名
+   * @abstract
+   */
+  protected abstract getTableName(): string;
+
+  /**
+   * @method setTenantId
+   * @description 设置租户ID并重新创建适配器
+   * @param {string} tenantId 租户ID
+   */
+  setTenantId(tenantId: string): void {
+    (this as any).tenantId = tenantId;
+    this.adapter = this.adapterFactory.createAdapter(tenantId);
+  }
+
+  /**
+   * @method createTenantSpecificRepository
+   * @description 创建特定租户的仓储实例
+   * @param {string} tenantId 租户ID
+   * @returns {TenantAwareRepository<T>} 新的仓储实例
+   */
+  createTenantSpecificRepository(tenantId: string): TenantAwareRepository<T> {
+    const RepositoryClass = this.constructor as new (
+      adapterFactory: DatabaseAdapterFactory,
+      isolationConfig: IsolationConfigService,
+      tenantId?: string,
+    ) => TenantAwareRepository<T>;
+
+    return new RepositoryClass(
+      this.adapterFactory,
+      this.isolationConfig,
+      tenantId,
+    );
+  }
+}
+````
+
+### 17. 数据库适配器工厂 (Database Adapter Factory) 示例
+
+````typescript
+/**
+ * @class DatabaseAdapterFactory
+ * @description 数据库适配器工厂，负责根据隔离策略动态创建数据库适配器。
+ *
+ * 工厂职责：
+ * 1. 根据隔离策略创建相应的数据库适配器
+ * 2. 管理适配器的配置和连接
+ * 3. 支持多种隔离策略的动态切换
+ * 4. 提供统一的适配器创建接口
+ *
+ * 隔离策略支持：
+ * 1. 数据库级隔离：为每个租户创建独立的数据库连接
+ * 2. Schema级隔离：为每个租户创建独立的Schema连接
+ * 3. 表级隔离：所有租户共享数据库连接，通过tenant_id隔离
+ *
+ * 配置管理：
+ * 1. 动态读取隔离策略配置
+ * 2. 根据策略生成相应的连接配置
+ * 3. 支持租户特定的配置覆盖
+ * 4. 提供配置验证和错误处理
+ *
+ * @param {IsolationConfigService} isolationConfig 隔离配置服务
+ *
+ * @example
+ * ```typescript
+ * const factory = new DatabaseAdapterFactory(isolationConfig);
+ * const adapter = factory.createAdapter('tenant-123');
+ * await adapter.connect();
+ * ```
+ * @since 1.0.0
+ */
+export class DatabaseAdapterFactory {
+  constructor(private readonly isolationConfig: IsolationConfigService) {}
+
+  /**
+   * @method createAdapter
+   * @description 根据隔离策略创建数据库适配器
+   * @param {string} [tenantId] 租户ID，可选
+   * @returns {IDatabaseAdapter} 数据库适配器实例
+   * @throws {UnsupportedIsolationStrategyError} 当隔离策略不支持时抛出
+   *
+   * 创建流程：
+   * 1. 获取当前隔离策略
+   * 2. 根据策略生成连接配置
+   * 3. 创建相应的适配器实例
+   * 4. 返回配置好的适配器
+   */
+  createAdapter(tenantId?: string): IDatabaseAdapter {
+    const strategy = this.isolationConfig.getStrategy();
+    const connectionConfig = this.isolationConfig.getConnectionConfig(tenantId);
+
+    switch (strategy) {
+      case IsolationStrategy.DATABASE_LEVEL:
+        return this.createDatabaseLevelAdapter(connectionConfig);
+      case IsolationStrategy.SCHEMA_LEVEL:
+        return this.createSchemaLevelAdapter(connectionConfig);
+      case IsolationStrategy.TABLE_LEVEL:
+        return this.createTableLevelAdapter(connectionConfig);
+      default:
+        throw new Error(`Unsupported isolation strategy: ${String(strategy)}`);
+    }
+  }
+
+  /**
+   * @method createDatabaseLevelAdapter
+   * @description 创建数据库级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * 数据库级隔离特点：
+   * 1. 每个租户使用独立的数据库
+   * 2. 完全的数据隔离
+   * 3. 需要为每个租户创建数据库
+   * 4. 连接配置包含租户特定的数据库名
+   */
+  private createDatabaseLevelAdapter(connectionConfig: {
+    database: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    return new PostgreSQLAdapter(
+      config,
+      `db-${connectionConfig.tenantId}`,
+      this.eventEmitter,
+      this.logger,
+    );
+  }
+
+  /**
+   * @method createSchemaLevelAdapter
+   * @description 创建Schema级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * Schema级隔离特点：
+   * 1. 每个租户使用独立的Schema
+   * 2. 共享数据库实例
+   * 3. 通过Schema名称进行隔离
+   * 4. 连接配置包含租户特定的Schema名
+   */
+  private createSchemaLevelAdapter(connectionConfig: {
+    database: string;
+    schema?: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      schema: connectionConfig.schema,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    const adapter = new PostgreSQLAdapter(
+      config,
+      `schema-${connectionConfig.tenantId}`,
+      this.eventEmitter,
+      this.logger,
+    );
+
+    // 设置默认Schema
+    if (connectionConfig.schema) {
+      adapter.setDefaultSchema(connectionConfig.schema);
+    }
+
+    return adapter;
+  }
+
+  /**
+   * @method createTableLevelAdapter
+   * @description 创建表级隔离适配器
+   * @param {object} connectionConfig 连接配置
+   * @returns {IDatabaseAdapter} 数据库适配器
+   * @private
+   *
+   * 表级隔离特点：
+   * 1. 所有租户共享数据库和Schema
+   * 2. 通过tenant_id字段进行隔离
+   * 3. 支持行级安全策略
+   * 4. 连接配置使用默认数据库
+   */
+  private createTableLevelAdapter(connectionConfig: {
+    database: string;
+    tenantId?: string;
+  }): IDatabaseAdapter {
+    const config: DatabaseConfig = {
+      type: 'postgresql',
+      host: this.isolationConfig.getHost(),
+      port: this.isolationConfig.getPort(),
+      username: this.isolationConfig.getUsername(),
+      password: this.isolationConfig.getPassword(),
+      database: connectionConfig.database,
+      pool: this.isolationConfig.getPoolConfig(),
+    };
+
+    const adapter = new PostgreSQLAdapter(
+      config,
+      'table-level',
+      this.eventEmitter,
+      this.logger,
+    );
+
+    // 设置租户上下文
+    if (connectionConfig.tenantId) {
+      adapter.setTenantContext(connectionConfig.tenantId);
+    }
+
+    // 启用行级安全策略
+    if (this.isolationConfig.isRowLevelSecurityEnabled()) {
+      adapter.enableRowLevelSecurity();
+    }
+
+    return adapter;
+  }
+}
+````
+
+### 18. 数据访问对象 (Data Access Object) 示例
 
 ````typescript
 /**
@@ -3776,28 +5347,38 @@ export class ConfigurationService {
 }
 ````
 
-## 事件驱动架构注释规范总结
+## 多租户数据库架构注释规范总结
 
 ### 核心原则
 
-1. **全面事件驱动**: 所有业务操作都通过事件进行异步处理
-2. **消息队列集成**: 使用Redis + Bull实现可靠的事件传递
-3. **异步处理**: 通过事件处理器实现松耦合的业务逻辑
-4. **最终一致性**: 通过事件驱动实现分布式系统的数据一致性
+1. **多租户数据隔离**: 支持数据库级、Schema级、表级三种隔离策略
+2. **配置驱动**: 通过配置动态切换隔离策略，无需修改代码
+3. **适配器模式**: 使用统一的数据库适配器接口支持多种数据库
+4. **租户感知**: 所有数据操作自动应用租户隔离条件
 
 ### 注释要求
 
-- **异步事件处理器**: 必须描述事件处理流程、重试机制和错误处理
-- **消息队列服务**: 必须描述消息发布、消费和可靠性保证
-- **事件总线服务**: 必须描述事件存储、消息队列集成和异步处理
-- **领域事件**: 必须描述事件含义、触发条件和影响范围
+- **数据库适配器**: 必须描述多租户支持、连接管理和性能监控
+- **租户感知仓储**: 必须描述隔离策略应用、租户上下文管理
+- **适配器工厂**: 必须描述策略选择、配置管理和适配器创建
+- **隔离配置服务**: 必须描述策略配置、租户管理和配置验证
 
 ### 架构优势
 
-- ✅ **松耦合**: 通过事件实现模块间的松耦合
+- ✅ **灵活隔离**: 支持三种隔离策略，满足不同业务需求
+- ✅ **配置驱动**: 通过环境变量动态切换隔离策略
+- ✅ **统一接口**: 使用适配器模式提供统一的数据库访问接口
+- ✅ **自动隔离**: 仓储层自动应用租户隔离条件，确保数据安全
+- ✅ **性能优化**: 支持连接池、查询缓存和性能监控
 - ✅ **可扩展**: 支持水平扩展和负载均衡
-- ✅ **可靠性**: 通过消息队列保证事件传递的可靠性
-- ✅ **可维护**: 清晰的事件流便于系统维护和调试
+
+### 隔离策略对比
+
+| 策略     | 隔离级别 | 性能 | 成本 | 适用场景                 |
+| -------- | -------- | ---- | ---- | ------------------------ |
+| 数据库级 | 完全隔离 | 高   | 高   | 大型企业，严格合规要求   |
+| Schema级 | 中等隔离 | 中   | 中   | 中型企业，平衡性能与隔离 |
+| 表级     | 共享隔离 | 低   | 低   | 小型企业，成本敏感场景   |
 
 ---
 

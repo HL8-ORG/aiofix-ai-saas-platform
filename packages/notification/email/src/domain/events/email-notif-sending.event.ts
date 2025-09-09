@@ -1,8 +1,5 @@
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
-import { NotifId } from '@aiofix/core/src/domain/value-objects/notif-id.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
-import { EmailAddress } from '../value-objects/email-address.vo';
+import { DomainEvent } from '@aiofix/core';
+import { NotifId, TenantId, UserId, Email } from '@aiofix/shared';
 import { EmailProvider } from '../value-objects/email-provider.vo';
 
 /**
@@ -21,15 +18,15 @@ import { EmailProvider } from '../value-objects/email-provider.vo';
  * 3. 重试发送邮件时触发
  *
  * 影响范围：
- * 1. 通知邮件发送服务更新发送状态
- * 2. 触发邮件发送监控和日志记录
- * 3. 更新邮件通知统计信息
- * 4. 记录邮件发送审计日志
+ * 1. 通知邮件发送服务开始发送流程
+ * 2. 更新邮件发送统计信息
+ * 3. 记录邮件发送审计日志
+ * 4. 触发邮件发送监控和告警
  *
  * @property {NotifId} notifId 邮件通知ID
  * @property {TenantId} tenantId 租户ID
  * @property {UserId} recipientId 收件人用户ID
- * @property {EmailAddress} recipientEmail 收件人邮箱地址
+ * @property {Email} recipientEmail 收件人邮箱地址
  * @property {EmailProvider} provider 邮件服务提供商
  * @property {Date} occurredOn 事件发生时间
  *
@@ -46,90 +43,34 @@ import { EmailProvider } from '../value-objects/email-provider.vo';
  * ```
  * @since 1.0.0
  */
-export class EmailNotifSendingEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'EmailNotifSending';
-
+export class EmailNotifSendingEvent extends DomainEvent {
   constructor(
     public readonly notifId: NotifId,
     public readonly tenantId: TenantId,
     public readonly recipientId: UserId,
-    public readonly recipientEmail: EmailAddress,
+    public readonly recipientEmail: Email,
     public readonly provider: EmailProvider,
-    public readonly occurredOn: Date = new Date(),
   ) {
-    this.eventId = this.generateEventId();
-    this.occurredOn = occurredOn;
+    super(notifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: recipientId.value,
+      source: 'email-notification',
+    });
   }
 
   /**
-   * @method getEventId
-   * @description 获取事件ID
-   * @returns {string} 事件ID
+   * @method toJSON
+   * @description 将事件转换为JSON格式
+   * @returns {object} 事件的JSON表示
    */
-  public getEventId(): string {
-    return this.eventId;
-  }
-
-  /**
-   * @method getEventType
-   * @description 获取事件类型
-   * @returns {string} 事件类型
-   */
-  public getEventType(): string {
-    return this.eventType;
-  }
-
-  /**
-   * @method getAggregateId
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
-   */
-  public getAggregateId(): string {
-    return this.notifId.value;
-  }
-
-  /**
-   * @method getTenantId
-   * @description 获取租户ID
-   * @returns {string} 租户ID
-   */
-  public getTenantId(): string {
-    return this.tenantId.value;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {object} 事件数据
-   */
-  public getEventData(): object {
+  toJSON(): Record<string, unknown> {
     return {
+      ...this.getBaseEventData(),
       notifId: this.notifId.value,
       tenantId: this.tenantId.value,
       recipientId: this.recipientId.value,
       recipientEmail: this.recipientEmail.value,
       provider: this.provider,
-      occurredOn: this.occurredOn,
     };
-  }
-
-  /**
-   * @method generateEventId
-   * @description 生成事件ID
-   * @returns {string} 事件ID
-   * @private
-   */
-  private generateEventId(): string {
-    // 简化的UUID v4生成器
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
   }
 }

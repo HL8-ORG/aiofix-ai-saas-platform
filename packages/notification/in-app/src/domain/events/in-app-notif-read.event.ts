@@ -56,7 +56,11 @@ export class InAppNotifReadEvent extends DomainEvent {
     public readonly newStatus: ReadStatus,
     public readonly readAt: Date,
   ) {
-    super(notifId.value);
+    super(notifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: recipientId.value,
+      source: 'in-app-notification',
+    });
     this.validateEvent();
   }
 
@@ -112,7 +116,7 @@ export class InAppNotifReadEvent extends DomainEvent {
    * @description 将事件转换为JSON格式
    * @returns {object} 事件的JSON表示
    */
-  toJSON(): object {
+  toJSON(): Record<string, unknown> {
     return {
       ...this.getBaseEventData(),
       notifId: this.notifId.value,

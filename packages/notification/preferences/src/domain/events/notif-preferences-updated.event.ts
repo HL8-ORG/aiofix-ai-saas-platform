@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 
 /**
  * 用户通知偏好更新事件
@@ -27,7 +27,7 @@ import { IDomainEvent } from '@aiofix/core';
  * @property {string} updatedBy 更新者
  * @property {Date} occurredOn 事件发生时间
  */
-export class NotifPreferencesUpdatedEvent implements IDomainEvent {
+export class NotifPreferencesUpdatedEvent extends DomainEvent {
   public readonly occurredOn: Date = new Date();
 
   constructor(
@@ -36,7 +36,13 @@ export class NotifPreferencesUpdatedEvent implements IDomainEvent {
     public readonly preferenceType: string,
     public readonly newValue: unknown,
     public readonly updatedBy: string,
-  ) {}
+  ) {
+    super(userId, 1, {
+      tenantId: tenantId,
+      userId: updatedBy,
+      source: 'notification-preferences',
+    });
+  }
 
   /**
    * 获取事件类型标识
@@ -71,21 +77,6 @@ export class NotifPreferencesUpdatedEvent implements IDomainEvent {
   }
 
   /**
-   * 获取事件元数据
-   * @returns {Record<string, unknown>} 事件元数据
-   */
-  getMetadata(): Record<string, unknown> {
-    return {
-      userId: this.userId,
-      tenantId: this.tenantId,
-      preferenceType: this.preferenceType,
-      updatedBy: this.updatedBy,
-      eventType: this.getEventType(),
-      eventVersion: this.getEventVersion(),
-    };
-  }
-
-  /**
    * 获取事件数据
    * @returns {Record<string, unknown>} 事件数据
    */
@@ -97,6 +88,18 @@ export class NotifPreferencesUpdatedEvent implements IDomainEvent {
       newValue: this.newValue,
       updatedBy: this.updatedBy,
       occurredOn: this.occurredOn,
+    };
+  }
+
+  /**
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
+   */
+  toJSON(): Record<string, unknown> {
+    return {
+      ...this.getBaseEventData(),
+      ...this.getData(),
     };
   }
 }

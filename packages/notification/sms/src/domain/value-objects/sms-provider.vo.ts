@@ -1,4 +1,5 @@
 import { ValueObject } from '@aiofix/core';
+import { SmsEncoding } from './sms-content.vo';
 
 /**
  * 短信提供商值对象
@@ -299,14 +300,6 @@ export enum SmsProviderType {
   TWILIO = 'TWILIO',
   AWS_SNS = 'AWS_SNS',
   CUSTOM = 'CUSTOM',
-}
-
-/**
- * 短信编码方式枚举
- */
-export enum SmsEncoding {
-  UTF8 = 'UTF8',
-  GSM = 'GSM',
 }
 
 /**

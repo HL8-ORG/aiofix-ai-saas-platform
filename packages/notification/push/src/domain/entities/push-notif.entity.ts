@@ -59,7 +59,10 @@ import { PushContent } from '../value-objects/push-content.vo';
  * @since 1.0.0
  */
 export class PushNotifEntity extends BaseEntity {
-  private _pushToken: PushToken;
+  public readonly id: string;
+  public readonly tenantId: string;
+  public readonly userId: string;
+  private readonly _pushToken: PushToken;
   private _content: PushContent;
   private _status: PushStatus;
   private _priority: PushPriority;
@@ -93,7 +96,10 @@ export class PushNotifEntity extends BaseEntity {
     scheduledAt?: Date,
     metadata?: Record<string, any>,
   ) {
-    super(id, tenantId);
+    super();
+    this.id = id;
+    this.tenantId = tenantId;
+    this.userId = userId;
     this._pushToken = pushToken;
     this._content = content;
     this._status = new PushStatus(PushStatusType.PENDING);
@@ -272,7 +278,7 @@ export class PushNotifEntity extends BaseEntity {
    * @returns {boolean} 是否为重试中状态
    */
   isRetrying(): boolean {
-    return this._status.isRetrying();
+    return this._status.isFailed() && this._retryCount > 0;
   }
 
   /**
@@ -355,7 +361,7 @@ export class PushNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   markAsFailed(reason: string): void {
-    this._status = this._status.transitionTo(PushStatusType.FAILED, reason);
+    this._status = this._status.transitionTo(PushStatusType.FAILED);
     this._failureReason = reason;
   }
 
@@ -367,10 +373,7 @@ export class PushNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   markAsPermanentlyFailed(reason: string): void {
-    this._status = this._status.transitionTo(
-      PushStatusType.PERMANENTLY_FAILED,
-      reason,
-    );
+    this._status = this._status.transitionTo(PushStatusType.PERMANENTLY_FAILED);
     this._failureReason = reason;
   }
 
@@ -381,7 +384,7 @@ export class PushNotifEntity extends BaseEntity {
    * @throws {InvalidStatusTransitionError} 当状态转换无效时抛出
    */
   markAsRetrying(): void {
-    this._status = this._status.transitionTo(PushStatusType.RETRYING);
+    this._status = this._status.transitionTo(PushStatusType.SENDING);
     this._retryCount++;
   }
 
@@ -468,7 +471,7 @@ export class PushNotifEntity extends BaseEntity {
       userId: this.userId,
       pushToken: this._pushToken.toString(),
       content: this._content.toPlainObject(),
-      status: this._status.getValue(),
+      status: this._status.value,
       priority: this._priority.getValue(),
       scheduledAt: this._scheduledAt,
       sentAt: this._sentAt,
@@ -478,7 +481,25 @@ export class PushNotifEntity extends BaseEntity {
       maxRetries: this._maxRetries,
       metadata: this._metadata,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      updatedAt: this.getUpdatedAt(),
     };
+  }
+
+  /**
+   * @method getEntityId
+   * @description 获取实体ID
+   * @returns {string} 实体ID
+   */
+  getEntityId(): string {
+    return this.id;
+  }
+
+  /**
+   * @method getTenantId
+   * @description 获取租户ID
+   * @returns {string} 租户ID
+   */
+  getTenantId(): string {
+    return this.tenantId;
   }
 }

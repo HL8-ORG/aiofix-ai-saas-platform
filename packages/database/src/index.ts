@@ -17,10 +17,17 @@
 export * from './interfaces/database.interface';
 
 // 导出配置
-export { DatabaseConfig } from './config/database.config';
+export {
+  DatabaseConfig,
+  RedisConfig,
+  IsolationConfigService,
+  IsolationStrategy,
+} from './config';
 
 // 导出适配器
 export * from './adapters/postgresql.adapter';
+export { DatabaseAdapterFactory } from './adapters/database-adapter.factory';
+export { TenantAwareRepository } from './repositories/tenant-aware.repository';
 
 // 导出模块
 export * from './database.module';

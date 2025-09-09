@@ -1,4 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
+import { NotifId, TenantId, UserId } from '@aiofix/shared';
 import { PushToken } from '../value-objects/push-token.vo';
 import { PushContent } from '../value-objects/push-content.vo';
 import { PushPriorityLevel } from '../value-objects/push-priority.vo';
@@ -50,19 +51,22 @@ import { PushPriorityLevel } from '../value-objects/push-priority.vo';
  * ```
  * @since 1.0.0
  */
-export class PushNotifCreatedEvent implements IDomainEvent {
-  public readonly occurredOn: Date = new Date();
-
+export class PushNotifCreatedEvent extends DomainEvent {
   constructor(
-    public readonly pushNotifId: string,
-    public readonly tenantId: string,
-    public readonly userId: string,
+    public readonly pushNotifId: NotifId,
+    public readonly tenantId: TenantId,
+    public readonly userId: UserId,
     public readonly pushToken: PushToken,
     public readonly content: PushContent,
     public readonly priority: PushPriorityLevel,
     public readonly scheduledAt?: Date,
-    public readonly metadata?: Record<string, any>,
-  ) {}
+  ) {
+    super(pushNotifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: userId.value,
+      source: 'push-notification',
+    });
+  }
 
   /**
    * @method getEventType
@@ -74,69 +78,21 @@ export class PushNotifCreatedEvent implements IDomainEvent {
   }
 
   /**
-   * @method getAggregateId
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
    */
-  getAggregateId(): string {
-    return this.pushNotifId;
-  }
-
-  /**
-   * @method getEventId
-   * @description 获取事件ID
-   * @returns {string} 事件ID
-   */
-  getEventId(): string {
-    return `${this.getEventType()}-${this.pushNotifId}-${this.occurredOn.getTime()}`;
-  }
-
-  /**
-   * @method getEventVersion
-   * @description 获取事件版本
-   * @returns {number} 事件版本
-   */
-  getEventVersion(): number {
-    return 1;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {Record<string, any>} 事件数据
-   */
-  getEventData(): Record<string, any> {
+  toJSON(): Record<string, unknown> {
     return {
-      pushNotifId: this.pushNotifId,
-      tenantId: this.tenantId,
-      userId: this.userId,
+      ...this.getBaseEventData(),
+      pushNotifId: this.pushNotifId.value,
+      tenantId: this.tenantId.value,
+      userId: this.userId.value,
       pushToken: this.pushToken.toString(),
       content: this.content.toPlainObject(),
       priority: this.priority,
       scheduledAt: this.scheduledAt,
       metadata: this.metadata,
-      occurredOn: this.occurredOn,
-    };
-  }
-
-  /**
-   * @method getEventMetadata
-   * @description 获取事件元数据
-   * @returns {Record<string, any>} 事件元数据
-   */
-  getEventMetadata(): Record<string, any> {
-    return {
-      eventType: this.getEventType(),
-      eventId: this.getEventId(),
-      eventVersion: this.getEventVersion(),
-      aggregateId: this.getAggregateId(),
-      tenantId: this.tenantId,
-      userId: this.userId,
-      occurredOn: this.occurredOn,
-      pushPlatform: this.pushToken.getPlatform(),
-      priority: this.priority,
-      hasScheduledTime: !!this.scheduledAt,
-      hasMetadata: !!this.metadata,
     };
   }
 
@@ -146,6 +102,6 @@ export class PushNotifCreatedEvent implements IDomainEvent {
    * @returns {string} 事件字符串
    */
   toString(): string {
-    return `PushNotifCreatedEvent: ${this.pushNotifId} for user ${this.userId} in tenant ${this.tenantId}`;
+    return `PushNotifCreatedEvent: ${this.pushNotifId.value} for user ${this.userId.value} in tenant ${this.tenantId.value}`;
   }
 }

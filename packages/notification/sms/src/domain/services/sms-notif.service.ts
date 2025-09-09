@@ -1,4 +1,4 @@
-import { PhoneNumber, PhoneRegion } from '../value-objects/phone-number.vo';
+import { PhoneNumber, PhoneRegion } from '@aiofix/shared';
 import { SmsContent, SmsEncoding } from '../value-objects/sms-content.vo';
 import { SmsProvider, SmsProviderType } from '../value-objects/sms-provider.vo';
 import { SmsNotifEntity } from '../entities/sms-notif.entity';
@@ -300,6 +300,7 @@ export class SmsNotifService {
     const multiplierMap: Record<PhoneRegion, number> = {
       [PhoneRegion.CHINA_MAINLAND]: 1.0,
       [PhoneRegion.HONG_KONG]: 1.2,
+      [PhoneRegion.MACAU]: 1.2,
       [PhoneRegion.TAIWAN]: 1.2,
       [PhoneRegion.USA]: 1.5,
       [PhoneRegion.UK]: 1.3,
@@ -368,6 +369,7 @@ export class SmsNotifService {
     const delayMap: Record<PhoneRegion, number> = {
       [PhoneRegion.CHINA_MAINLAND]: 0,
       [PhoneRegion.HONG_KONG]: 200,
+      [PhoneRegion.MACAU]: 200,
       [PhoneRegion.TAIWAN]: 200,
       [PhoneRegion.USA]: 500,
       [PhoneRegion.UK]: 300,

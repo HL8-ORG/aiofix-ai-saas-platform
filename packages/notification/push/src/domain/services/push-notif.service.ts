@@ -168,7 +168,7 @@ export class PushNotifService {
 
     for (const pushNotif of pushNotifs) {
       // 按状态统计
-      const status = pushNotif.getStatus().getValue();
+      const status = pushNotif.getStatus().value;
       metrics.byStatus[status] = (metrics.byStatus[status] || 0) + 1;
 
       // 按优先级统计

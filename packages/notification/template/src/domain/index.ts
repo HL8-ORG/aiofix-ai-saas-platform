@@ -45,5 +45,4 @@ export { TemplateService } from './services/template.service';
 export {
   InvalidEmailTemplateDataError,
   InvalidOperationError,
-  InvalidTemplateContentError,
 } from './entities/email-template.entity';

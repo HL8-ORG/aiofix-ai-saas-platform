@@ -22,7 +22,6 @@ export {
   InvalidAuditStateError,
   ValidationError,
   EventSourcedAggregateRoot,
-  IDomainEvent,
 } from '@aiofix/core';
 
 // 领域实体
@@ -35,9 +34,9 @@ export {
 export { InAppNotif } from './aggregates/in-app-notif.aggregate';
 
 // 值对象
-export { NotifId, InvalidNotifIdError } from './value-objects/notif-id.vo';
-export { TenantId, InvalidTenantIdError } from './value-objects/tenant-id.vo';
-export { UserId, InvalidUserIdError } from './value-objects/user-id.vo';
+export { NotifId, InvalidNotifIdError } from '@aiofix/shared';
+export { TenantId, InvalidTenantIdError } from '@aiofix/shared';
+export { UserId, InvalidUserIdError } from '@aiofix/shared';
 export {
   NotifType,
   NotifTypeValidator,

@@ -61,9 +61,13 @@ export class InAppNotifCreatedEvent extends DomainEvent {
     public readonly title: string,
     public readonly content: string,
     public readonly priority: NotifPriority,
-    public readonly metadata: Record<string, unknown> = {},
+    public readonly notifMetadata: Record<string, unknown> = {},
   ) {
-    super(notifId.value);
+    super(notifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: recipientId.value,
+      source: 'in-app-notification',
+    });
     this.validateEvent();
   }
 
@@ -121,7 +125,7 @@ export class InAppNotifCreatedEvent extends DomainEvent {
    * @description 将事件转换为JSON格式
    * @returns {object} 事件的JSON表示
    */
-  toJSON(): object {
+  toJSON(): Record<string, unknown> {
     return {
       ...this.getBaseEventData(),
       notifId: this.notifId.value,
@@ -131,7 +135,7 @@ export class InAppNotifCreatedEvent extends DomainEvent {
       title: this.title,
       content: this.content,
       priority: this.priority,
-      metadata: this.metadata,
+      metadata: this.notifMetadata,
     };
   }
 }

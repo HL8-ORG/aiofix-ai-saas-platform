@@ -1,6 +1,15 @@
 // 值对象导出
-export * from './value-objects/phone-number.vo';
-export * from './value-objects/sms-status.vo';
+// 使用共享模块中的值对象
+export {
+  PhoneNumber,
+  PhoneRegion,
+  InvalidPhoneNumberError,
+} from '@aiofix/shared';
+export {
+  NotifStatus,
+  NotifStatusType,
+  InvalidStatusTransitionError,
+} from '@aiofix/shared';
 export * from './value-objects/sms-content.vo';
 export * from './value-objects/sms-provider.vo';
 
@@ -25,4 +34,3 @@ export * from './events/sms-notif-cancelled.event';
 export * from './services/sms-notif.service';
 
 // 测试示例导出
-export * from './test-example';

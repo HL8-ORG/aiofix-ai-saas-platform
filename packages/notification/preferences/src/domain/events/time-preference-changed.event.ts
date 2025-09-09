@@ -1,4 +1,4 @@
-import { IDomainEvent } from '@aiofix/core';
+import { DomainEvent } from '@aiofix/core';
 
 /**
  * @class TimePreferenceChangedEvent
@@ -36,7 +36,7 @@ import { IDomainEvent } from '@aiofix/core';
  * ```
  * @since 1.0.0
  */
-export class TimePreferenceChangedEvent implements IDomainEvent {
+export class TimePreferenceChangedEvent extends DomainEvent {
   public readonly occurredOn: Date = new Date();
   public readonly eventId: string = this.generateEventId();
 
@@ -44,7 +44,14 @@ export class TimePreferenceChangedEvent implements IDomainEvent {
     public readonly userId: string,
     public readonly tenantId: string,
     public readonly changeData: TimePreferenceChangeData,
-  ) {}
+    public readonly changedBy: string,
+  ) {
+    super(userId, 1, {
+      tenantId: tenantId,
+      userId: changedBy,
+      source: 'notification-preferences',
+    });
+  }
 
   /**
    * @method getEventType
@@ -74,6 +81,20 @@ export class TimePreferenceChangedEvent implements IDomainEvent {
   }
 
   /**
+   * @method getData
+   * @description 获取事件数据
+   * @returns {Record<string, unknown>} 事件数据
+   */
+  getData(): Record<string, unknown> {
+    return {
+      userId: this.userId,
+      tenantId: this.tenantId,
+      changeData: this.changeData,
+      changedBy: this.changedBy,
+    };
+  }
+
+  /**
    * @method generateEventId
    * @description 生成事件ID
    * @returns {string} 事件ID
@@ -81,6 +102,18 @@ export class TimePreferenceChangedEvent implements IDomainEvent {
    */
   private generateEventId(): string {
     return `time-preference-changed-${this.userId}-${Date.now()}`;
+  }
+
+  /**
+   * @method toJSON
+   * @description 将事件转换为JSON格式，用于序列化和存储
+   * @returns {Record<string, unknown>} 事件的JSON表示
+   */
+  toJSON(): Record<string, unknown> {
+    return {
+      ...this.getBaseEventData(),
+      ...this.getData(),
+    };
   }
 }
 

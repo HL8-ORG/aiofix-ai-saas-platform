@@ -48,6 +48,9 @@ import type { Connection as MikroOrmConnection } from '@mikro-orm/core';
 @Injectable()
 export class PostgreSQLAdapter implements IDatabaseAdapter {
   public readonly name: string;
+  private tenantId?: string;
+  private defaultSchema?: string;
+  private rlsEnabled: boolean = false;
   public readonly type: string = 'postgresql';
   public readonly eventEmitter: EventEmitter2;
   public readonly config: DatabaseConfig;
@@ -610,5 +613,66 @@ export class PostgreSQLAdapter implements IDatabaseAdapter {
       adapter: this.name,
       ..._data,
     });
+  }
+
+  /**
+   * @method setTenantContext
+   * @description 设置租户上下文
+   * @param {string} tenantId 租户ID
+   */
+  setTenantContext(tenantId: string): void {
+    this.tenantId = tenantId;
+  }
+
+  /**
+   * @method getTenantContext
+   * @description 获取租户上下文
+   * @returns {string | undefined} 租户ID
+   */
+  getTenantContext(): string | undefined {
+    return this.tenantId;
+  }
+
+  /**
+   * @method setDefaultSchema
+   * @description 设置默认Schema
+   * @param {string} schemaName Schema名称
+   */
+  setDefaultSchema(schemaName: string): void {
+    this.defaultSchema = schemaName;
+  }
+
+  /**
+   * @method getDefaultSchema
+   * @description 获取默认Schema
+   * @returns {string | undefined} Schema名称
+   */
+  getDefaultSchema(): string | undefined {
+    return this.defaultSchema;
+  }
+
+  /**
+   * @method enableRowLevelSecurity
+   * @description 启用行级安全策略
+   */
+  enableRowLevelSecurity(): void {
+    this.rlsEnabled = true;
+  }
+
+  /**
+   * @method disableRowLevelSecurity
+   * @description 禁用行级安全策略
+   */
+  disableRowLevelSecurity(): void {
+    this.rlsEnabled = false;
+  }
+
+  /**
+   * @method isRowLevelSecurityEnabled
+   * @description 检查是否启用了行级安全策略
+   * @returns {boolean} 是否启用RLS
+   */
+  isRowLevelSecurityEnabled(): boolean {
+    return this.rlsEnabled;
   }
 }

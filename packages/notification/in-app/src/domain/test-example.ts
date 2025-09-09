@@ -28,7 +28,7 @@ export function demonstrateInAppNotifUsage(): void {
 
   // 1. 创建值对象
   const notifId = NotifId.generate();
-  const tenantId = TenantId.generate();
+  const tenantId = TenantId.generate('tenant', 'test-tenant');
   const userId = UserId.generate();
 
   console.log('创建的值对象:');
@@ -120,11 +120,11 @@ export function demonstrateValueObjectValidation(): void {
 
   try {
     // 创建有效的值对象
-    const validNotifId = NotifId.create('123e4567-e89b-12d3-a456-426614174000');
+    const validNotifId = new NotifId('123e4567-e89b-12d3-a456-426614174000');
     console.log('有效的NotifId:', validNotifId.value);
 
     // 尝试创建无效的值对象
-    const invalidNotifId = NotifId.create('invalid-id');
+    const invalidNotifId = new NotifId('invalid-id');
     console.log('无效的NotifId:', invalidNotifId.value);
   } catch (error) {
     console.log('捕获到错误:', (error as Error).message);

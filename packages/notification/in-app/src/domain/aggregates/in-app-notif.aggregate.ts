@@ -1,4 +1,4 @@
-import { EventSourcedAggregateRoot, IDomainEvent } from '@aiofix/core';
+import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { InAppNotifEntity } from '../entities/in-app-notif.entity';
 import { NotifId } from '@aiofix/shared';
 import { TenantId } from '@aiofix/shared';

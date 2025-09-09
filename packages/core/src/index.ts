@@ -16,6 +16,9 @@ export {
 // 基础聚合根类
 export { EventSourcedAggregateRoot } from './domain/base/event-sourced-aggregate-root';
 
+// 基础事件处理器类
+export { BaseEventHandler } from './domain/base/base-event-handler';
+
 // 领域事件
 export { DomainEvent } from './domain/domain-event';
 

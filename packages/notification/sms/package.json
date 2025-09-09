@@ -12,7 +12,8 @@
     "lint:fix": "eslint src --ext .ts --fix"
   },
   "dependencies": {
-    "@aiofix/core": "workspace:*"
+    "@aiofix/core": "workspace:*",
+    "@aiofix/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

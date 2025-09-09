@@ -190,7 +190,7 @@ export class NotifPreferencesService {
           preference.enabled &&
           preference.isNotificationTypeAllowed(notificationType),
       )
-      .sort((a, b) => b.priority - a.priority)
+      .sort((a, b) => b.getPriorityNumber() - a.getPriorityNumber())
       .map(preference => preference.channelType);
   }
 

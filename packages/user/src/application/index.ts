@@ -6,4 +6,6 @@
 
 export * from './commands';
 export * from './queries';
+export * from './use-cases';
+export * from './events';
 export * from './services';

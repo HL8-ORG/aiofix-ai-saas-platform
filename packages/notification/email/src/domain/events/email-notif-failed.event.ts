@@ -1,8 +1,5 @@
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
-import { NotifId } from '@aiofix/core/src/domain/value-objects/notif-id.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
-import { EmailAddress } from '../value-objects/email-address.vo';
+import { DomainEvent } from '@aiofix/core';
+import { NotifId, TenantId, UserId, Email } from '@aiofix/shared';
 import { EmailProvider } from '../value-objects/email-provider.vo';
 
 /**
@@ -11,26 +8,25 @@ import { EmailProvider } from '../value-objects/email-provider.vo';
  * 邮件通知发送失败领域事件，描述事件含义、触发条件和影响范围。
  *
  * 事件含义：
- * 1. 表示邮件通知发送失败，但可以重试
- * 2. 包含邮件发送失败的关键信息
+ * 1. 表示邮件通知发送失败
+ * 2. 包含失败原因和重试信息
  * 3. 为其他聚合根提供邮件发送失败通知
  *
  * 触发条件：
- * 1. 邮件通知状态从SENDING转换为FAILED时触发
- * 2. 邮件发送服务返回发送失败时触发
- * 3. 邮件服务器返回错误响应时触发
+ * 1. 邮件通知发送过程中发生错误时触发
+ * 2. 邮件发送服务返回失败状态时触发
+ * 3. 网络超时或其他技术问题导致失败时触发
  *
  * 影响范围：
- * 1. 通知邮件发送服务更新发送状态
- * 2. 触发邮件发送失败监控和日志记录
- * 3. 更新邮件通知统计信息
- * 4. 记录邮件发送失败审计日志
- * 5. 可能触发重试机制
+ * 1. 触发邮件重试机制
+ * 2. 更新邮件发送统计信息
+ * 3. 记录邮件发送失败审计日志
+ * 4. 触发失败告警和通知
  *
  * @property {NotifId} notifId 邮件通知ID
  * @property {TenantId} tenantId 租户ID
  * @property {UserId} recipientId 收件人用户ID
- * @property {EmailAddress} recipientEmail 收件人邮箱地址
+ * @property {Email} recipientEmail 收件人邮箱地址
  * @property {EmailProvider} provider 邮件服务提供商
  * @property {string} errorMessage 错误信息
  * @property {number} retryCount 重试次数
@@ -45,74 +41,37 @@ import { EmailProvider } from '../value-objects/email-provider.vo';
  *   emailAddress,
  *   EmailProvider.SENDGRID,
  *   'SMTP connection timeout',
- *   1
+ *   2
  * );
  * eventBus.publish(event);
  * ```
  * @since 1.0.0
  */
-export class EmailNotifFailedEvent implements IDomainEvent {
-  public readonly eventId: string;
-  public readonly occurredOn: Date;
-  public readonly eventType: string = 'EmailNotifFailed';
-
+export class EmailNotifFailedEvent extends DomainEvent {
   constructor(
     public readonly notifId: NotifId,
     public readonly tenantId: TenantId,
     public readonly recipientId: UserId,
-    public readonly recipientEmail: EmailAddress,
+    public readonly recipientEmail: Email,
     public readonly provider: EmailProvider,
     public readonly errorMessage: string,
     public readonly retryCount: number,
-    public readonly occurredOn: Date = new Date(),
   ) {
-    this.eventId = this.generateEventId();
-    this.occurredOn = occurredOn;
+    super(notifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: recipientId.value,
+      source: 'email-notification',
+    });
   }
 
   /**
-   * @method getEventId
-   * @description 获取事件ID
-   * @returns {string} 事件ID
+   * @method toJSON
+   * @description 将事件转换为JSON格式
+   * @returns {object} 事件的JSON表示
    */
-  public getEventId(): string {
-    return this.eventId;
-  }
-
-  /**
-   * @method getEventType
-   * @description 获取事件类型
-   * @returns {string} 事件类型
-   */
-  public getEventType(): string {
-    return this.eventType;
-  }
-
-  /**
-   * @method getAggregateId
-   * @description 获取聚合根ID
-   * @returns {string} 聚合根ID
-   */
-  public getAggregateId(): string {
-    return this.notifId.value;
-  }
-
-  /**
-   * @method getTenantId
-   * @description 获取租户ID
-   * @returns {string} 租户ID
-   */
-  public getTenantId(): string {
-    return this.tenantId.value;
-  }
-
-  /**
-   * @method getEventData
-   * @description 获取事件数据
-   * @returns {object} 事件数据
-   */
-  public getEventData(): object {
+  toJSON(): Record<string, unknown> {
     return {
+      ...this.getBaseEventData(),
       notifId: this.notifId.value,
       tenantId: this.tenantId.value,
       recipientId: this.recipientId.value,
@@ -120,25 +79,6 @@ export class EmailNotifFailedEvent implements IDomainEvent {
       provider: this.provider,
       errorMessage: this.errorMessage,
       retryCount: this.retryCount,
-      occurredOn: this.occurredOn,
     };
-  }
-
-  /**
-   * @method generateEventId
-   * @description 生成事件ID
-   * @returns {string} 事件ID
-   * @private
-   */
-  private generateEventId(): string {
-    // 简化的UUID v4生成器
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
   }
 }

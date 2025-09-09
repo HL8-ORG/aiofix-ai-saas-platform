@@ -1,12 +1,10 @@
-import { EventSourcedAggregateRoot } from '@aiofix/core/src/domain/base/event-sourced-aggregate-root';
-import { IDomainEvent } from '@aiofix/core/src/domain/base/domain-event';
+import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { TemplateId } from '../value-objects/template-id.vo';
 import { TemplateType } from '../value-objects/template-type.vo';
 import { TemplateStatus } from '../value-objects/template-status.vo';
 import { TemplateVariable } from '../value-objects/template-variable.vo';
 import { TemplateContent } from '../value-objects/template-content.vo';
-import { TenantId } from '@aiofix/core/src/domain/value-objects/tenant-id.vo';
-import { UserId } from '@aiofix/core/src/domain/value-objects/user-id.vo';
+import { TenantId, UserId } from '@aiofix/shared';
 import { EmailTemplateEntity } from '../entities/email-template.entity';
 import { TemplateCreatedEvent } from '../events/template-created.event';
 import { TemplateUpdatedEvent } from '../events/template-updated.event';
@@ -122,9 +120,7 @@ export class EmailTemplate extends EventSourcedAggregateRoot {
         variables,
         category,
         description,
-        metadata,
         createdBy,
-        new Date(),
       ),
     );
 
@@ -157,9 +153,8 @@ export class EmailTemplate extends EventSourcedAggregateRoot {
         this.emailTemplate.displayName,
         newContent,
         newVariables,
-        this.emailTemplate.version,
+        this.emailTemplate.getVersion(),
         updatedBy,
-        new Date(),
       ),
     );
   }
@@ -182,9 +177,8 @@ export class EmailTemplate extends EventSourcedAggregateRoot {
         TemplateType.EMAIL,
         this.emailTemplate.name,
         this.emailTemplate.displayName,
-        this.emailTemplate.version,
+        this.emailTemplate.getVersion(),
         publishedBy,
-        new Date(),
       ),
     );
   }
@@ -207,9 +201,8 @@ export class EmailTemplate extends EventSourcedAggregateRoot {
         TemplateType.EMAIL,
         this.emailTemplate.name,
         this.emailTemplate.displayName,
-        this.emailTemplate.version,
+        this.emailTemplate.getVersion(),
         unpublishedBy,
-        new Date(),
       ),
     );
   }
@@ -244,9 +237,8 @@ export class EmailTemplate extends EventSourcedAggregateRoot {
         TemplateType.EMAIL,
         this.emailTemplate.name,
         this.emailTemplate.displayName,
-        this.emailTemplate.version,
+        this.emailTemplate.getVersion(),
         deletedBy,
-        new Date(),
       ),
     );
   }

@@ -266,6 +266,35 @@ export class TimePreference {
   }
 
   /**
+   * @method hasConflict
+   * @description 检查与其他时间偏好是否有冲突
+   * @param {TimePreference} other 其他时间偏好
+   * @returns {boolean} 是否有冲突
+   */
+  hasConflict(other: TimePreference): boolean {
+    // 检查时区冲突
+    if (this.timezone !== other.timezone) {
+      return true;
+    }
+
+    // 检查勿扰模式冲突
+    if (this.doNotDisturb !== other.doNotDisturb) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @method get type
+   * @description 获取偏好类型
+   * @returns {string} 偏好类型
+   */
+  get type(): string {
+    return 'time';
+  }
+
+  /**
    * @method getSummary
    * @description 获取时间偏好摘要
    * @returns {object} 时间偏好摘要

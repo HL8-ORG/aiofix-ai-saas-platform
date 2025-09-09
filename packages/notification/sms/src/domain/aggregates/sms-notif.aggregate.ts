@@ -1,6 +1,6 @@
 import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { SmsNotifEntity } from '../entities/sms-notif.entity';
-import { PhoneNumber } from '../value-objects/phone-number.vo';
+import { PhoneNumber, NotifId, TenantId, UserId } from '@aiofix/shared';
 import { SmsContent } from '../value-objects/sms-content.vo';
 import { SmsProvider } from '../value-objects/sms-provider.vo';
 import { SmsStatus, SmsStatusType } from '../value-objects/sms-status.vo';
@@ -89,9 +89,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布创建事件
     aggregate.addDomainEvent(
       new SmsNotifCreatedEvent(
-        id,
-        tenantId,
-        userId,
+        new NotifId(id),
+        new TenantId(tenantId),
+        new UserId(userId),
         phoneNumber,
         content,
         provider,
@@ -280,9 +280,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布发送中事件
     this.addDomainEvent(
       new SmsNotifSendingEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -307,9 +307,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布已发送事件
     this.addDomainEvent(
       new SmsNotifSentEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -335,9 +335,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布已送达事件
     this.addDomainEvent(
       new SmsNotifDeliveredEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -353,7 +353,7 @@ export class SmsNotif extends EventSourcedAggregateRoot {
    * @throws {InvalidSmsOperationError} 当操作无效时抛出
    */
   public markAsFailed(reason: string): void {
-    if (!this.smsNotif.getStatus().isFailedStatus()) {
+    if (!this.smsNotif.getStatus().isSending()) {
       throw new InvalidSmsOperationError('只有发送中状态的短信才能标记为失败');
     }
 
@@ -362,9 +362,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布失败事件
     this.addDomainEvent(
       new SmsNotifFailedEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -392,9 +392,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布永久失败事件
     this.addDomainEvent(
       new SmsNotifPermanentlyFailedEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -419,9 +419,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布重试事件
     this.addDomainEvent(
       new SmsNotifRetryingEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -446,9 +446,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布调度事件
     this.addDomainEvent(
       new SmsNotifScheduledEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),
@@ -473,9 +473,9 @@ export class SmsNotif extends EventSourcedAggregateRoot {
     // 发布取消事件
     this.addDomainEvent(
       new SmsNotifCancelledEvent(
-        this.getId(),
-        this.getTenantId(),
-        this.getUserId(),
+        new NotifId(this.getId()),
+        new TenantId(this.getTenantId()),
+        new UserId(this.getUserId()),
         this.getPhoneNumber(),
         this.getContent(),
         this.getProvider(),

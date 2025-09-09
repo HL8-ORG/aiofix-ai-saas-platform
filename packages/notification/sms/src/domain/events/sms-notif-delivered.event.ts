@@ -1,5 +1,5 @@
-import { IDomainEvent } from '@aiofix/core';
-import { PhoneNumber } from '../value-objects/phone-number.vo';
+import { DomainEvent } from '@aiofix/core';
+import { PhoneNumber, NotifId, TenantId, UserId } from '@aiofix/shared';
 import { SmsContent } from '../value-objects/sms-content.vo';
 import { SmsProvider } from '../value-objects/sms-provider.vo';
 
@@ -27,18 +27,22 @@ import { SmsProvider } from '../value-objects/sms-provider.vo';
  * @class SmsNotifDeliveredEvent
  * @implements IDomainEvent
  */
-export class SmsNotifDeliveredEvent implements IDomainEvent {
-  public readonly occurredOn: Date = new Date();
-
+export class SmsNotifDeliveredEvent extends DomainEvent {
   constructor(
-    public readonly smsNotifId: string,
-    public readonly tenantId: string,
-    public readonly userId: string,
+    public readonly smsNotifId: NotifId,
+    public readonly tenantId: TenantId,
+    public readonly userId: UserId,
     public readonly phoneNumber: PhoneNumber,
     public readonly content: SmsContent,
     public readonly provider: SmsProvider,
     public readonly deliveredAt: Date,
-  ) {}
+  ) {
+    super(smsNotifId.value, 1, {
+      tenantId: tenantId.value,
+      userId: userId.value,
+      source: 'sms-notification',
+    });
+  }
 
   /**
    * 获取事件类型
@@ -64,7 +68,7 @@ export class SmsNotifDeliveredEvent implements IDomainEvent {
    * @returns {string} 聚合根ID
    */
   getAggregateId(): string {
-    return this.smsNotifId;
+    return this.smsNotifId.value;
   }
 
   /**
@@ -131,6 +135,18 @@ export class SmsNotifDeliveredEvent implements IDomainEvent {
       occurredOn: this.occurredOn,
       tenantId: this.tenantId,
       userId: this.userId,
+    };
+  }
+
+  /**
+   * 将事件转换为JSON格式
+   *
+   * @returns {Record<string, unknown>} 事件的JSON表示
+   */
+  toJSON(): Record<string, unknown> {
+    return {
+      ...this.getEventMetadata(),
+      ...this.getEventData(),
     };
   }
 }

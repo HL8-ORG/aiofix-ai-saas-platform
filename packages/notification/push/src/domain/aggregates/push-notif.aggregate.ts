@@ -1,5 +1,6 @@
 import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { PushNotifEntity } from '../entities/push-notif.entity';
+import { NotifId, TenantId, UserId } from '@aiofix/shared';
 import { PushToken } from '../value-objects/push-token.vo';
 import { PushContent } from '../value-objects/push-content.vo';
 import { PushPriorityLevel } from '../value-objects/push-priority.vo';
@@ -111,16 +112,15 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     );
 
     // 发布推送通知创建事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifCreatedEvent(
-        id,
-        tenantId,
-        userId,
+        new NotifId(id),
+        new TenantId(tenantId),
+        new UserId(userId),
         pushToken,
         content,
         priority,
         scheduledAt,
-        metadata,
       ),
     );
   }
@@ -139,14 +139,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsSending();
 
     // 发布推送通知发送中事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifSendingEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
       ),
     );
   }
@@ -165,14 +165,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsSent();
 
     // 发布推送通知已发送事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifSentEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         this.pushNotif.getSentAt()!,
       ),
     );
@@ -192,14 +192,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsDelivered();
 
     // 发布推送通知已送达事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifDeliveredEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         this.pushNotif.getDeliveredAt()!,
       ),
     );
@@ -220,14 +220,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsFailed(reason);
 
     // 发布推送通知失败事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifFailedEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         reason,
         this.pushNotif.getRetryCount(),
       ),
@@ -249,14 +249,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsPermanentlyFailed(reason);
 
     // 发布推送通知永久失败事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifPermanentlyFailedEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         reason,
         this.pushNotif.getRetryCount(),
       ),
@@ -277,14 +277,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.markAsRetrying();
 
     // 发布推送通知重试事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifRetryingEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         this.pushNotif.getRetryCount(),
         this.pushNotif.getNextRetryTime(),
       ),
@@ -306,14 +306,14 @@ export class PushNotifAggregate extends EventSourcedAggregateRoot {
     this.pushNotif.schedule(scheduledAt);
 
     // 发布推送通知调度事件
-    this.publishEvent(
+    this.addDomainEvent(
       new PushNotifScheduledEvent(
-        this.pushNotif.id,
-        this.pushNotif.tenantId,
-        this.pushNotif.userId,
+        new NotifId(this.pushNotif.id),
+        new TenantId(this.pushNotif.tenantId),
+        new UserId(this.pushNotif.userId),
         this.pushNotif.getPushToken(),
         this.pushNotif.getContent(),
-        this.pushNotif.getPriority(),
+        this.pushNotif.getPriority().getValue(),
         scheduledAt,
       ),
     );
