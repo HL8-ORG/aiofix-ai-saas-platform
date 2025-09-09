@@ -191,7 +191,6 @@ AI应在以下情况下主动查阅技术设计文档：
 
 ### 事件驱动架构开发提示词
 
-```
 在开始开发事件驱动架构相关功能之前，请先查阅以下技术设计文档：
 
 1. 必读文档：
@@ -211,17 +210,15 @@ AI应在以下情况下主动查阅技术设计文档：
    - 遵循事件驱动架构原则
    - 使用完整的TSDoc注释
    - 实现完整的错误处理
-```
 
 ### 领域模型开发提示词
 
-```
 在开始开发领域模型之前，请先查阅以下技术设计文档：
 
 1. 必读文档：
-   - docs/technical-design-documents/03-entities-layer.md
-   - docs/business-requirements.md
-   - docs/technical-design-documents/01-architecture-overview.md
+   - `docs/technical-design-documents/03-entities-layer.md`
+   - `docs/business-requirements.md`
+   - `docs/technical-design-documents/01-architecture-overview.md`
 
 2. 查阅重点：
    - 聚合根设计原则
@@ -235,18 +232,16 @@ AI应在以下情况下主动查阅技术设计文档：
    - 实现完整的事件溯源
    - 使用完整的TSDoc注释
    - **重要**：创建值对象时优先检查`packages/shared/src/identifiers`和`packages/shared/src/common`中是否有可用的共享值对象
-```
 
 ### 数据库模块开发提示词
 
-```
 在开始开发数据库模块相关功能之前，请先查阅以下技术设计文档：
 
 1. 必读文档：
-   - docs/technical-design-documents/06-frameworks-drivers-layer.md
-   - docs/technical-design-documents/12-multitenant-data-isolation.md
-   - docs/technical-design-documents/14-adapter-pattern-design.md
-   - .cursor/rules/code-annotation-specification.mdc
+   - `docs/technical-design-documents/06-frameworks-drivers-layer.md`
+   - `docs/technical-design-documents/12-multitenant-data-isolation.md`
+   - `docs/technical-design-documents/14-adapter-pattern-design.md`
+   - `.cursor/rules/code-annotation-specification.mdc`
 
 2. 查阅重点：
    - 三种隔离策略的实现（数据库级、Schema级、表级）
@@ -261,7 +256,6 @@ AI应在以下情况下主动查阅技术设计文档：
    - 实现配置驱动的隔离策略
    - 使用完整的TSDoc注释
    - 确保数据隔离的安全性
-```
 
 ## 质量保证
 

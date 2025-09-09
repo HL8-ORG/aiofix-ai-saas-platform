@@ -9,6 +9,6 @@
     "emitDecoratorMetadata": true,
     "noEmit": false
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "identifiers"],
   "exclude": ["dist", "node_modules"]
 }

@@ -12,6 +12,8 @@
 - **测试驱动**：每个模块都要有完整的测试覆盖
 - **文档同步**：代码与文档保持同步更新
 - **质量保证**：每个阶段都要进行代码检查和性能优化
+- **设计先行**：开发前必须先查阅相关技术设计文档
+- **共享优先**：创建值对象时优先使用共享模块中的值对象
 
 ## 当前进度总结
 
@@ -72,19 +74,24 @@
   - ✅ 组织状态管理
   - ✅ 组织设置和配置管理
 
-#### 事件驱动架构设计 (100% 完成)
+#### 技术设计文档体系 (100% 完成)
 
-- **技术设计方案**: 全面调整为事件驱动架构
-  - ✅ 架构概览文档更新
-  - ✅ 分层架构设计更新
-  - ✅ 应用层设计更新
-  - ✅ 基础设施层设计更新
-  - ✅ 事件驱动架构设计文档
-  - ✅ 通知模块技术设计完成
-  - ✅ 代码注释规范更新
-  - ✅ 数据库隔离策略设计文档
-  - ✅ 仓储模式设计文档
-  - ✅ 适配器模式设计文档
+- **完整技术设计文档体系**: 重新编写了完整的技术设计文档
+  - ✅ 技术设计文档目录 (0-catalog.md)
+  - ✅ 架构概述文档 (01-architecture-overview.md)
+  - ✅ Clean Architecture分层设计 (02-clean-architecture-layers.md)
+  - ✅ Entities层设计 (03-entities-layer.md)
+  - ✅ Use Cases层设计 (04-use-cases-layer.md)
+  - ✅ Interface Adapters层设计 (05-interface-adapters-layer.md)
+  - ✅ Frameworks & Drivers层设计 (06-frameworks-drivers-layer.md)
+  - ✅ 事件驱动架构设计 (07-event-driven-architecture.md)
+  - ✅ 依赖倒置实施指南 (08-dependency-inversion-guide.md)
+  - ✅ 模块结构设计指南 (09-module-structure-guide.md)
+  - ✅ CQRS实现指南 (10-cqrs-implementation.md)
+  - ✅ 测试策略文档 (11-testing-strategy.md)
+  - ✅ 多租户数据隔离设计 (12-multitenant-data-isolation.md)
+  - ✅ 事件溯源设计 (13-event-sourcing-design.md)
+  - ✅ 适配器模式设计 (14-adapter-pattern-design.md)
   - ✅ 技术设计查阅指南更新
 
 #### 事件驱动架构基础设施开发 (100% 完成)
@@ -139,32 +146,44 @@
 
 ### 🎯 下一步工作重点
 
-1. **现有模块事件驱动改造**
+1. **Use Cases层重构和开发** (最高优先级)
+   - 重构现有应用服务为Use Cases层
+   - 实现CQRS模式分离命令和查询
+   - 实现命令处理器、查询处理器、事件处理器
+   - 按照Clean Architecture架构重新组织代码
+
+2. **现有模块事件驱动改造**
    - 用户模块事件驱动改造
    - 租户模块事件驱动改造
    - 组织模块事件驱动改造
 
-2. **基础设施完善**
+3. **基础设施完善**
    - 完成Docker开发环境配置
    - 配置数据库连接和迁移
    - 配置Redis消息队列
    - 实现生产级事件存储（PostgreSQL/MongoDB）
 
-3. **平台模块重构**
+4. **平台模块重构**
    - 重构平台模块领域层，符合业务需求
    - 实现平台管理服务
    - 实现系统配置和监控
 
-4. **API接口开发**
+5. **API接口开发**
    - 为通知模块开发RESTful API
    - 实现事件处理器和异步处理
    - 系统集成和端到端测试
 
-5. **数据库模块生产级部署**
+6. **数据库模块生产级部署**
    - 实现生产级数据库适配器
    - 配置多租户数据隔离策略
    - 实现数据库连接池和性能监控
    - 配置行级安全策略
+
+7. **技术设计文档应用**
+   - 严格按照技术设计文档进行开发
+   - 确保实现与设计文档完全一致
+   - 使用技术设计查阅指南指导开发
+   - 优先使用共享模块中的值对象
 
 ## 开发阶段规划
 
@@ -361,7 +380,32 @@
   - 密码强度验证和加密
   - 用户会话管理
 
-#### 4.3 租户领域模型 (25% 完成)
+#### 4.3 用户Use Cases层开发 (新增)
+
+- [ ] 实现用户命令处理器
+  - [ ] `CreateUserCommandHandler`
+  - [ ] `UpdateUserCommandHandler`
+  - [ ] `DeleteUserCommandHandler`
+  - [ ] `AssignUserToTenantCommandHandler`
+  - [ ] `RemoveUserFromTenantCommandHandler`
+- [ ] 实现用户查询处理器
+  - [ ] `GetUserQueryHandler`
+  - [ ] `GetUsersQueryHandler`
+  - [ ] `GetUsersByTenantQueryHandler`
+  - [ ] `GetUsersByOrganizationQueryHandler`
+  - [ ] `SearchUsersQueryHandler`
+- [ ] 实现用户应用服务
+  - [ ] `UserApplicationService`重构
+  - [ ] 用户业务用例编排
+  - [ ] 事务边界管理
+  - [ ] 事件发布协调
+- [ ] 实现用户事件处理器
+  - [ ] `UserCreatedEventHandler`
+  - [ ] `UserUpdatedEventHandler`
+  - [ ] `UserAssignedToTenantEventHandler`
+  - [ ] `UserRemovedFromTenantEventHandler`
+
+#### 4.4 租户领域模型 (25% 完成)
 
 - [x] 实现`Tenant`聚合根
   - ✅ 租户创建、配置、管理
@@ -382,7 +426,33 @@
   - ✅ 租户健康状态评估
   - ✅ 租户评分计算
 
-#### 4.4 组织架构领域模型 (30% 完成)
+#### 4.5 租户Use Cases层开发 (新增)
+
+- [ ] 实现租户命令处理器
+  - [ ] `CreateTenantCommandHandler`
+  - [ ] `UpdateTenantCommandHandler`
+  - [ ] `DeleteTenantCommandHandler`
+  - [ ] `ActivateTenantCommandHandler`
+  - [ ] `DeactivateTenantCommandHandler`
+  - [ ] `UpdateTenantQuotaCommandHandler`
+- [ ] 实现租户查询处理器
+  - [ ] `GetTenantQueryHandler`
+  - [ ] `GetTenantsQueryHandler`
+  - [ ] `GetTenantStatisticsQueryHandler`
+  - [ ] `GetTenantUsageQueryHandler`
+  - [ ] `SearchTenantsQueryHandler`
+- [ ] 实现租户应用服务
+  - [ ] `TenantApplicationService`重构
+  - [ ] 租户业务用例编排
+  - [ ] 租户资源管理协调
+  - [ ] 租户状态管理协调
+- [ ] 实现租户事件处理器
+  - [ ] `TenantCreatedEventHandler`
+  - [ ] `TenantUpdatedEventHandler`
+  - [ ] `TenantQuotaExceededEventHandler`
+  - [ ] `TenantStatusChangedEventHandler`
+
+#### 4.6 组织架构领域模型 (30% 完成)
 
 - [x] 实现`Organization`聚合根
   - ✅ 组织创建、管理、删除
@@ -399,6 +469,57 @@
   - ✅ `OrganizationCreatedEvent`、`OrganizationUpdatedEvent`
   - ✅ `OrganizationStatusChangedEvent`、`OrganizationDeletedEvent`
   - [ ] `UserAssignedToOrganizationEvent`
+
+#### 4.7 组织架构Use Cases层开发 (新增)
+
+- [ ] 实现组织命令处理器
+  - [ ] `CreateOrganizationCommandHandler`
+  - [ ] `UpdateOrganizationCommandHandler`
+  - [ ] `DeleteOrganizationCommandHandler`
+  - [ ] `ActivateOrganizationCommandHandler`
+  - [ ] `DeactivateOrganizationCommandHandler`
+  - [ ] `AssignUserToOrganizationCommandHandler`
+- [ ] 实现组织查询处理器
+  - [ ] `GetOrganizationQueryHandler`
+  - [ ] `GetOrganizationsQueryHandler`
+  - [ ] `GetOrganizationsByTenantQueryHandler`
+  - [ ] `GetOrganizationUsersQueryHandler`
+  - [ ] `SearchOrganizationsQueryHandler`
+- [ ] 实现组织应用服务
+  - [ ] `OrganizationApplicationService`重构
+  - [ ] 组织业务用例编排
+  - [ ] 组织用户管理协调
+  - [ ] 组织状态管理协调
+- [ ] 实现组织事件处理器
+  - [ ] `OrganizationCreatedEventHandler`
+  - [ ] `OrganizationUpdatedEventHandler`
+  - [ ] `OrganizationStatusChangedEventHandler`
+  - [ ] `OrganizationDeletedEventHandler`
+
+#### 4.8 部门Use Cases层开发 (新增)
+
+- [ ] 实现部门命令处理器
+  - [ ] `CreateDepartmentCommandHandler`
+  - [ ] `UpdateDepartmentCommandHandler`
+  - [ ] `DeleteDepartmentCommandHandler`
+  - [ ] `AssignUserToDepartmentCommandHandler`
+  - [ ] `RemoveUserFromDepartmentCommandHandler`
+- [ ] 实现部门查询处理器
+  - [ ] `GetDepartmentQueryHandler`
+  - [ ] `GetDepartmentsQueryHandler`
+  - [ ] `GetDepartmentsByOrganizationQueryHandler`
+  - [ ] `GetDepartmentUsersQueryHandler`
+  - [ ] `GetDepartmentHierarchyQueryHandler`
+- [ ] 实现部门应用服务
+  - [ ] `DepartmentApplicationService`
+  - [ ] 部门业务用例编排
+  - [ ] 部门层级管理协调
+  - [ ] 部门用户管理协调
+- [ ] 实现部门事件处理器
+  - [ ] `DepartmentCreatedEventHandler`
+  - [ ] `DepartmentUpdatedEventHandler`
+  - [ ] `DepartmentDeletedEventHandler`
+  - [ ] `UserAssignedToDepartmentEventHandler`
 
 ### 阶段5：多租户数据隔离实现 (预计2-3周) - 100% 完成
 
@@ -426,9 +547,111 @@
 - [x] 实现配置驱动的隔离策略切换
 - [x] 实现完整的单元测试覆盖
 
-### 阶段6：用户管理模块开发 (预计3-4周)
+### 阶段6：Use Cases层重构和开发 (预计2-3周)
 
-#### 6.1 平台用户管理
+#### 6.1 Use Cases层架构重构
+
+- [ ] 重构现有应用服务为Use Cases层
+  - [ ] 将`UserApplicationService`重构为Use Cases层
+  - [ ] 将`TenantApplicationService`重构为Use Cases层
+  - [ ] 将`OrganizationApplicationService`重构为Use Cases层
+  - [ ] 实现CQRS模式分离命令和查询
+- [ ] 实现命令处理器基类
+  - [ ] `BaseCommandHandler`基类
+  - [ ] 命令验证和授权
+  - [ ] 事务管理
+  - [ ] 事件发布
+- [ ] 实现查询处理器基类
+  - [ ] `BaseQueryHandler`基类
+  - [ ] 查询优化和缓存
+  - [ ] 权限过滤
+  - [ ] 数据转换
+- [ ] 实现事件处理器基类
+  - [ ] `BaseEventHandler`基类
+  - [ ] 事件重试机制
+  - [ ] 错误处理和恢复
+  - [ ] 事件监控
+
+#### 6.2 用户Use Cases层实现
+
+- [ ] 实现用户命令处理器
+  - [ ] `CreateUserCommandHandler`
+  - [ ] `UpdateUserCommandHandler`
+  - [ ] `DeleteUserCommandHandler`
+  - [ ] `AssignUserToTenantCommandHandler`
+  - [ ] `RemoveUserFromTenantCommandHandler`
+- [ ] 实现用户查询处理器
+  - [ ] `GetUserQueryHandler`
+  - [ ] `GetUsersQueryHandler`
+  - [ ] `GetUsersByTenantQueryHandler`
+  - [ ] `GetUsersByOrganizationQueryHandler`
+  - [ ] `SearchUsersQueryHandler`
+- [ ] 实现用户事件处理器
+  - [ ] `UserCreatedEventHandler`
+  - [ ] `UserUpdatedEventHandler`
+  - [ ] `UserAssignedToTenantEventHandler`
+  - [ ] `UserRemovedFromTenantEventHandler`
+
+#### 6.3 租户Use Cases层实现
+
+- [ ] 实现租户命令处理器
+  - [ ] `CreateTenantCommandHandler`
+  - [ ] `UpdateTenantCommandHandler`
+  - [ ] `DeleteTenantCommandHandler`
+  - [ ] `ActivateTenantCommandHandler`
+  - [ ] `DeactivateTenantCommandHandler`
+  - [ ] `UpdateTenantQuotaCommandHandler`
+- [ ] 实现租户查询处理器
+  - [ ] `GetTenantQueryHandler`
+  - [ ] `GetTenantsQueryHandler`
+  - [ ] `GetTenantStatisticsQueryHandler`
+  - [ ] `GetTenantUsageQueryHandler`
+  - [ ] `SearchTenantsQueryHandler`
+- [ ] 实现租户事件处理器
+  - [ ] `TenantCreatedEventHandler`
+  - [ ] `TenantUpdatedEventHandler`
+  - [ ] `TenantQuotaExceededEventHandler`
+  - [ ] `TenantStatusChangedEventHandler`
+
+#### 6.4 组织架构Use Cases层实现
+
+- [ ] 实现组织命令处理器
+  - [ ] `CreateOrganizationCommandHandler`
+  - [ ] `UpdateOrganizationCommandHandler`
+  - [ ] `DeleteOrganizationCommandHandler`
+  - [ ] `ActivateOrganizationCommandHandler`
+  - [ ] `DeactivateOrganizationCommandHandler`
+  - [ ] `AssignUserToOrganizationCommandHandler`
+- [ ] 实现组织查询处理器
+  - [ ] `GetOrganizationQueryHandler`
+  - [ ] `GetOrganizationsQueryHandler`
+  - [ ] `GetOrganizationsByTenantQueryHandler`
+  - [ ] `GetOrganizationUsersQueryHandler`
+  - [ ] `SearchOrganizationsQueryHandler`
+- [ ] 实现部门命令处理器
+  - [ ] `CreateDepartmentCommandHandler`
+  - [ ] `UpdateDepartmentCommandHandler`
+  - [ ] `DeleteDepartmentCommandHandler`
+  - [ ] `AssignUserToDepartmentCommandHandler`
+  - [ ] `RemoveUserFromDepartmentCommandHandler`
+- [ ] 实现部门查询处理器
+  - [ ] `GetDepartmentQueryHandler`
+  - [ ] `GetDepartmentsQueryHandler`
+  - [ ] `GetDepartmentsByOrganizationQueryHandler`
+  - [ ] `GetDepartmentUsersQueryHandler`
+  - [ ] `GetDepartmentHierarchyQueryHandler`
+
+#### 6.5 Use Cases层测试
+
+- [ ] 编写命令处理器单元测试
+- [ ] 编写查询处理器单元测试
+- [ ] 编写事件处理器单元测试
+- [ ] 编写集成测试
+- [ ] 编写端到端测试
+
+### 阶段7：用户管理模块开发 (预计3-4周)
+
+#### 7.1 平台用户管理
 
 - [ ] 实现用户注册命令和处理器
 - [ ] 实现用户认证和授权
@@ -436,7 +659,7 @@
 - [ ] 实现用户状态管理
 - [ ] 实现用户会话管理
 
-#### 6.2 租户用户管理
+#### 7.2 租户用户管理
 
 - [ ] 实现平台用户分配到租户
 - [ ] 实现租户用户管理
@@ -444,7 +667,7 @@
 - [ ] 实现用户离开租户流程
 - [ ] 实现用户兼职管理
 
-#### 6.3 用户查询和搜索
+#### 7.3 用户查询和搜索
 
 - [ ] 实现用户查询处理器
 - [ ] 实现用户搜索功能
@@ -452,7 +675,7 @@
 - [ ] 实现用户统计和报表
 - [ ] 实现用户导入导出
 
-#### 6.4 用户接口层
+#### 7.4 用户接口层
 
 - [ ] 实现用户控制器
 - [ ] 实现用户DTO和验证
@@ -460,9 +683,9 @@
 - [ ] 实现用户权限检查
 - [ ] 实现用户异常处理
 
-### 阶段7：租户管理模块开发 (预计2-3周)
+### 阶段8：租户管理模块开发 (预计2-3周)
 
-#### 7.1 租户核心功能
+#### 8.1 租户核心功能
 
 - [ ] 实现租户创建命令和处理器
 - [ ] 实现租户配置管理
@@ -470,7 +693,7 @@
 - [ ] 实现租户状态管理
 - [ ] 实现租户删除和备份
 
-#### 7.2 租户资源管理
+#### 8.2 租户资源管理
 
 - [ ] 实现租户资源配额管理
 - [ ] 实现租户使用量统计
@@ -478,7 +701,7 @@
 - [ ] 实现租户资源告警
 - [ ] 实现租户资源优化
 
-#### 7.3 租户查询和管理
+#### 8.3 租户查询和管理
 
 - [ ] 实现租户查询处理器
 - [ ] 实现租户列表和搜索
@@ -486,9 +709,9 @@
 - [ ] 实现租户监控面板
 - [ ] 实现租户管理接口
 
-### 阶段8：组织架构管理模块开发 (预计3-4周)
+### 阶段9：组织架构管理模块开发 (预计3-4周)
 
-#### 8.1 组织管理
+#### 9.1 组织管理
 
 - [ ] 实现组织创建和管理
 - [ ] 实现组织层级关系
@@ -496,7 +719,7 @@
 - [ ] 实现组织用户管理
 - [ ] 实现组织权限控制
 
-#### 8.2 部门管理
+#### 9.2 部门管理
 
 - [ ] 实现部门创建和管理
 - [ ] 实现部门层级关系
@@ -504,7 +727,7 @@
 - [ ] 实现部门用户管理
 - [ ] 实现部门权限控制
 
-#### 8.3 组织架构查询
+#### 9.3 组织架构查询
 
 - [ ] 实现组织架构查询
 - [ ] 实现组织架构树形结构
@@ -512,9 +735,9 @@
 - [ ] 实现组织架构统计
 - [ ] 实现组织架构管理接口
 
-### 阶段9：角色权限管理模块开发 (预计3-4周)
+### 阶段10：角色权限管理模块开发 (预计3-4周)
 
-#### 9.1 角色管理
+#### 10.1 角色管理
 
 - [ ] 实现角色定义和管理
 - [ ] 实现角色分配和撤销
@@ -522,7 +745,7 @@
 - [ ] 实现角色有效期管理
 - [ ] 实现角色审批流程
 
-#### 9.2 权限管理
+#### 10.2 权限管理
 
 - [ ] 实现权限定义和管理
 - [ ] 实现权限分配和验证
@@ -530,7 +753,7 @@
 - [ ] 实现权限审计日志
 - [ ] 实现权限违规检测
 
-#### 9.3 权限控制
+#### 10.3 权限控制
 
 - [ ] 实现基于角色的访问控制（RBAC）
 - [ ] 实现基于属性的访问控制（ABAC）
@@ -538,9 +761,9 @@
 - [ ] 实现权限守卫和拦截器
 - [ ] 实现权限管理接口
 
-### 阶段10：认证与授权模块开发 (预计2-3周)
+### 阶段11：认证与授权模块开发 (预计2-3周)
 
-#### 10.1 身份认证
+#### 11.1 身份认证
 
 - [ ] 实现用户名密码认证
 - [ ] 实现多因素认证
@@ -548,7 +771,7 @@
 - [ ] 实现第三方认证集成
 - [ ] 实现认证状态管理
 
-#### 10.2 访问控制
+#### 11.2 访问控制
 
 - [ ] 实现会话管理
 - [ ] 实现令牌管理
@@ -556,7 +779,7 @@
 - [ ] 实现访问日志
 - [ ] 实现安全策略
 
-#### 10.3 安全功能
+#### 11.3 安全功能
 
 - [ ] 实现密码策略
 - [ ] 实现登录失败锁定
@@ -564,9 +787,9 @@
 - [ ] 实现安全日志记录
 - [ ] 实现安全监控
 
-### 阶段11：平台管理模块开发 (预计2-3周)
+### 阶段12：平台管理模块开发 (预计2-3周)
 
-#### 11.1 平台配置管理
+#### 12.1 平台配置管理
 
 - [ ] 实现平台配置管理
 - [ ] 实现系统参数配置
@@ -574,7 +797,7 @@
 - [ ] 实现主题和样式配置
 - [ ] 实现配置变更审计
 
-#### 11.2 系统监控
+#### 12.2 系统监控
 
 - [ ] 实现系统性能监控
 - [ ] 实现用户行为分析
@@ -582,7 +805,7 @@
 - [ ] 实现资源使用统计
 - [ ] 实现监控告警
 
-#### 11.3 审计管理
+#### 12.3 审计管理
 
 - [ ] 实现操作日志记录
 - [ ] 实现审计报告生成
@@ -590,9 +813,9 @@
 - [ ] 实现安全事件监控
 - [ ] 实现审计管理接口
 
-### 阶段12：测试和文档完善 (预计2-3周)
+### 阶段13：测试和文档完善 (预计2-3周)
 
-#### 12.1 测试覆盖
+#### 13.1 测试覆盖
 
 - [ ] 编写单元测试
 - [ ] 编写集成测试
@@ -600,7 +823,7 @@
 - [ ] 编写性能测试
 - [ ] 编写安全测试
 
-#### 12.2 文档完善
+#### 13.2 文档完善
 
 - [ ] 完善API文档
 - [ ] 完善部署文档
@@ -608,13 +831,122 @@
 - [ ] 完善用户手册
 - [ ] 完善开发指南
 
-#### 12.3 质量保证
+#### 13.3 质量保证
 
 - [ ] 代码质量检查
 - [ ] 性能优化
 - [ ] 安全漏洞扫描
 - [ ] 代码审查
 - [ ] 最终测试
+
+## 技术设计文档应用指南
+
+### 文档查阅原则
+
+- **设计先行**：在编写任何代码之前，必须先查阅相关的技术设计文档
+- **架构一致性**：确保实现与设计文档完全一致
+- **文档驱动**：以技术设计文档为准，不偏离既定架构
+- **主动查阅**：AI应主动识别需要查阅的文档并提前阅读
+- **共享优先**：创建值对象时优先使用共享模块中的值对象
+
+### 技术设计文档结构
+
+#### 主要设计文档
+
+- **架构概览**：`docs/technical-design-documents/01-architecture-overview.md`
+- **分层架构**：`docs/technical-design-documents/02-clean-architecture-layers.md`
+- **领域层设计**：`docs/technical-design-documents/03-entities-layer.md`
+- **应用层设计**：`docs/technical-design-documents/04-use-cases-layer.md`
+- **接口适配器层设计**：`docs/technical-design-documents/05-interface-adapters-layer.md`
+- **框架驱动层设计**：`docs/technical-design-documents/06-frameworks-drivers-layer.md`
+- **事件驱动架构设计**：`docs/technical-design-documents/07-event-driven-architecture.md`
+- **依赖倒置实施指南**：`docs/technical-design-documents/08-dependency-inversion-guide.md`
+- **模块结构设计指南**：`docs/technical-design-documents/09-module-structure-guide.md`
+- **CQRS实现指南**：`docs/technical-design-documents/10-cqrs-implementation.md`
+- **测试策略文档**：`docs/technical-design-documents/11-testing-strategy.md`
+- **多租户数据隔离设计**：`docs/technical-design-documents/12-multitenant-data-isolation.md`
+- **事件溯源设计**：`docs/technical-design-documents/13-event-sourcing-design.md`
+- **适配器模式设计**：`docs/technical-design-documents/14-adapter-pattern-design.md`
+
+#### 支持文档
+
+- **技术设计文档目录**：`docs/technical-design-documents/0-catalog.md`
+- **业务需求**：`docs/business-requirements.md`
+- **开发计划**：`docs/development-plan.md`
+- **代码注释规范**：`.cursor/rules/code-annotation-specification.mdc`
+- **技术设计查阅指南**：`.cursor/rules/technical-design-guide-for-ai.mdc`
+
+### 开发环节查阅指南
+
+#### 1. 事件驱动架构基础设施开发
+
+**触发条件**：开发消息队列、事件总线、异步事件处理器等基础设施组件
+
+**必读文档**：
+
+- `docs/technical-design-documents/07-event-driven-architecture.md` - 事件驱动架构设计
+- `docs/technical-design-documents/13-event-sourcing-design.md` - 事件溯源设计
+- `docs/technical-design-documents/06-frameworks-drivers-layer.md` - 框架驱动层设计
+- `.cursor/rules/code-annotation-specification.mdc` - 异步事件处理器注释规范
+
+#### 2. 领域模型开发
+
+**触发条件**：开发用户、租户、组织、部门等核心领域模型
+
+**必读文档**：
+
+- `docs/technical-design-documents/03-entities-layer.md` - 领域层设计
+- `docs/business-requirements.md` - 业务需求
+- `docs/technical-design-documents/01-architecture-overview.md` - 架构概览
+
+**重要**：创建值对象时优先检查`packages/shared/src/identifiers`和`packages/shared/src/common`中是否有可用的共享值对象
+
+#### 3. 应用层开发
+
+**触发条件**：开发命令、查询、命令处理器、查询处理器等应用层组件
+
+**必读文档**：
+
+- `docs/technical-design-documents/04-use-cases-layer.md` - 应用层设计
+- `docs/technical-design-documents/02-clean-architecture-layers.md` - 分层架构
+- `docs/technical-design-documents/07-event-driven-architecture.md` - 事件驱动架构
+
+#### 4. 数据库模块开发
+
+**触发条件**：开发数据库适配器、多租户仓储、隔离策略配置等数据库相关组件
+
+**必读文档**：
+
+- `docs/technical-design-documents/06-frameworks-drivers-layer.md` - 框架驱动层设计
+- `docs/technical-design-documents/12-multitenant-data-isolation.md` - 多租户数据隔离设计
+- `docs/technical-design-documents/14-adapter-pattern-design.md` - 适配器模式设计
+- `.cursor/rules/code-annotation-specification.mdc` - 数据库组件注释规范
+
+#### 5. 接口层开发
+
+**触发条件**：开发控制器、DTO、API等接口层组件
+
+**必读文档**：
+
+- `docs/technical-design-documents/05-interface-adapters-layer.md` - 接口适配器层设计
+- `docs/technical-design-documents/02-clean-architecture-layers.md` - 分层架构
+- `docs/technical-design-documents/01-architecture-overview.md` - 架构概览
+
+### 共享值对象优先原则
+
+**核心原则**：在创建任何值对象之前，必须优先检查共享模块中是否已有可用的值对象。
+
+**检查路径**：
+
+- `packages/shared/src/identifiers/` - 标识符类值对象（如NotifId、TenantId、UserId等）
+- `packages/shared/src/common/` - 通用值对象（如Email、NotificationStatus、PhoneNumber等）
+
+**检查步骤**：
+
+1. 首先查看`packages/shared/src/identifiers/index.ts`和`packages/shared/src/common/index.ts`
+2. 确认是否有符合需求的值对象
+3. 如果有，直接使用`import { ValueObjectName } from '@aiofix/shared'`
+4. 如果没有，再考虑创建新的值对象
 
 ## 开发指导原则
 
@@ -624,6 +956,8 @@
 - 确保依赖倒置原则
 - 保持领域层的纯净性
 - 实现CQRS和事件溯源模式
+- **设计先行**：开发前必须先查阅相关技术设计文档
+- **共享优先**：创建值对象时优先使用共享模块中的值对象
 
 ### 2. 代码质量原则
 
@@ -631,6 +965,8 @@
 - 编写详细的中文注释
 - 遵循TSDoc规范
 - 实现完整的错误处理
+- 严格按照技术设计文档实现
+- 确保代码与设计文档的一致性
 
 ### 3. 测试原则
 
@@ -729,14 +1065,22 @@
 - [x] 数据库模块重构完成
 - [x] 技术设计文档更新完成
 
-### 里程碑6：核心模块完成 (第25周末)
+### 里程碑6：Use Cases层完成 (第21周末)
+
+- Use Cases层架构重构完成
+- 用户Use Cases层实现完成
+- 租户Use Cases层实现完成
+- 组织架构Use Cases层实现完成
+- Use Cases层测试完成
+
+### 里程碑7：核心模块完成 (第28周末)
 
 - 用户管理模块完成
 - 租户管理模块完成
 - 组织架构管理模块完成
 - 角色权限管理模块完成
 
-### 里程碑7：系统完成 (第30周末)
+### 里程碑8：系统完成 (第33周末)
 
 - 认证与授权模块完成
 - 平台管理模块完成
@@ -776,16 +1120,22 @@
 ### 2024-01-01 进度更新
 
 - ✅ 完成基础架构包开发（common、core、logging、config、cache、database）
-- ✅ 完成事件驱动架构技术设计（100%）
-  - 架构概览文档更新
-  - 分层架构设计更新
-  - 应用层设计更新
-  - 基础设施层设计更新
-  - 事件驱动架构设计文档
-  - 代码注释规范更新
-  - 数据库隔离策略设计文档
-  - 仓储模式设计文档
-  - 适配器模式设计文档
+- ✅ 完成完整技术设计文档体系（100%）
+  - 技术设计文档目录 (0-catalog.md)
+  - 架构概述文档 (01-architecture-overview.md)
+  - Clean Architecture分层设计 (02-clean-architecture-layers.md)
+  - Entities层设计 (03-entities-layer.md)
+  - Use Cases层设计 (04-use-cases-layer.md)
+  - Interface Adapters层设计 (05-interface-adapters-layer.md)
+  - Frameworks & Drivers层设计 (06-frameworks-drivers-layer.md)
+  - 事件驱动架构设计 (07-event-driven-architecture.md)
+  - 依赖倒置实施指南 (08-dependency-inversion-guide.md)
+  - 模块结构设计指南 (09-module-structure-guide.md)
+  - CQRS实现指南 (10-cqrs-implementation.md)
+  - 测试策略文档 (11-testing-strategy.md)
+  - 多租户数据隔离设计 (12-multitenant-data-isolation.md)
+  - 事件溯源设计 (13-event-sourcing-design.md)
+  - 适配器模式设计 (14-adapter-pattern-design.md)
   - 技术设计查阅指南更新
 - ✅ 完成通知模块完整实现（100%）
   - 站内信子领域完整实现
@@ -844,11 +1194,11 @@
   - 组织状态管理
   - 组织设置和配置管理
 - 📊 代码统计：200+个TypeScript文件，19个测试文件，19个包
-- 🎯 下一步：现有模块事件驱动改造、基础设施完善、API接口开发、数据库模块生产级部署
+- 🎯 下一步：现有模块事件驱动改造、基础设施完善、API接口开发、数据库模块生产级部署、技术设计文档应用
 
 ---
 
-**文档版本**：2.3  
+**文档版本**：2.5  
 **创建日期**：2024-01-01  
 **最后更新**：2024-01-01  
 **维护者**：项目开发团队

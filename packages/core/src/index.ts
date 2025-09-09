@@ -28,3 +28,10 @@ export { generateUUID, validateUUID } from './domain/utils/uuid';
 
 // 事件驱动架构接口
 export * from './domain/interfaces';
+
+// 应用层接口和基类
+export { IUseCase } from './application/use-cases/use-case.interface';
+export { ICommandHandler } from './application/handlers/command-handler.interface';
+export { IQueryHandler } from './application/handlers/query-handler.interface';
+export { BaseCommandHandler } from './application/handlers/base-command-handler';
+export { BaseQueryHandler } from './application/handlers/base-query-handler';
