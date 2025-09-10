@@ -87,7 +87,7 @@ export class CreateUserUseCase {
 
     // 5. 发布领域事件
     const userCreatedEvent = new UserCreatedEvent(
-      userAggregate.id,
+      userAggregate.userId,
       userAggregate.email,
       userAggregate.profile,
       userAggregate.status,

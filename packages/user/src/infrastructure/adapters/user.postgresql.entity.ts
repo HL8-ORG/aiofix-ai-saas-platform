@@ -144,8 +144,8 @@ export class UserPostgreSQLEntity {
     entity.status = aggregate.status;
     entity.tenantId = aggregate.user.tenantId;
     entity.platformId = aggregate.user.platformId;
-    entity.organizationId = aggregate.user.organizationId;
-    entity.departmentId = aggregate.user.departmentId;
+    entity.organizationId = undefined; // TODO: 从用户资料或聚合根获取
+    entity.departmentId = undefined; // TODO: 从用户资料或聚合根获取
     entity.theme = aggregate.preferences.value.theme;
     entity.language = aggregate.preferences.value.language;
     entity.timezone = aggregate.preferences.value.timezone;

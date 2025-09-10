@@ -63,10 +63,7 @@ export class UserDatabaseConfig {
       entities: this.getEntities(),
       migrations: this.getMigrations(),
       debug: process.env.NODE_ENV === 'development',
-      logger: this.getLoggerConfig(),
-      pool: this.getPoolConfig(),
-      schemaGenerator: this.getSchemaGeneratorConfig(),
-    };
+    } as any;
   }
 
   /**

@@ -191,6 +191,16 @@ export class UserAggregate extends EventSourcedAggregateRoot {
   }
 
   /**
+   * @getter platformId
+   * @description 获取平台ID
+   * @returns {string} 平台ID字符串值
+   * @since 1.0.0
+   */
+  public get platformId(): string {
+    return this._user.platformId;
+  }
+
+  /**
    * @getter createdAt
    * @description 获取用户创建时间
    * @returns {Date} 用户创建时间戳

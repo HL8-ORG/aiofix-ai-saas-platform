@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AssignUserToTenantCommand } from '../commands/assign-user-to-tenant.command';
 import { UserAssignedToTenantEvent } from '../../domain/events';
+import { UserId } from '@aiofix/shared';
 import { IEventBus } from '@aiofix/core';
 
 /**
@@ -71,10 +72,10 @@ export class AssignUserToTenantUseCase {
 
     // 5. 发布领域事件
     const userAssignedEvent = new UserAssignedToTenantEvent(
-      command.userId,
+      new UserId(command.userId),
       command.tenantId,
-      command.role,
-      command.assignedBy,
+      command.role || 'USER',
+      command.requestedBy,
     );
 
     await this.eventBus.publish(userAssignedEvent);

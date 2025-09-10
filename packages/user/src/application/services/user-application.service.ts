@@ -7,7 +7,7 @@ import {
   AssignUserToTenantUseCase,
   GetUsersUseCase,
 } from '../use-cases';
-import { EventBusService } from '@aiofix/core';
+import { IEventBus } from '@aiofix/core';
 import {
   UserCreatedEvent,
   UserAssignedToTenantEvent,

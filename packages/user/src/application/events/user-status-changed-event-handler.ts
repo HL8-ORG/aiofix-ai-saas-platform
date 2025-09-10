@@ -57,7 +57,7 @@ export class UserStatusChangedEventHandler extends BaseEventHandler<UserStatusCh
   protected async processEvent(event: UserStatusChangedEvent): Promise<void> {
     try {
       // 1. 验证事件
-      this.validateEvent(event);
+      // 事件验证已在基类中处理
 
       // 2. 并行处理多个后续操作
       await Promise.allSettled([
@@ -243,33 +243,6 @@ export class UserStatusChangedEventHandler extends BaseEventHandler<UserStatusCh
    */
   private shouldInvalidateSessions(status: any): boolean {
     return status.toString() === 'DISABLED' || status.toString() === 'DELETED';
-  }
-
-  /**
-   * @method validateEvent
-   * @description 验证事件的有效性
-   * @param {UserStatusChangedEvent} event 用户状态变更事件
-   * @returns {void}
-   * @throws {ValidationError} 当事件无效时抛出
-   * @private
-   */
-  private validateEvent(event: UserStatusChangedEvent): void {
-    if (
-      !event.aggregateId ||
-      !event.oldStatus ||
-      !event.newStatus ||
-      !event.changedBy
-    ) {
-      throw new Error(
-        'Invalid UserStatusChangedEvent: missing required fields',
-      );
-    }
-
-    if (event.oldStatus.toString() === event.newStatus.toString()) {
-      throw new Error(
-        'Invalid UserStatusChangedEvent: old and new status cannot be the same',
-      );
-    }
   }
 
   /**

@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { UserAggregate } from '../../domain/aggregates/user.aggregate';
-import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import {
+  IUserRepository,
+  UserFilters,
+  PaginationOptions,
+  PaginatedResult,
+} from '../../domain/repositories/user.repository.interface';
 import { UserPostgreSQLEntity } from '../adapters/user.postgresql.entity';
 import { UserId, Email } from '@aiofix/shared';
 import {
@@ -50,12 +55,12 @@ export class UserRepository implements IUserRepository {
   /**
    * @method findById
    * @description 根据用户ID查找用户聚合根
-   * @param {UserId} id 用户ID
+   * @param {string} id 用户ID字符串
    * @returns {Promise<UserAggregate | null>} 用户聚合根或null
    */
-  async findById(id: UserId): Promise<UserAggregate | null> {
+  async findById(id: string): Promise<UserAggregate | null> {
     const entity = await this.entityManager.findOne(UserPostgreSQLEntity, {
-      id: id.value,
+      id: id,
       deletedAt: null,
     });
 
@@ -69,22 +74,19 @@ export class UserRepository implements IUserRepository {
   /**
    * @method findByEmail
    * @description 根据邮箱地址查找用户聚合根
-   * @param {Email} email 邮箱地址
-   * @param {string} [tenantId] 租户ID，可选
+   * @param {string} email 邮箱地址字符串
+   * @param {string} tenantId 租户ID
    * @returns {Promise<UserAggregate | null>} 用户聚合根或null
    */
   async findByEmail(
-    email: Email,
-    tenantId?: string,
+    email: string,
+    tenantId: string,
   ): Promise<UserAggregate | null> {
     const whereClause: any = {
-      email: email.value,
+      email: email,
+      tenantId: tenantId,
       deletedAt: null,
     };
-
-    if (tenantId) {
-      whereClause.tenantId = tenantId;
-    }
 
     const entity = await this.entityManager.findOne(
       UserPostgreSQLEntity,
@@ -112,12 +114,12 @@ export class UserRepository implements IUserRepository {
   /**
    * @method delete
    * @description 软删除用户聚合根
-   * @param {UserId} id 用户ID
+   * @param {string} id 用户ID字符串
    * @returns {Promise<void>}
    */
-  async delete(id: UserId): Promise<void> {
+  async delete(id: string): Promise<void> {
     const entity = await this.entityManager.findOne(UserPostgreSQLEntity, {
-      id: id.value,
+      id: id,
     });
 
     if (entity) {
@@ -129,38 +131,37 @@ export class UserRepository implements IUserRepository {
   /**
    * @method findUsers
    * @description 查找用户列表，支持分页和过滤
-   * @param {object} filters 过滤条件
-   * @param {number} [page=1] 页码
-   * @param {number} [limit=20] 每页数量
-   * @returns {Promise<{ users: UserAggregate[]; total: number }>} 用户列表和总数
+   * @param {UserFilters} filters 过滤条件
+   * @param {PaginationOptions} pagination 分页选项
+   * @returns {Promise<PaginatedResult<UserAggregate>>} 分页的用户列表
    */
   async findUsers(
-    filters: {
-      tenantId?: string;
-      platformId?: string;
-      organizationId?: string;
-      departmentId?: string;
-      status?: UserStatus;
-      searchTerm?: string;
-    },
-    page: number = 1,
-    limit: number = 20,
-  ): Promise<{ users: UserAggregate[]; total: number }> {
+    filters: UserFilters,
+    pagination: PaginationOptions,
+  ): Promise<PaginatedResult<UserAggregate>> {
     const whereClause = this.buildWhereClause(filters);
 
     const [entities, total] = await this.entityManager.findAndCount(
       UserPostgreSQLEntity,
       whereClause,
       {
-        limit,
-        offset: (page - 1) * limit,
-        orderBy: { createdAt: 'DESC' },
+        limit: pagination.limit,
+        offset: (pagination.page - 1) * pagination.limit,
+        orderBy: {
+          [pagination.sortBy || 'createdAt']: pagination.sortOrder || 'DESC',
+        },
       },
     );
 
-    const users = entities.map(entity => this.mapToAggregate(entity));
+    const data = entities.map(entity => this.mapToAggregate(entity));
 
-    return { users, total };
+    return {
+      data,
+      total,
+      page: pagination.page,
+      limit: pagination.limit,
+      totalPages: Math.ceil(total / pagination.limit),
+    };
   }
 
   /**
@@ -177,28 +178,17 @@ export class UserRepository implements IUserRepository {
   /**
    * @method buildWhereClause
    * @description 构建查询条件
-   * @param {object} filters 过滤条件
+   * @param {UserFilters} filters 过滤条件
    * @returns {object} 查询条件对象
    * @private
    */
-  private buildWhereClause(filters: {
-    tenantId?: string;
-    platformId?: string;
-    organizationId?: string;
-    departmentId?: string;
-    status?: UserStatus;
-    searchTerm?: string;
-  }): any {
+  private buildWhereClause(filters: UserFilters): any {
     const whereClause: any = {
       deletedAt: null,
     };
 
     if (filters.tenantId) {
       whereClause.tenantId = filters.tenantId;
-    }
-
-    if (filters.platformId) {
-      whereClause.platformId = filters.platformId;
     }
 
     if (filters.organizationId) {
@@ -235,18 +225,24 @@ export class UserRepository implements IUserRepository {
     // 创建值对象
     const id = new UserId(entity.id);
     const email = new Email(entity.email);
-    const password = new Password(entity.passwordHash);
-    const profile = new UserProfile(
-      entity.firstName,
-      entity.lastName,
-      entity.phoneNumber,
-      entity.avatar,
-    );
-    const preferences = new UserPreferences(
-      entity.theme,
-      entity.language,
-      entity.timezone,
-    );
+    const password = Password.fromHashed(entity.passwordHash);
+    const profile = new UserProfile({
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      phoneNumber: entity.phoneNumber,
+      avatar: entity.avatar,
+    });
+    const preferences = new UserPreferences({
+      theme: entity.theme,
+      language: entity.language,
+      timezone: entity.timezone,
+      dateFormat: 'YYYY-MM-DD',
+      timeFormat: '24h',
+      currency: 'CNY',
+      notifications: {} as any,
+      privacy: {} as any,
+      accessibility: {} as any,
+    });
 
     // 创建用户聚合根
     const aggregate = new UserAggregate(

@@ -118,9 +118,9 @@ export class UserPreferencesUpdatedEventHandler extends BaseEventHandler<UserPre
   ): Promise<void> {
     const interfaceSettings = {
       userId: event.aggregateId,
-      theme: event.newPreferences.theme,
-      language: event.newPreferences.language,
-      timezone: event.newPreferences.timezone,
+      theme: event.newPreferences.value.theme,
+      language: event.newPreferences.value.language,
+      timezone: event.newPreferences.value.timezone,
       updatedAt: event.occurredOn,
     };
 
