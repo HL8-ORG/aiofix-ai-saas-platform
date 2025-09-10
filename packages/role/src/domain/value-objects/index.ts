@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-export { RoleId, InvalidRoleIdError } from './role-id.vo';
+export { RoleId, InvalidRoleIdError } from '@aiofix/shared';
 
 export {
   RoleName,

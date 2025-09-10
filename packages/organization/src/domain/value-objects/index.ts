@@ -5,10 +5,7 @@
  * @since 1.0.0
  */
 
-export {
-  OrganizationId,
-  InvalidOrganizationIdError,
-} from './organization-id.vo';
+export { OrganizationId, InvalidOrganizationIdError } from '@aiofix/shared';
 export { OrganizationName, OrganizationDescription } from '@aiofix/shared';
 export {
   OrganizationSettings,

@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-export { PermissionId, InvalidPermissionIdError } from './permission-id.vo';
+export { PermissionId, InvalidPermissionIdError } from '@aiofix/shared';
 
 export { Resource, InvalidResourceError } from './resource.vo';
 

@@ -1,5 +1,5 @@
 import { BaseEntity } from '@aiofix/core';
-import { OrganizationId } from '../value-objects/organization-id.vo';
+import { OrganizationId } from '@aiofix/shared';
 import { OrganizationName, OrganizationDescription } from '@aiofix/shared';
 import { OrganizationSettings } from '../value-objects/organization-settings.vo';
 import {

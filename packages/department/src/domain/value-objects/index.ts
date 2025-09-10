@@ -5,7 +5,7 @@
  * @since 1.0.0
  */
 
-export { DepartmentId, InvalidDepartmentIdError } from './department-id.vo';
+export { DepartmentId, InvalidDepartmentIdError } from '@aiofix/shared';
 export { DepartmentName, InvalidNameError } from '@aiofix/shared';
 export { DepartmentDescription, InvalidDescriptionError } from '@aiofix/shared';
 export {

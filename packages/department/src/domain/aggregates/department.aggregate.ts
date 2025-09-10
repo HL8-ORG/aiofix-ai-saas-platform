@@ -2,7 +2,7 @@ import { EventSourcedAggregateRoot, DomainEvent } from '@aiofix/core';
 import { DepartmentCreatedEvent } from '../events/department-created.event';
 import { DepartmentMovedEvent } from '../events/department-moved.event';
 import { DepartmentEntity } from '../entities/department.entity';
-import { DepartmentId } from '../value-objects/department-id.vo';
+import { DepartmentId } from '@aiofix/shared';
 import { DepartmentName, DepartmentDescription } from '@aiofix/shared';
 import {
   DepartmentSettings,
@@ -10,7 +10,7 @@ import {
 } from '../value-objects/department-settings.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
-import { OrganizationId } from '@aiofix/organization';
+import { OrganizationId } from '@aiofix/shared';
 
 // 事件数据接口
 interface DepartmentEventData {

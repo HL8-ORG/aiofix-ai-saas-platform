@@ -1,8 +1,8 @@
 import { DomainEvent } from '@aiofix/core';
-import { DepartmentId } from '../value-objects/department-id.vo';
+import { DepartmentId } from '@aiofix/shared';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
-import { OrganizationId } from '@aiofix/organization';
+import { OrganizationId } from '@aiofix/shared';
 
 /**
  * @class DepartmentStatusChangedEvent

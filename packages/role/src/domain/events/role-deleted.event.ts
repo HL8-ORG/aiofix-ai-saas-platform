@@ -1,5 +1,5 @@
 import { DomainEvent } from '@aiofix/core';
-import { RoleId } from '../value-objects/role-id.vo';
+import { RoleId } from '@aiofix/shared';
 import { RoleStatus } from '../enums/role-status.enum';
 import { TenantId } from '@aiofix/shared';
 

@@ -546,6 +546,60 @@ export class UserAggregate extends EventSourcedAggregateRoot {
   }
 
   /**
+   * @method isDeleted
+   * @description 检查用户是否已被删除
+   * @returns {boolean} 是否已被删除
+   * @since 1.0.0
+   */
+  public isDeleted(): boolean {
+    return this._user.status === UserStatus.DELETED;
+  }
+
+  /**
+   * @method markAsDeleted
+   * @description 标记用户为已删除状态（软删除）
+   * @param {string} [reason] 删除原因
+   * @returns {UserAggregate} 更新后的聚合根
+   * @since 1.0.0
+   */
+  public markAsDeleted(reason?: string): UserAggregate {
+    this.delete('system', reason);
+    return this;
+  }
+
+  /**
+   * @method update
+   * @description 更新用户信息
+   * @param {object} updateData 更新数据
+   * @returns {UserAggregate} 更新后的聚合根
+   * @since 1.0.0
+   */
+  public update(updateData: {
+    email?: Email;
+    password?: Password;
+    profile?: UserProfile;
+    status?: UserStatus;
+  }): UserAggregate {
+    if (updateData.email) {
+      this._user.updateEmail(updateData.email);
+    }
+
+    if (updateData.password) {
+      this._user.updatePassword(updateData.password);
+    }
+
+    if (updateData.profile) {
+      this._user.updateProfile(updateData.profile);
+    }
+
+    if (updateData.status) {
+      this._user.updateStatus(updateData.status);
+    }
+
+    return this;
+  }
+
+  /**
    * @method getDisplayName
    * @description
    * 获取用户显示名称，用于界面展示。

@@ -1,5 +1,4 @@
-import { ValueObject } from '@aiofix/core';
-import { v4 as uuidv4 } from 'uuid';
+import { UUIDIdentifier } from './base-identifier.vo';
 
 /**
  * @class UserId
@@ -32,54 +31,7 @@ import { v4 as uuidv4 } from 'uuid';
  * ```
  * @since 1.0.0
  */
-export class UserId extends ValueObject<string> {
-  constructor(value?: string) {
-    super(value ?? uuidv4());
-    this.validate();
-  }
-
-  /**
-   * @method validate
-   * @description 验证用户ID的有效性
-   * @returns {void}
-   * @throws {InvalidUserIdError} 当用户ID无效时抛出
-   * @private
-   */
-  private validate(): void {
-    if (!this.value || this.value.trim().length === 0) {
-      throw new InvalidUserIdError('用户ID不能为空');
-    }
-
-    // UUID v4格式验证
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(this.value)) {
-      throw new InvalidUserIdError(`无效的UUID格式: ${this.value}`);
-    }
-  }
-
-  /**
-   * @method equals
-   * @description 比较两个用户ID是否相等
-   * @param {UserId} other 另一个用户ID对象
-   * @returns {boolean} 是否相等
-   */
-  equals(other: UserId): boolean {
-    if (!(other instanceof UserId)) {
-      return false;
-    }
-    return this.value.toLowerCase() === other.value.toLowerCase();
-  }
-
-  /**
-   * @method toString
-   * @description 返回用户ID的字符串表示
-   * @returns {string} 用户ID字符串
-   */
-  toString(): string {
-    return this.value;
-  }
-
+export class UserId extends UUIDIdentifier {
   /**
    * @method generate
    * @description 生成新的用户ID
@@ -87,7 +39,7 @@ export class UserId extends ValueObject<string> {
    * @static
    */
   static generate(): UserId {
-    return new UserId(uuidv4());
+    return new UserId();
   }
 
   /**
@@ -115,6 +67,17 @@ export class UserId extends ValueObject<string> {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * @method create
+   * @description 创建用户ID（与fromString功能相同，提供一致的接口）
+   * @param {string} value 用户ID字符串
+   * @returns {UserId} 用户ID实例
+   * @static
+   */
+  static create(value: string): UserId {
+    return UserId.fromString(value);
   }
 }
 

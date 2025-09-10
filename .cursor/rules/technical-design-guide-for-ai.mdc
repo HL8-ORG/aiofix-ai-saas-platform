@@ -36,6 +36,7 @@ alwaysApply: true
 - **多租户数据隔离设计**：`docs/technical-design-documents/12-multitenant-data-isolation.md`
 - **事件溯源设计**：`docs/technical-design-documents/13-event-sourcing-design.md`
 - **适配器模式设计**：`docs/technical-design-documents/14-adapter-pattern-design.md`
+- **标识符值对象统一架构设计**：`docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md`
 - **通知模块设计**：`docs/technical-design-documents/notification/`
 
 ### 支持文档
@@ -72,6 +73,7 @@ alwaysApply: true
 **必读文档**：
 
 - `docs/technical-design-documents/03-entities-layer.md` - 领域层设计
+- `docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md` - 标识符值对象统一架构设计
 - `docs/business-requirements.md` - 业务需求
 - `docs/technical-design-documents/01-architecture-overview.md` - 架构概览
 
@@ -82,6 +84,8 @@ alwaysApply: true
 - 领域事件设计
 - 业务规则和不变性约束
 - **重要**：创建值对象时优先检查`packages/shared/src/identifiers`和`packages/shared/src/common`中是否有可用的共享值对象
+- 标识符值对象的统一管理架构
+- 基类设计和验证规则系统
 
 ### 3. 应用层开发
 
@@ -135,7 +139,26 @@ alwaysApply: true
 - 消息队列配置
 - 服务发现和注册
 
-### 6. 接口层开发
+### 6. 标识符值对象开发
+
+**触发条件**：开发新的标识符值对象、修改现有标识符、统一标识符管理
+
+**必读文档**：
+
+- `docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md` - 标识符值对象统一架构设计
+- `docs/technical-design-documents/03-entities-layer.md` - 领域层设计
+- `docs/technical-design-documents/01-architecture-overview.md` - 架构概览
+
+**查阅重点**：
+
+- 基类层次结构设计
+- 验证规则系统
+- 统一方法接口
+- 标识符类型分类
+- 设计模式应用
+- 性能优化策略
+
+### 7. 接口层开发
 
 **触发条件**：开发控制器、DTO、API等接口层组件
 
@@ -217,6 +240,7 @@ AI应在以下情况下主动查阅技术设计文档：
 
 1. 必读文档：
    - `docs/technical-design-documents/03-entities-layer.md`
+   - `docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md`
    - `docs/business-requirements.md`
    - `docs/technical-design-documents/01-architecture-overview.md`
 
@@ -225,6 +249,8 @@ AI应在以下情况下主动查阅技术设计文档：
    - 值对象和实体设计
    - 领域事件设计
    - 业务规则和不变性约束
+   - 标识符值对象的统一管理架构
+   - 基类设计和验证规则系统
 
 3. 实现要求：
    - 严格按照DDD原则实现
@@ -232,6 +258,7 @@ AI应在以下情况下主动查阅技术设计文档：
    - 实现完整的事件溯源
    - 使用完整的TSDoc注释
    - **重要**：创建值对象时优先检查`packages/shared/src/identifiers`和`packages/shared/src/common`中是否有可用的共享值对象
+   - 使用统一的标识符值对象架构
 
 ### 数据库模块开发提示词
 
@@ -256,6 +283,31 @@ AI应在以下情况下主动查阅技术设计文档：
    - 实现配置驱动的隔离策略
    - 使用完整的TSDoc注释
    - 确保数据隔离的安全性
+
+### 标识符值对象开发提示词
+
+在开始开发标识符值对象之前，请先查阅以下技术设计文档：
+
+1. 必读文档：
+   - `docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md`
+   - `docs/technical-design-documents/03-entities-layer.md`
+   - `docs/technical-design-documents/01-architecture-overview.md`
+
+2. 查阅重点：
+   - 基类层次结构设计
+   - 验证规则系统
+   - 统一方法接口
+   - 标识符类型分类
+   - 设计模式应用
+   - 性能优化策略
+
+3. 实现要求：
+   - 严格按照统一架构设计实现
+   - 继承相应的基类（UUIDIdentifier或CustomIdentifier）
+   - 实现统一的方法接口
+   - 使用完整的TSDoc注释
+   - 遵循设计模式和最佳实践
+   - 确保类型安全和性能优化
 
 ## 质量保证
 
@@ -344,7 +396,25 @@ AI应在以下情况下主动查阅技术设计文档：
 - 多租户CRUD操作
 - 租户特定仓储创建
 
-### 场景5：设计API接口
+### 场景5：开发标识符值对象
+
+**查阅文档**：
+
+- `docs/technical-design-documents/15-identifier-value-objects-unified-architecture.md` - 标识符值对象统一架构设计
+- `docs/technical-design-documents/03-entities-layer.md` - 领域层设计
+- `docs/technical-design-documents/01-architecture-overview.md` - 架构概览
+
+**查阅重点**：
+
+- 基类层次结构设计
+- 验证规则系统
+- 统一方法接口
+- 标识符类型分类
+- 设计模式应用
+- 性能优化策略
+- 最佳实践和错误处理
+
+### 场景6：设计API接口
 
 **查阅文档**：
 
@@ -413,7 +483,7 @@ import {
 
 ---
 
-**文档版本**：1.3  
+**文档版本**：1.4  
 **创建日期**：2024-01-01  
 **最后更新**：2024-01-01  
 **维护者**：项目开发团队

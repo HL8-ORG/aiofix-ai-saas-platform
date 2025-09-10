@@ -1,13 +1,13 @@
 import { DomainEvent } from '@aiofix/core';
-import { RoleId } from '../value-objects/role-id.vo';
+import { RoleId } from '@aiofix/shared';
 import { RoleName, RoleDescription } from '@aiofix/shared';
 import { RoleSettings } from '../value-objects/role-settings.vo';
 import { Permission } from '../value-objects/permission.vo';
 import { RoleStatus } from '../enums/role-status.enum';
 import { RoleType } from '../enums/role-type.enum';
 import { TenantId } from '@aiofix/shared';
-import { OrganizationId } from '@aiofix/organization';
-import { DepartmentId } from '@aiofix/department';
+import { OrganizationId } from '@aiofix/shared';
+import { DepartmentId } from '@aiofix/shared';
 
 /**
  * @class RoleCreatedEvent

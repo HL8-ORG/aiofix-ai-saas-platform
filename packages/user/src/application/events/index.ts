@@ -9,6 +9,8 @@
  */
 
 export { UserCreatedEventHandler } from './user-created-event-handler';
+export { UserUpdatedEventHandler } from './user-updated-event-handler';
+export { UserDeletedEventHandler } from './user-deleted-event-handler';
 export { UserAssignedToTenantEventHandler } from './user-assigned-to-tenant-event-handler';
 export { UserProfileUpdatedEventHandler } from './user-profile-updated-event-handler';
 export { UserPasswordUpdatedEventHandler } from './user-password-updated-event-handler';

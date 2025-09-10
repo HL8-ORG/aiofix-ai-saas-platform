@@ -1,5 +1,5 @@
 import { DomainEvent } from '@aiofix/core';
-import { OrganizationId } from '../value-objects/organization-id.vo';
+import { OrganizationId } from '@aiofix/shared';
 import { OrganizationStatus } from '../enums/organization-status.enum';
 import { TenantId } from '@aiofix/shared';
 

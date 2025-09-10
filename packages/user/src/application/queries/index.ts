@@ -4,4 +4,5 @@
  * @since 1.0.0
  */
 
+export * from './get-user.query';
 export * from './get-users.query';

@@ -3,8 +3,12 @@ import { UserDatabaseModule } from './infrastructure/database/user-database.modu
 import { UserRepository } from './infrastructure/repositories/user.repository';
 import { UserApplicationService } from './application/services/user-application.service';
 import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
+import { UpdateUserUseCase } from './application/use-cases/update-user.use-case';
+import { DeleteUserUseCase } from './application/use-cases/delete-user.use-case';
+import { GetUserUseCase } from './application/use-cases/get-user.use-case';
 import { GetUsersUseCase } from './application/use-cases/get-users.use-case';
 import { AssignUserToTenantUseCase } from './application/use-cases/assign-user-to-tenant.use-case';
+import { UserController } from './interfaces/controllers/user.controller';
 
 /**
  * @class UserModule
@@ -36,10 +40,14 @@ import { AssignUserToTenantUseCase } from './application/use-cases/assign-user-t
  */
 @Module({
   imports: [UserDatabaseModule],
+  controllers: [UserController],
   providers: [
     UserRepository,
     UserApplicationService,
     CreateUserUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
+    GetUserUseCase,
     GetUsersUseCase,
     AssignUserToTenantUseCase,
   ],
@@ -47,6 +55,9 @@ import { AssignUserToTenantUseCase } from './application/use-cases/assign-user-t
     UserRepository,
     UserApplicationService,
     CreateUserUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
+    GetUserUseCase,
     GetUsersUseCase,
     AssignUserToTenantUseCase,
   ],

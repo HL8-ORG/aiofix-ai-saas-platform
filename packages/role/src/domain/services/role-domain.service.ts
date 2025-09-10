@@ -1,10 +1,10 @@
-import { RoleId } from '../value-objects/role-id.vo';
+import { RoleId } from '@aiofix/shared';
 import { RoleName } from '@aiofix/shared';
 import { Permission } from '../value-objects/permission.vo';
 import { RoleType, RoleTypeHelper } from '../enums/role-type.enum';
 import { TenantId } from '@aiofix/shared';
-import { OrganizationId } from '@aiofix/organization';
-import { DepartmentId } from '@aiofix/department';
+import { OrganizationId } from '@aiofix/shared';
+import { DepartmentId } from '@aiofix/shared';
 
 /**
  * @interface RoleHierarchy

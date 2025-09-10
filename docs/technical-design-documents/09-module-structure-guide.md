@@ -3,7 +3,7 @@
 ## 文档信息
 
 - **文档名称**: 模块结构设计指南
-- **文档版本**: V1.0
+- **文档版本**: V1.1
 - **创建日期**: 2024-01-01
 - **最后更新**: 2024-01-01
 - **维护者**: 项目开发团队
@@ -11,6 +11,40 @@
 ## 概述
 
 本指南详细说明了项目的模块结构设计，基于Clean Architecture和DDD原则，确保代码组织清晰、职责明确、易于维护和扩展。模块结构遵循分层架构和依赖倒置原则，支持多租户架构和事件驱动设计。
+
+## 代码组织原则
+
+### 功能导向 vs 技术导向
+
+本架构采用**功能导向**的代码组织方式，相比传统的**技术导向**组织方式具有以下优势：
+
+**功能导向组织** (当前采用):
+
+```
+infrastructure/
+├── cache/              # 缓存功能
+├── guards/             # 认证授权功能
+├── interceptors/       # 横切关注点功能
+└── external-adapters/  # 外部服务功能
+```
+
+**技术导向组织** (传统方式):
+
+```
+infrastructure/
+├── persistence/postgresql/  # PostgreSQL技术
+├── persistence/mongodb/     # MongoDB技术
+└── interfaces/rest/         # REST技术
+```
+
+### 功能导向的优势
+
+1. **功能内聚**: 相关功能组件集中管理，便于维护和扩展
+2. **技术解耦**: 技术变更不影响功能模块，支持技术栈升级
+3. **团队协作**: 不同团队可以独立开发不同功能模块，减少冲突
+4. **代码复用**: 守卫、拦截器、装饰器等可以跨协议复用
+5. **测试友好**: 测试结构清晰，功能模块独立测试
+6. **扩展便利**: 新功能直接添加，无需重构目录结构
 
 ## 项目整体结构
 
@@ -232,20 +266,51 @@ packages/user/
 │   │       ├── create-user.dto.ts
 │   │       ├── update-user.dto.ts
 │   │       └── user-response.dto.ts
-│   ├── interfaces/             # Interface Adapters Layer
-│   │   ├── rest/               # RESTful API接口
-│   │   │   ├── controllers/    # REST控制器
-│   │   │   │   └── user.controller.ts
-│   │   │   ├── guards/         # 守卫
-│   │   │   │   └── user-permission.guard.ts
-│   │   │   ├── interceptors/   # 拦截器
-│   │   │   │   └── user-audit.interceptor.ts
-│   │   │   └── decorators/     # 装饰器
-│   │   │       └── user-permissions.decorator.ts
-│   │   ├── graphql/            # GraphQL接口
-│   │   │   ├── resolvers/      # 解析器
+│   ├── infrastructure/         # Interface Adapters Layer
+│   │   ├── adapters/           # 数据适配器
+│   │   │   ├── mappers/        # 对象映射器
+│   │   │   │   ├── user-aggregate-mapper.ts
+│   │   │   │   └── user-dto-mapper.ts
+│   │   │   └── user.postgresql.entity.ts
+│   │   ├── cache/              # 缓存实现
+│   │   │   ├── cache.service.interface.ts
+│   │   │   ├── redis-cache.service.ts
+│   │   │   └── cache.module.ts
+│   │   ├── event-storage/      # 事件存储实现
+│   │   │   ├── event-storage.interface.ts
+│   │   │   ├── mongodb-event-storage.service.ts
+│   │   │   └── event-storage.module.ts
+│   │   ├── external-adapters/  # 外部服务适配器
+│   │   │   ├── email.service.ts
+│   │   │   ├── notification.service.ts
+│   │   │   └── audit.service.ts
+│   │   ├── repositories/       # 仓储实现
+│   │   │   └── user.repository.ts
+│   │   ├── guards/             # 守卫 (跨协议复用)
+│   │   │   ├── auth.guard.ts
+│   │   │   ├── permission.guard.ts
+│   │   │   └── tenant.guard.ts
+│   │   ├── interceptors/       # 拦截器 (跨协议复用)
+│   │   │   ├── logging.interceptor.ts
+│   │   │   ├── cache.interceptor.ts
+│   │   │   └── performance.interceptor.ts
+│   │   └── decorators/         # 装饰器 (跨协议复用)
+│   │       ├── permissions.decorator.ts
+│   │       ├── tenant.decorator.ts
+│   │       ├── cache.decorator.ts
+│   │       ├── audit.decorator.ts
+│   │       └── performance.decorator.ts
+│   ├── interfaces/             # Frameworks & Drivers Layer
+│   │   ├── controllers/        # REST控制器
+│   │   │   └── user.controller.ts
+│   │   ├── dtos/              # 数据传输对象
+│   │   │   ├── create-user.dto.ts
+│   │   │   ├── update-user.dto.ts
+│   │   │   └── user-response.dto.ts
+│   │   ├── graphql/           # GraphQL接口 (可选)
+│   │   │   ├── resolvers/     # 解析器
 │   │   │   │   └── user.resolver.ts
-│   │   │   └── schemas/        # 模式定义
+│   │   │   └── schemas/       # 模式定义
 │   │   │       └── user.schema.ts
 │   │   └── grpc/               # gRPC接口
 │   │       ├── services/       # 服务定义
@@ -700,7 +765,7 @@ apps/worker/
 
 ### 1. 数据库实体/文档 (Database Entities/Documents)
 
-**位置**: `infrastructure/persistence/entities/`
+**位置**: `infrastructure/adapters/`
 
 **职责**:
 
@@ -714,7 +779,7 @@ apps/worker/
 #### PostgreSQL实体示例
 
 ```typescript
-// entities/postgresql/user.entity.ts - PostgreSQL写实体
+// adapters/user.postgresql.entity.ts - PostgreSQL写实体
 @Entity({ tableName: 'users' })
 export class UserPostgreSQLEntity {
   @PrimaryKey({ type: 'uuid' })
@@ -872,7 +937,7 @@ export class UserReadMongoDBDocument {
 
 ### 2. 事件投射器 (Event Projectors)
 
-**位置**: `infrastructure/events/projectors/`
+**位置**: `application/events/` (事件处理器)
 
 **职责**:
 
@@ -885,7 +950,7 @@ export class UserReadMongoDBDocument {
 #### PostgreSQL读模型投射器示例
 
 ```typescript
-// projectors/postgresql/user-read-model-projector.ts
+// application/events/user-created-event-handler.ts
 @Injectable()
 export class UserReadModelProjector implements IEventProjection {
   constructor(
@@ -1032,7 +1097,7 @@ export class UserStatisticsProjector implements IEventProjection {
 
 ### 3. 数据库适配器 (Database Adapters)
 
-**位置**: `infrastructure/persistence/adapters/`
+**位置**: `infrastructure/repositories/`
 
 **职责**:
 
@@ -1044,9 +1109,9 @@ export class UserStatisticsProjector implements IEventProjection {
 #### PostgreSQL仓储示例
 
 ```typescript
-// repositories/postgresql/user.repository.ts
+// infrastructure/repositories/user.repository.ts
 @Injectable()
-export class UserPostgreSQLRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   constructor(
     @InjectEntityManager('postgresql')
     private readonly em: EntityManager,
@@ -1176,7 +1241,7 @@ export class UserMongoDBRepository implements IUserRepository {
 
 ### 4. 数据映射器 (Mappers)
 
-**位置**: `infrastructure/persistence/mappers/`
+**位置**: `infrastructure/adapters/mappers/`
 
 **职责**:
 
@@ -1424,9 +1489,7 @@ export default [
   // PostgreSQL配置 - 核心业务数据
   {
     name: 'postgresql',
-    entities: [
-      './src/infrastructure/persistence/entities/postgresql/*.entity.ts',
-    ],
+    entities: ['./src/infrastructure/adapters/*.postgresql.entity.ts'],
     dbName: 'aiofix_platform',
     type: 'postgresql',
     host: process.env.POSTGRES_HOST || 'localhost',
@@ -1447,9 +1510,7 @@ export default [
   // MongoDB配置 - 事件存储和文档数据
   {
     name: 'mongodb',
-    entities: [
-      './src/infrastructure/persistence/entities/mongodb/*.document.ts',
-    ],
+    entities: ['./src/infrastructure/event-storage/*.document.ts'],
     dbName: 'aiofix_events',
     type: 'mongo',
     host: process.env.MONGO_HOST || 'localhost',

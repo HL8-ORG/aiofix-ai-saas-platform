@@ -5,3 +5,4 @@
  */
 
 export * from './user.postgresql.entity';
+export * from './mappers';

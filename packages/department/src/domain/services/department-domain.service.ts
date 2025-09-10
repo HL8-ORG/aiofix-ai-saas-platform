@@ -1,9 +1,9 @@
-import { DepartmentId } from '../value-objects/department-id.vo';
+import { DepartmentId } from '@aiofix/shared';
 import { DepartmentName } from '@aiofix/shared';
 import { DepartmentSettings } from '../value-objects/department-settings.vo';
 import { DepartmentStatus } from '../enums/department-status.enum';
 import { TenantId } from '@aiofix/shared';
-import { OrganizationId } from '@aiofix/organization';
+import { OrganizationId } from '@aiofix/shared';
 
 /**
  * @class DepartmentDomainService

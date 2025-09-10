@@ -1,5 +1,4 @@
-import { ValueObject } from '@aiofix/core';
-import { v4 as uuidv4 } from 'uuid';
+import { UUIDIdentifier } from './base-identifier.vo';
 
 /**
  * @class NotifId
@@ -32,54 +31,7 @@ import { v4 as uuidv4 } from 'uuid';
  * ```
  * @since 1.0.0
  */
-export class NotifId extends ValueObject<string> {
-  constructor(value?: string) {
-    super(value ?? uuidv4());
-    this.validate();
-  }
-
-  /**
-   * @method validate
-   * @description 验证通知ID的有效性
-   * @returns {void}
-   * @throws {InvalidNotifIdError} 当通知ID无效时抛出
-   * @private
-   */
-  private validate(): void {
-    if (!this.value || this.value.trim().length === 0) {
-      throw new InvalidNotifIdError('通知ID不能为空');
-    }
-
-    // UUID v4格式验证
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(this.value)) {
-      throw new InvalidNotifIdError(`无效的UUID格式: ${this.value}`);
-    }
-  }
-
-  /**
-   * @method equals
-   * @description 比较两个通知ID是否相等
-   * @param {NotifId} other 另一个通知ID对象
-   * @returns {boolean} 是否相等
-   */
-  equals(other: NotifId): boolean {
-    if (!(other instanceof NotifId)) {
-      return false;
-    }
-    return this.value.toLowerCase() === other.value.toLowerCase();
-  }
-
-  /**
-   * @method toString
-   * @description 返回通知ID的字符串表示
-   * @returns {string} 通知ID字符串
-   */
-  toString(): string {
-    return this.value;
-  }
-
+export class NotifId extends UUIDIdentifier {
   /**
    * @method generate
    * @description 生成新的通知ID
@@ -87,7 +39,7 @@ export class NotifId extends ValueObject<string> {
    * @static
    */
   static generate(): NotifId {
-    return new NotifId(uuidv4());
+    return new NotifId();
   }
 
   /**
@@ -115,6 +67,17 @@ export class NotifId extends ValueObject<string> {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * @method create
+   * @description 创建通知ID（与fromString功能相同，提供一致的接口）
+   * @param {string} value 通知ID字符串
+   * @returns {NotifId} 通知ID实例
+   * @static
+   */
+  static create(value: string): NotifId {
+    return NotifId.fromString(value);
   }
 }
 

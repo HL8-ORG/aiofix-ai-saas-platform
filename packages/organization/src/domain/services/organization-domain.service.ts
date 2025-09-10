@@ -1,4 +1,4 @@
-import { OrganizationId } from '../value-objects/organization-id.vo';
+import { OrganizationId } from '@aiofix/shared';
 import { OrganizationName } from '@aiofix/shared';
 import { OrganizationSettings } from '../value-objects/organization-settings.vo';
 import { OrganizationStatus } from '../enums/organization-status.enum';

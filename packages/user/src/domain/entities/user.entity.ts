@@ -62,7 +62,7 @@ import {
  */
 export class UserEntity extends BaseEntity {
   private readonly _id: UserId;
-  private readonly _email: Email;
+  private _email: Email;
   private _password: Password;
   private _profile: UserProfile;
   private _preferences: UserPreferences;
@@ -288,6 +288,37 @@ export class UserEntity extends BaseEntity {
     }
 
     this._password = newPassword;
+    this.updateAuditInfo(updatedBy);
+  }
+
+  /**
+   * @method updateEmail
+   * @description 更新用户邮箱地址
+   * @param {Email} newEmail 新的邮箱地址
+   * @param {string} [updatedBy='system'] 更新者ID
+   * @since 1.0.0
+   */
+  public updateEmail(newEmail: Email, updatedBy: string = 'system'): void {
+    if (this._status === UserStatus.SUSPENDED) {
+      throw new Error('已暂停的用户无法更新邮箱');
+    }
+
+    this._email = newEmail;
+    this.updateAuditInfo(updatedBy);
+  }
+
+  /**
+   * @method updateStatus
+   * @description 更新用户状态
+   * @param {UserStatus} newStatus 新的用户状态
+   * @param {string} [updatedBy='system'] 更新者ID
+   * @since 1.0.0
+   */
+  public updateStatus(
+    newStatus: UserStatus,
+    updatedBy: string = 'system',
+  ): void {
+    this._status = newStatus;
     this.updateAuditInfo(updatedBy);
   }
 

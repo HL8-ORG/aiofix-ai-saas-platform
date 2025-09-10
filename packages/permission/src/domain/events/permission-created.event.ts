@@ -1,5 +1,5 @@
 import { DomainEvent } from '@aiofix/core';
-import { PermissionId } from '../value-objects/permission-id.vo';
+import { PermissionId } from '@aiofix/shared';
 import {
   Resource,
   Action,

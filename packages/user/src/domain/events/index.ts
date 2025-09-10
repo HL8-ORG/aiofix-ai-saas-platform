@@ -9,6 +9,8 @@
  */
 
 export { UserCreatedEvent } from './user-created.event';
+export { UserUpdatedEvent } from './user-updated.event';
+export { UserDeletedEvent } from './user-deleted.event';
 export { UserProfileUpdatedEvent } from './user-profile-updated.event';
 export { UserStatusChangedEvent } from './user-status-changed.event';
 export { UserPasswordUpdatedEvent } from './user-password-updated.event';

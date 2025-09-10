@@ -1,6 +1,6 @@
 import { EventSourcedAggregateRoot } from '@aiofix/core';
 import { PermissionEntity } from '../entities/permission.entity';
-import { PermissionId } from '../value-objects/permission-id.vo';
+import { PermissionId } from '@aiofix/shared';
 import {
   Resource,
   Action,

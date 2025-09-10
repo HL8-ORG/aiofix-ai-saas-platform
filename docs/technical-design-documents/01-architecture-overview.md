@@ -3,7 +3,7 @@
 ## 文档信息
 
 - **项目名称**: Aiofix AI SAAS平台
-- **文档版本**: V3.0
+- **文档版本**: V3.1
 - **创建日期**: 2024-01-01
 - **最后更新**: 2024-01-01
 - **维护者**: 项目开发团队
@@ -185,46 +185,52 @@ packages/user/
 │   │       ├── update-user.dto.ts
 │   │       └── user-response.dto.ts
 │   ├── infrastructure/           # Interface Adapters Layer (接口适配层)
-│   │   ├── persistence/         # 持久化实现
-│   │   │   ├── postgresql/     # PostgreSQL实现
-│   │   │   │   ├── entities/   # 数据库实体
-│   │   │   │   │   └── user.entity.ts
-│   │   │   │   ├── repositories/ # 仓储实现
-│   │   │   │   │   └── user.repository.ts
-│   │   │   │   └── mappers/    # 对象映射器
-│   │   │   │       └── user.mapper.ts
-│   │   │   └── mongodb/        # MongoDB实现 (事件存储)
-│   │   │       ├── events/     # 事件存储
-│   │   │       │   └── user-events.collection.ts
-│   │   │       └── snapshots/  # 快照存储
-│   │   │           └── user-snapshots.collection.ts
-│   │   ├── events/             # 事件处理器
-│   │   │   ├── user-created-event-handler.ts
-│   │   │   ├── user-profile-updated-event-handler.ts
-│   │   │   ├── user-status-changed-event-handler.ts
-│   │   │   ├── user-password-updated-event-handler.ts
-│   │   │   └── user-preferences-updated-event-handler.ts
-│   │   ├── external/           # 外部服务适配器
-│   │   │   ├── email-service.adapter.ts
-│   │   │   └── notification-service.adapter.ts
-│   │   └── cache/              # 缓存实现
-│   │       └── user-cache.service.ts
+│   │   ├── adapters/            # 数据适配器
+│   │   │   ├── mappers/         # 对象映射器
+│   │   │   │   ├── user-aggregate-mapper.ts
+│   │   │   │   └── user-dto-mapper.ts
+│   │   │   └── user.postgresql.entity.ts  # PostgreSQL数据库实体
+│   │   ├── cache/               # 缓存实现
+│   │   │   ├── cache.service.interface.ts
+│   │   │   ├── redis-cache.service.ts
+│   │   │   └── cache.module.ts
+│   │   ├── event-storage/       # 事件存储实现
+│   │   │   ├── event-storage.interface.ts
+│   │   │   ├── mongodb-event-storage.service.ts
+│   │   │   └── event-storage.module.ts
+│   │   ├── external-adapters/   # 外部服务适配器
+│   │   │   ├── email.service.ts
+│   │   │   ├── notification.service.ts
+│   │   │   └── audit.service.ts
+│   │   ├── repositories/        # 仓储实现
+│   │   │   └── user.repository.ts
+│   │   ├── guards/              # 守卫 (跨协议复用)
+│   │   │   ├── auth.guard.ts
+│   │   │   ├── permission.guard.ts
+│   │   │   └── tenant.guard.ts
+│   │   ├── interceptors/        # 拦截器 (跨协议复用)
+│   │   │   ├── logging.interceptor.ts
+│   │   │   ├── cache.interceptor.ts
+│   │   │   └── performance.interceptor.ts
+│   │   └── decorators/          # 装饰器 (跨协议复用)
+│   │       ├── permissions.decorator.ts
+│   │       ├── tenant.decorator.ts
+│   │       ├── cache.decorator.ts
+│   │       ├── audit.decorator.ts
+│   │       └── performance.decorator.ts
 │   ├── interfaces/             # Frameworks & Drivers Layer (框架驱动层)
-│   │   ├── rest/              # RESTful API接口
-│   │   │   ├── controllers/   # REST控制器
-│   │   │   │   └── user.controller.ts
-│   │   │   ├── guards/        # 守卫
-│   │   │   │   └── user-permission.guard.ts
-│   │   │   ├── interceptors/  # 拦截器
-│   │   │   │   └── user-audit.interceptor.ts
-│   │   │   └── decorators/    # 装饰器
-│   │   │       └── user-permissions.decorator.ts
-│   │   ├── graphql/           # GraphQL接口
+│   │   ├── controllers/        # REST控制器
+│   │   │   └── user.controller.ts
+│   │   ├── dtos/              # 数据传输对象
+│   │   │   ├── create-user.dto.ts
+│   │   │   ├── update-user.dto.ts
+│   │   │   └── user-response.dto.ts
+│   │   ├── graphql/           # GraphQL接口 (可选)
 │   │   │   ├── resolvers/     # 解析器
 │   │   │   │   └── user.resolver.ts
 │   │   │   └── schemas/       # 模式定义
 │   │   │       └── user.schema.ts
-│   │   └── grpc/              # gRPC接口
+│   │   └── grpc/              # gRPC接口 (可选)
 │   │       ├── services/      # 服务定义
 │   │       │   └── user.service.ts
 │   │       └── proto/         # Proto文件
@@ -273,16 +279,73 @@ packages/user/
 
 #### 3. Infrastructure Layer (接口适配层)
 
-- **persistence/**: 持久化实现，数据存储适配
-- **events/**: 事件处理器，处理领域事件副作用
-- **external/**: 外部服务适配器，第三方服务集成
+- **adapters/**: 数据适配器，包含对象映射器和数据库实体
 - **cache/**: 缓存实现，性能优化
+- **event-storage/**: 事件存储实现，支持事件溯源
+- **external-adapters/**: 外部服务适配器，第三方服务集成
+- **repositories/**: 仓储实现，数据访问层
+- **guards/**: 守卫，跨协议复用的认证授权组件
+- **interceptors/**: 拦截器，跨协议复用的横切关注点
+- **decorators/**: 装饰器，跨协议复用的元数据装饰
 
 #### 4. Interfaces Layer (框架驱动层)
 
-- **rest/**: RESTful API接口，标准HTTP REST API
-- **graphql/**: GraphQL接口，灵活查询
-- **grpc/**: gRPC接口，高性能通信
+- **controllers/**: REST控制器，HTTP API接口
+- **dtos/**: 数据传输对象，API数据传输
+- **graphql/**: GraphQL接口，灵活查询 (可选)
+- **grpc/**: gRPC接口，高性能通信 (可选)
+
+### 代码组织原则
+
+#### 功能导向 vs 技术导向
+
+本架构采用**功能导向**的代码组织方式，相比传统的**技术导向**组织方式具有以下优势：
+
+**功能导向组织** (当前采用):
+
+```
+infrastructure/
+├── cache/              # 缓存功能
+├── guards/             # 认证授权功能
+├── interceptors/       # 横切关注点功能
+└── external-adapters/  # 外部服务功能
+```
+
+**技术导向组织** (传统方式):
+
+```
+infrastructure/
+├── persistence/postgresql/  # PostgreSQL技术
+├── persistence/mongodb/     # MongoDB技术
+└── interfaces/rest/         # REST技术
+```
+
+#### 功能导向的优势
+
+1. **功能内聚**: 相关功能组件集中管理，便于维护和扩展
+2. **技术解耦**: 技术变更不影响功能模块，支持技术栈升级
+3. **团队协作**: 不同团队可以独立开发不同功能模块，减少冲突
+4. **代码复用**: 守卫、拦截器、装饰器等可以跨协议复用
+5. **测试友好**: 测试结构清晰，功能模块独立测试
+6. **扩展便利**: 新功能直接添加，无需重构目录结构
+
+#### 跨协议复用设计
+
+基础设施层的守卫、拦截器、装饰器采用跨协议复用设计：
+
+```typescript
+// 同一套守卫可以用于REST、GraphQL、gRPC
+infrastructure/guards/
+├── auth.guard.ts          // 认证守卫
+├── permission.guard.ts    // 权限守卫
+└── tenant.guard.ts        // 租户守卫
+
+// 同一套拦截器可以用于所有协议
+infrastructure/interceptors/
+├── logging.interceptor.ts     // 日志拦截器
+├── cache.interceptor.ts       // 缓存拦截器
+└── performance.interceptor.ts // 性能拦截器
+```
 
 这种结构确保了：
 
@@ -290,6 +353,8 @@ packages/user/
 - **单一职责**: 每层都有明确的职责
 - **开闭原则**: 对扩展开放，对修改封闭
 - **可测试性**: 每层都可以独立测试
+- **功能内聚**: 相关功能集中管理
+- **技术解耦**: 技术变更影响范围可控
 
 ## 架构层次
 
@@ -486,6 +551,6 @@ Aiofix AI SAAS平台采用现代化的架构设计，通过Clean Architecture、
 
 ---
 
-**文档版本**: 3.0  
+**文档版本**: 3.1  
 **最后更新**: 2024-01-01  
 **维护者**: 项目开发团队

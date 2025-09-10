@@ -60,6 +60,27 @@ export class Password extends ValueObject<string> {
   }
 
   /**
+   * 从明文密码创建值对象（同步版本）
+   *
+   * @param plainPassword 明文密码
+   * @returns 密码值对象
+   */
+  public static fromPlainText(plainPassword: string): Password {
+    if (!plainPassword || plainPassword.trim().length === 0) {
+      throw new InvalidPasswordError('Password cannot be empty');
+    }
+
+    // 验证密码强度
+    Password.validateStrength(plainPassword);
+
+    // 同步加密密码（使用较低的salt rounds以提高性能）
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(plainPassword, saltRounds);
+
+    return new Password(hashedPassword);
+  }
+
+  /**
    * 验证密码强度
    *
    * 业务规则：

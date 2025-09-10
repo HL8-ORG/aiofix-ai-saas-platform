@@ -1,4 +1,7 @@
-import { ValueObject } from '@aiofix/core';
+import {
+  CustomIdentifier,
+  CustomFormatValidationRule,
+} from './base-identifier.vo';
 
 /**
  * @class TenantId
@@ -31,65 +34,32 @@ import { ValueObject } from '@aiofix/core';
  * ```
  * @since 1.0.0
  */
-export class TenantId extends ValueObject<string> {
+export class TenantId extends CustomIdentifier {
   constructor(value: string) {
-    super(value);
-    this.validate();
+    super(
+      value,
+      new CustomFormatValidationRule(
+        /^[a-zA-Z0-9_-]+$/,
+        '租户ID只能包含字母、数字、连字符和下划线',
+        3,
+        50,
+      ),
+    );
+    this.validateTenantIdSpecificRules();
   }
 
   /**
-   * @method validate
-   * @description 验证租户ID的有效性
+   * @method validateTenantIdSpecificRules
+   * @description 验证租户ID特定的业务规则
    * @returns {void}
    * @throws {InvalidTenantIdError} 当租户ID无效时抛出
    * @private
    */
-  private validate(): void {
-    if (!this.value || this.value.trim().length === 0) {
-      throw new InvalidTenantIdError('租户ID不能为空');
-    }
-
-    if (this.value.length < 3) {
-      throw new InvalidTenantIdError('租户ID长度不能少于3个字符');
-    }
-
-    if (this.value.length > 50) {
-      throw new InvalidTenantIdError('租户ID长度不能超过50个字符');
-    }
-
-    // 验证租户ID格式：只能包含字母、数字、连字符和下划线
-    if (!/^[a-zA-Z0-9_-]+$/.test(this.value)) {
-      throw new InvalidTenantIdError(
-        '租户ID只能包含字母、数字、连字符和下划线',
-      );
-    }
-
+  private validateTenantIdSpecificRules(): void {
     // 验证租户ID不能以连字符或下划线开头或结尾
     if (/^[-_]|[-_]$/.test(this.value)) {
       throw new InvalidTenantIdError('租户ID不能以连字符或下划线开头或结尾');
     }
-  }
-
-  /**
-   * @method equals
-   * @description 比较两个租户ID是否相等，忽略大小写
-   * @param {TenantId} other 另一个租户ID对象
-   * @returns {boolean} 是否相等
-   */
-  equals(other: TenantId): boolean {
-    if (!(other instanceof TenantId)) {
-      return false;
-    }
-    return this.value.toLowerCase() === other.value.toLowerCase();
-  }
-
-  /**
-   * @method toString
-   * @description 返回租户ID的字符串表示
-   * @returns {string} 租户ID字符串
-   */
-  toString(): string {
-    return this.value;
   }
 
   /**
@@ -212,17 +182,27 @@ export class TenantId extends ValueObject<string> {
   }
 
   /**
-   * @method generate
-   * @description 生成新的租户ID
+   * @method create
+   * @description 创建新的租户ID
    * @param {string} type 租户类型
    * @param {string} identifier 标识符
    * @returns {TenantId} 新的租户ID实例
    * @static
    */
-  static generate(type: string, identifier: string): TenantId {
+  static create(type: string, identifier: string): TenantId {
     const prefix = type.toLowerCase();
     const id = `${prefix}-${identifier}`;
     return new TenantId(id);
+  }
+
+  /**
+   * @method generate
+   * @description 生成新的租户ID（使用默认类型和随机标识符）
+   * @returns {TenantId} 新的租户ID实例
+   * @static
+   */
+  static generate(): TenantId {
+    return TenantId.random('tenant', 8);
   }
 
   /**
@@ -252,7 +232,7 @@ export class TenantId extends ValueObject<string> {
       identifier += chars.charAt(Math.floor(Math.random() * chars.length));
     }
 
-    return TenantId.generate(type, identifier);
+    return TenantId.create(type, identifier);
   }
 
   /**
